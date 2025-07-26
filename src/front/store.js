@@ -12,7 +12,8 @@ export const initialStore=()=>{
         title: "Do my homework",
         background: null,
       }
-    ]
+    ],
+    tournament: [],
   }
 }
 
@@ -23,6 +24,15 @@ export default function storeReducer(store, action = {}) {
         ...store,
         message: action.payload
       };
+
+    case 'list_tournament':
+
+      const  {newTournament}  = action.payload
+
+      return {
+        ...store,
+        tournament: newTournament
+      };
       
     case 'add_task':
 
@@ -32,7 +42,9 @@ export default function storeReducer(store, action = {}) {
         ...store,
         todos: store.todos.map((todo) => (todo.id === id ? { ...todo, background: color } : todo))
       };
+      
     default:
       throw Error('Unknown action.');
   }    
+  
 }
