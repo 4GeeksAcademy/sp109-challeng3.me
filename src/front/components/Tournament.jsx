@@ -55,6 +55,10 @@ export const Tournament = () => {
                     <Link to={`/card/${tournament.id}`}>
                        <button className="btn btn-primary m-1">Ver</button>
                     </Link>
+                    <Link to={`/editTournament/${tournament.id}`}>
+                       <button className="btn btn-secondary m-1">Editar</button>
+                    </Link>
+                
                     <div>
                     <button className="btn btn-danger m-1" onClick={() => {
                         deleteTournament(tournament.id)

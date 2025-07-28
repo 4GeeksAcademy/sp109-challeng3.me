@@ -12,6 +12,9 @@ import { Demo } from "./pages/Demo";
 import { Tournament } from "./components/Tournament.jsx";
 import { Card } from "./components/Card.jsx";
 import { Form } from "./components/Form.jsx";
+import UserCRUD from "./pages/UserCRUD";
+import AdminCRUD from "./pages/AdminCRUD";
+import { EditTournament } from "./components/EditTournament.jsx";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -31,6 +34,9 @@ export const router = createBrowserRouter(
         <Route path="/tournament" element={<Tournament />} />
         <Route path="/card/:id" element={ <Card />} />
         <Route path="/form" element={<Form />} />
+        <Route path="/user" element={<UserCRUD />} />
+        <Route path="/admin" element={<AdminCRUD />} />
+        <Route path="/editTournament/:id" element={ <EditTournament />} />
       </Route>
     )
 );
