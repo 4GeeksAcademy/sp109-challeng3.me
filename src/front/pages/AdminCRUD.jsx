@@ -41,7 +41,7 @@ const AdminCRUD = () => {
             <h3 className="display-5 mb-4">Admins</h3>
             <div >
                 {admins.map(admin => (<p key={admin.id} className="border p-2 d-flex justify-content-between">
-                    {admin.username}
+                    <Link to={`/admin/${admin.id}`}>{admin.username}</Link>
                     <span className="d-flex justify-content-between gap-2 align-items-center">
                         <span><EditAdminModal adminId={admin.id} onAdminModified={getAdmins}/></span>
                         <button className="btn btn-outline-danger align-self-end" onClick={() => deleteAdmin(admin.id)}>X</button>
