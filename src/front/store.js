@@ -12,7 +12,8 @@ export const initialStore=()=>{
         title: "Do my homework",
         background: null,
       }
-    ]
+    ],
+    users: []
   }
 }
 
@@ -34,5 +35,11 @@ export default function storeReducer(store, action = {}) {
       };
     default:
       throw Error('Unknown action.');
+
+    case 'get_users':
+      return {
+        ...store,
+        users: action.payload
+      };
   }    
 }
