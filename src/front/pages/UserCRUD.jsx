@@ -41,7 +41,7 @@ const UserCRUD = () => {
             <h3 className="display-5 mb-4">Users</h3>
             <div >
                 {users.map(user => (<p key={user.id} className="border p-2 d-flex justify-content-between">
-                    <Link to='/'>{user.username}</Link>
+                    <Link to={`/user/${user.id}`}>{user.username}</Link>
                     <span className="d-flex justify-content-between gap-2 align-items-center">
                         <span><EditUserModal userId={user.id} onUserModified={getUsers}/></span>
                         <button className="btn btn-outline-danger align-self-end" onClick={() => deleteUser(user.id)}>X</button>
