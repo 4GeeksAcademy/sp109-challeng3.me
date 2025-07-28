@@ -13,7 +13,8 @@ export const initialStore=()=>{
         background: null,
       }
     ],
-    users: []
+    users: [],
+    admins: []
   }
 }
 
@@ -41,5 +42,11 @@ export default function storeReducer(store, action = {}) {
         ...store,
         users: action.payload
       };
-  }    
+      case 'get_admins':
+      return {
+        ...store,
+        admins: action.payload
+      };
+  }
 }
+

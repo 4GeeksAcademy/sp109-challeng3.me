@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User
+from api.models import db, User, Admin
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from sqlalchemy import select
@@ -114,3 +114,83 @@ def delete_users(user_id):
     db.session.commit()
 
     return 'User with id ' + str(user_id) + ' has been deleted', 200
+
+@api.route('/admin', methods=['GET'])
+def get_admins():
+
+    all_admins =  db.session.execute(select(Admin)).scalars().all()
+    if all_admins is None:
+        return 'Cant get Admins', 400
+    
+    result = list(map(lambda admin: admin.serialize(), all_admins))
+
+    return jsonify(result), 200
+
+@api.route('/admin/<int:admin_id>', methods=['GET'])
+def get_admin(admin_id):
+
+    admin =  db.session.execute(select(Admin).where(Admin.id == admin_id)).scalars().first()
+    if admin is None:
+        return 'Cant get the admin', 400
+
+    return jsonify(admin.serialize()), 200
+
+@api.route('/admin', methods=['POST'])
+def add_admin():
+
+    body = request.get_json()
+
+    if body is None:
+        return 'El cuerpo debe seguir la siguiente estructura, {"username": username, "password": password, "email": email}', 400
+    if 'username' not in body:
+        return 'Debes especificar username', 400
+    if 'password' not in body:
+        return 'Debes especificar password', 400
+    if 'email' not in body:
+        return 'Debes especificar email', 400
+    
+    new_admin =  Admin(
+        username = body['username'],
+        password = body['password'],
+        email = body['email'],
+    )
+
+    db.session.add(new_admin)
+    db.session.commit()
+    
+    return 'Admin successful created', 200
+
+@api.route('/admin/<int:admin_id>', methods=['PUT'])
+def edit_admin(admin_id):
+
+    body = request.get_json()
+    admin = db.session.execute(select(Admin).where(Admin.id == admin_id)).scalars().first()
+
+    if admin is None:
+        return 'User dont exist', 400
+
+    if body is None:
+        return 'El cuerpo debe seguir la siguiente estructura, {"username": username, "password": password, "email": email, "level": level, "points": points, "premium": premium, "premium_end_date": premium_end_date}', 400
+    if 'username' in body:
+        admin.username = body['username']
+    if 'password' in body:
+        admin.password = body['password']
+    if 'email' in body:
+        admin.email = body['email']
+    
+    db.session.commit()
+    
+    return 'Admin with id ' + str(admin_id) + ' has been edited', 200
+
+@api.route('/admin/<int:admin_id>', methods=['DELETE'])
+def delete_admin(admin_id):
+
+    admin = db.session.execute(select(Admin).where(Admin.id == admin_id)).scalars().first()
+
+    if admin is None:
+        return 'Admin dont exist', 400
+
+    db.session.delete(admin)
+    db.session.commit()
+
+    return 'Admin with id ' + str(admin_id) + ' has been deleted', 200
