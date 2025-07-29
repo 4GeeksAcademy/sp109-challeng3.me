@@ -10,7 +10,7 @@ export const Tournament = () => {
 
       function getTournament (){
         fetch(import.meta.env.VITE_BACKEND_URL + "/api/tournament")
-        .then((Response)=>Response.json())
+        .then((response)=>response.json())
         .then((data) =>{
             setTournaments(data.tournament);
             dispatch({
