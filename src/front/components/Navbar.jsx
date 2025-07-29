@@ -18,6 +18,9 @@ export const Navbar = () => {
 					<Link to="/tournament">
 						<button className="btn btn-primary">Crud Tournaments</button>
 					</Link>
+					<Link to="/team">
+						<button className="btn btn-primary">Crud Teams</button>
+					</Link>
 					<Link to="/demo">
 						<button className="btn btn-primary">Check the Context in action</button>
 					</Link>
