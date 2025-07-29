@@ -14,7 +14,10 @@ export const initialStore=()=>{
       }
     ],
     users: [],
-    admins: []
+    admins: [],
+    tournament: [],
+    newTournament: [],
+    editarTorneo: [{name: null}]
   }
 }
 
@@ -25,6 +28,21 @@ export default function storeReducer(store, action = {}) {
         ...store,
         message: action.payload
       };
+
+    case 'list_tournament':
+      const  {torneo}  = action.payload
+        return {
+        ...store,
+        tournament: torneo
+      };
+
+    case 'add_tournament':
+
+      return {
+        ...store,
+      newTournament: action.payload
+
+    };
       
     case 'add_task':
 
@@ -34,19 +52,27 @@ export default function storeReducer(store, action = {}) {
         ...store,
         todos: store.todos.map((todo) => (todo.id === id ? { ...todo, background: color } : todo))
       };
-    default:
-      throw Error('Unknown action.');
+      
+      case 'get_users':
+        return {
+          ...store,
+          users: action.payload
+        };
+        case 'get_admins':
+        return {
+          ...store,
+          admins: action.payload
+        };
 
-    case 'get_users':
-      return {
-        ...store,
-        users: action.payload
-      };
-      case 'get_admins':
-      return {
-        ...store,
-        admins: action.payload
-      };
+      case 'edit_torneo':
+        return {
+          ...store,
+          editarTorneo: action.payload
+        };
+    
+      default:
+        throw Error('Unknown action.');
+  
   }
-}
+} 
 

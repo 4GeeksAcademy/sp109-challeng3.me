@@ -1,6 +1,7 @@
 import React, { useEffect } from "react"
 import rigoImageUrl from "../assets/img/rigo-baby.jpg";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
+import { Tournament } from "../components/Tournament.jsx";
 
 export const Home = () => {
 
@@ -47,6 +48,7 @@ export const Home = () => {
 					</span>
 				)}
 			</div>
+			{/* <Tournament /> */}
 		</div>
 	);
 }; 

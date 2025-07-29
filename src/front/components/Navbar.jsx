@@ -15,9 +15,13 @@ export const Navbar = () => {
 					<Link to="/admin">
 						<button className="btn btn-primary">CRUD Admin</button>
 					</Link>
+					<Link to="/tournament">
+						<button className="btn btn-primary">Crud Tournaments</button>
+					</Link>
 					<Link to="/demo">
 						<button className="btn btn-primary">Check the Context in action</button>
 					</Link>
+
 				</div>
 			</div>
 		</nav>
