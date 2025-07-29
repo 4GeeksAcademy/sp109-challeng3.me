@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Admin
+from api.models import db, User, Admin, Tournament
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from sqlalchemy import select
@@ -13,14 +13,69 @@ api = Blueprint('api', __name__)
 CORS(api)
 
 
-@api.route('/hello', methods=['POST', 'GET'])
-def handle_hello():
+@api.route('/tournament', methods=['GET'])
+def get_tournament():
+
+    all_tournaments = Tournament.query.all()
+    results = list(map(lambda tournament : tournament.serialize(),all_tournaments))
 
     response_body = {
-        "message": "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
+        "tournament": results
     }
 
     return jsonify(response_body), 200
+
+@api.route('/tournament/<int:tournament_id>', methods=['GET'])
+def get_tournament_by_id(tournament_id):
+    tournament = db.session.get(Tournament, tournament_id)
+
+    return jsonify(tournament.serialize()), 200
+
+@api.route('/tournament', methods=['POST'])
+def add_tournament():
+    body = request.get_json()
+    new_torneo = Tournament(**body)
+    db.session.add(new_torneo)
+    db.session.commit()
+
+    response_body = {
+        "tournament": new_torneo.serialize(),
+        "msg": "nuevo torneo"
+    }
+
+    return jsonify(response_body), 200
+
+@api.route('/tournament/<int:tournament_id>', methods=['PUT'])
+def edit_tournament(tournament_id):
+    edit_torneo = Tournament.query.get(tournament_id)
+    if edit_torneo is None:
+        return 'Tournament not found', 404
+
+    body = request.get_json()
+    for key, value in body.items():
+        setattr(edit_torneo, key, value)
+
+    db.session.commit()
+
+    response_body = {
+        "tournament": edit_torneo.serialize(),
+        "msg": "torneo editado"
+    }
+
+    return jsonify(response_body), 200
+
+@api.route('/tournament/<int:tournament_id>', methods=['DELETE'])
+def delete_tournament(tournament_id):
+    tournament_delete = db.session.get(Tournament,tournament_id)
+    response_body ={
+        "msg":"se elimino torneo"
+    }
+
+    db.session.delete(tournament_delete)
+    db.session.commit()
+
+    return jsonify(response_body), 200
+
 
 @api.route('/user', methods=['GET'])
 def get_users():
