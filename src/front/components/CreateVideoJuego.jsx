@@ -1,0 +1,62 @@
+// Import necessary components from react-router-dom and other parts of the application.
+import { Link } from "react-router-dom";
+import useGlobalReducer from "../hooks/useGlobalReducer";  // Custom hook for accessing the global state.
+import { useEffect, useState } from "react";
+
+export const CreateVideoJuego = () => {
+  // Access the global state and dispatch function using the useGlobalReducer hook.
+  const { store, dispatch } = useGlobalReducer();
+  const [videojuegoNuevo, setVideojuegoNuevo] = useState({
+    videojuegos: "",
+  });
+
+  useEffect(() => {
+    setVideojuegoNuevo(store.newVideoJuego);
+  }, []);
+
+    function newVideoJuego (){
+      const requestOptions = {
+        method: "POST",
+        headers: {'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                  videojuegos: videojuegoNuevo.videojuegos,
+              })
+      };
+
+      fetch(import.meta.env.VITE_BACKEND_URL + "/api/videojuego/", requestOptions)
+        .then((response) => response.json())
+        .then((data) => window.location.href = "/videojuego")
+}
+
+  return (
+    <div className="container m-auto mt-5">
+      <ul className="list-group ">
+
+            <li
+              className="list-group-item d-flex justify-content-between"> 
+  
+              <div className="input-group input-group-sm mb-3 row d-flex justify-content-center">
+                <div className="col-8">
+                Name:
+                <input
+                  type="text"
+                  className="form-control mt-2"
+                  value={videojuegoNuevo.videojuegos}
+                  onChange={(e) => setVideojuegoNuevo({...videojuegoNuevo, videojuegos: e.target.value})}
+                />
+                </div>
+                <Link className="text-center" to="/videojuego">
+                <button className="btn btn-success m-1 w-50 mt-4" 
+                  onClick={newVideoJuego}>
+                  Save
+                </button>
+                </Link>
+              </div>
+            </li>
+      </ul>
+      <Link to="/videojuego">
+        <button className="btn btn-primary mt-2">Back home</button>
+      </Link>
+    </div>
+  );
+};

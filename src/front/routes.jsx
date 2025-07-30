@@ -17,6 +17,10 @@ import AdminCRUD from "./pages/AdminCRUD";
 import SingleUser from "./pages/SingleUser";
 import SingleAdmin from "./pages/SingleAdmin";
 import { EditTournament } from "./components/EditTournament.jsx";
+import { Videojuego } from "./components/VideoJuego.jsx";
+import { EditVideoJuego } from "./components/EditVideoJuego.jsx";
+import { CardVideoJuego } from "./components/CardVideoJuego.jsx";
+import { CreateVideoJuego } from "./components/CreateVideoJuego.jsx";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -30,6 +34,7 @@ export const router = createBrowserRouter(
       <Route path="/" element={<Layout />} errorElement={<h1>Not found!</h1>} >
 
         {/* Nested Routes: Defines sub-routes within the BaseHome component. */}
+        
         <Route path= "/" element={<Home />} />
         <Route path="/single/:theId" element={ <Single />} />  {/* Dynamic route for single items */}
         <Route path="/demo" element={<Demo />} />
@@ -41,6 +46,13 @@ export const router = createBrowserRouter(
         <Route path="/admin" element={<AdminCRUD />} />
         <Route path="/admin/:admin_id" element={<SingleAdmin/>} />
         <Route path="/editTournament/:id" element={ <EditTournament />} />
+
+
+
+        <Route path="/videojuego" element={<Videojuego />} />
+        <Route path="/createVideoJuego" element={ <CreateVideoJuego />} />
+        <Route path="/cardVideojuego/:id" element={ <CardVideoJuego />} />
+        <Route path="/editVideojuego/:id" element={ <EditVideoJuego />} />
       </Route>
     )
 );

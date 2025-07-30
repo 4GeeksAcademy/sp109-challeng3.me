@@ -9,6 +9,9 @@ export const Navbar = () => {
 					<span className="navbar-brand mb-0 h1">React Boilerplate</span>
 				</Link>
 				<div className="ml-auto d-flex gap-2">
+					<Link to="/videojuego">
+						<button className="btn btn-primary">CRUD Videojuego</button>
+					</Link>
 					<Link to="/user">
 						<button className="btn btn-primary">CRUD User</button>
 					</Link>
@@ -16,7 +19,7 @@ export const Navbar = () => {
 						<button className="btn btn-primary">CRUD Admin</button>
 					</Link>
 					<Link to="/tournament">
-						<button className="btn btn-primary">Crud Tournaments</button>
+						<button className="btn btn-primary">CRUD Tournaments</button>
 					</Link>
 					<Link to="/demo">
 						<button className="btn btn-primary">Check the Context in action</button>

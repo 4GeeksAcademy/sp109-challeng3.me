@@ -60,7 +60,7 @@ class Tournament(db.Model):
     
 class Videojuego(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
-    videojuegos: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+    videojuegos: Mapped[str] = mapped_column(nullable=False)
 
     def serialize(self):
         return {

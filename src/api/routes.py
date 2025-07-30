@@ -24,6 +24,61 @@ def get_videojuego():
 
     return jsonify(response_body), 200
 
+@api.route('/videojuego/<int:videojuego_id>', methods=['GET'])
+def get_videojuego_by_id(videojuego_id):
+    videojuego = db.session.get(Videojuego, videojuego_id)
+    if videojuego is None:
+        return 'Videojuego not found', 404
+
+    return jsonify(videojuego.serialize()), 200
+
+@api.route('/videojuego', methods=['POST'])
+def add_videojuego():
+    body = request.get_json()
+    new_videojuego = Videojuego(**body)
+    db.session.add(new_videojuego)
+    db.session.commit()
+
+    response_body = {
+        "videojuego": new_videojuego.serialize(),
+        "msg": "nuevo videojuego"
+    }
+
+    return jsonify(response_body), 200
+
+@api.route('/videojuego/<int:videojuego_id>', methods=['PUT'])
+def edit_videojuego(videojuego_id):
+    edit_videojuego = Videojuego.query.get(videojuego_id)
+    if edit_videojuego is None:
+        return 'Videojuego not found', 404
+
+    body = request.get_json()
+    for key, value in body.items():
+        setattr(edit_videojuego, key, value)
+
+    db.session.commit()
+
+    response_body = {
+        "videojuego": edit_videojuego.serialize(),
+        "msg": "videojuego editado"
+    }
+
+    return jsonify(response_body), 200
+
+@api.route('/videojuego/<int:videojuego_id>', methods=['DELETE'])
+def delete_videojuego(videojuego_id):
+    videojuego_delete = db.session.get(Videojuego, videojuego_id)
+    if videojuego_delete is None:
+        return 'Videojuego not found', 404
+
+    response_body = {
+        "msg": "se elimino videojuego"
+    }
+
+    db.session.delete(videojuego_delete)
+    db.session.commit()
+
+    return jsonify(response_body), 200
 
 @api.route('/tournament', methods=['GET'])
 def get_tournament():
