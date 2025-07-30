@@ -23,7 +23,8 @@ export const initialStore=()=>{
     videojuego: [],
     juego: [],
     editarVideoJuego: [{videojuegos: null}],
-    newVideoJuego: []
+    newVideoJuego: [],
+    user_team: []
   }
 }
 
@@ -108,6 +109,12 @@ export default function storeReducer(store, action = {}) {
 
     };
     
+      case 'get_user_team':
+        return {
+          ...store,
+          user_team: action.payload
+        };
+
       default:
         throw Error('Unknown action.');
   

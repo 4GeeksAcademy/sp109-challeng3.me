@@ -25,10 +25,17 @@ import UserTournamentCRUD from "./pages/UserTournamentCRUD.jsx";
 import CreateUserTournament from "./pages/CreateUserTournament.jsx";
 import SingleUserTournament from "./pages/SingleUserTournament.jsx";
 import EditUserTournament from "./pages/EditUserTournament.jsx";
+<<<<<<< HEAD
+import CreateUserTeam from "./pages/CreateUserTeam.jsx";
+import SingleUserTeam from "./pages/SingleUserTeam.jsx";
+import EditUserTeam from "./pages/EditUserTeam.jsx";
+import UserTeamCRUD from "./pages/UserTeamCRUD.jsx";
+=======
 import { Videojuego } from "./components/VideoJuego.jsx";
 import { EditVideoJuego } from "./components/EditVideoJuego.jsx";
 import { CardVideoJuego } from "./components/CardVideoJuego.jsx";
 import { CreateVideoJuego } from "./components/CreateVideoJuego.jsx";
+>>>>>>> develop
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -66,6 +73,10 @@ export const router = createBrowserRouter(
         <Route path="/createVideoJuego" element={ <CreateVideoJuego />} />
         <Route path="/cardVideojuego/:id" element={ <CardVideoJuego />} />
         <Route path="/editVideojuego/:id" element={ <EditVideoJuego />} />
+        <Route path="/user/team" element={<UserTeamCRUD />} />
+        <Route path="/user/team/create" element={<CreateUserTeam/>} />
+        <Route path="/user/team/:id" element={<SingleUserTeam/>} />
+        <Route path="/user/team/edit/:id" element={<EditUserTeam/>} />
       </Route>
     )
 );
