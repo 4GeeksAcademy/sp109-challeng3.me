@@ -82,6 +82,16 @@ class Team(db.Model):
             "premium": self.premium,
             "user_id": self.user_id
         }
+class Videojuego(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    videojuegos: Mapped[str] = mapped_column(nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "videojuegos": self.videojuegos,
+            # do not serialize the password, its a security breach
+        }
 
 class User_tournament(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)

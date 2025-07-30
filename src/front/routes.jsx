@@ -25,10 +25,17 @@ import UserTournamentCRUD from "./pages/UserTournamentCRUD.jsx";
 import CreateUserTournament from "./pages/CreateUserTournament.jsx";
 import SingleUserTournament from "./pages/SingleUserTournament.jsx";
 import EditUserTournament from "./pages/EditUserTournament.jsx";
+<<<<<<< HEAD
 import CreateUserTeam from "./pages/CreateUserTeam.jsx";
 import SingleUserTeam from "./pages/SingleUserTeam.jsx";
 import EditUserTeam from "./pages/EditUserTeam.jsx";
 import UserTeamCRUD from "./pages/UserTeamCRUD.jsx";
+=======
+import { Videojuego } from "./components/VideoJuego.jsx";
+import { EditVideoJuego } from "./components/EditVideoJuego.jsx";
+import { CardVideoJuego } from "./components/CardVideoJuego.jsx";
+import { CreateVideoJuego } from "./components/CreateVideoJuego.jsx";
+>>>>>>> develop
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -42,6 +49,7 @@ export const router = createBrowserRouter(
       <Route path="/" element={<Layout />} errorElement={<h1>Not found!</h1>} >
 
         {/* Nested Routes: Defines sub-routes within the BaseHome component. */}
+        
         <Route path= "/" element={<Home />} />
         <Route path="/single/:theId" element={ <Single />} />  {/* Dynamic route for single items */}
         <Route path="/demo" element={<Demo />} />
@@ -61,6 +69,10 @@ export const router = createBrowserRouter(
         <Route path="/user/tournament/create" element={<CreateUserTournament/>} />
         <Route path="/user/tournament/:id" element={<SingleUserTournament/>} />
         <Route path="/user/tournament/edit/:id" element={<EditUserTournament/>} />
+        <Route path="/videojuego" element={<Videojuego />} />
+        <Route path="/createVideoJuego" element={ <CreateVideoJuego />} />
+        <Route path="/cardVideojuego/:id" element={ <CardVideoJuego />} />
+        <Route path="/editVideojuego/:id" element={ <EditVideoJuego />} />
         <Route path="/user/team" element={<UserTeamCRUD />} />
         <Route path="/user/team/create" element={<CreateUserTeam/>} />
         <Route path="/user/team/:id" element={<SingleUserTeam/>} />

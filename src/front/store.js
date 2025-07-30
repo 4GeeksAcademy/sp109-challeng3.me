@@ -20,6 +20,10 @@ export const initialStore=()=>{
     editarTorneo: [{name: null}],
     teams: [],
     user_tournament: [],
+    videojuego: [],
+    juego: [],
+    editarVideoJuego: [{videojuegos: null}],
+    newVideoJuego: [],
     user_team: []
   }
 }
@@ -84,6 +88,26 @@ export default function storeReducer(store, action = {}) {
           ...store,
           user_tournament: action.payload
         };
+
+      case 'list_videojuego':
+        const  {juego}  = action.payload
+        return {
+        ...store,
+        videojuego:juego
+      };
+
+      case 'edit_videojuego':
+        return {
+          ...store,
+          editarVideoJuego: action.payload
+        };
+
+      case 'add_videojuego':
+        return {
+        ...store,
+      newVideoJuego: action.payload
+
+    };
     
       case 'get_user_team':
         return {
@@ -96,4 +120,5 @@ export default function storeReducer(store, action = {}) {
   
   }
 } 
+
 
