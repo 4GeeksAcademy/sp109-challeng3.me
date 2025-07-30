@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Admin, Tournament
+from api.models import db, User, Admin, Tournament, Team, User_tournament
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from sqlalchemy import select
@@ -249,3 +249,161 @@ def delete_admin(admin_id):
     db.session.commit()
 
     return 'Admin with id ' + str(admin_id) + ' has been deleted', 200
+
+@api.route('/team', methods=['GET'])
+def get_teams():
+
+    all_teams =  db.session.execute(select(Team)).scalars().all()
+    if all_teams is None:
+        return 'Cant get Teams', 400
+    
+    result = list(map(lambda team: team.serialize(), all_teams))
+
+    return jsonify(result), 200
+
+@api.route('/team/<int:team_id>', methods=['GET'])
+def get_team(team_id):
+
+    team =  db.session.execute(select(Team).where(Team.id == team_id)).scalars().first()
+    if team is None:
+        return 'Cant get the team', 400
+
+    return jsonify(team.serialize()), 200
+
+@api.route('/team', methods=['POST'])
+def add_team():
+
+    body = request.get_json()
+
+    if body is None:
+        return 'El cuerpo debe seguir la siguiente estructura, {"name": name, "user_id": user_id}', 400
+    if 'name' not in body:
+        return 'Debes especificar name', 400
+    if 'user_id' not in body:
+        return 'Debes especificar user_id', 400
+
+    
+    new_team =  Team(
+        name = body['name'],
+        level = 1,
+        premium = False,
+        user_id = body['user_id']
+    )
+
+    db.session.add(new_team)
+    db.session.commit()
+    
+    return 'Team successful created', 200
+
+@api.route('/team/<int:team_id>', methods=['PUT'])
+def edit_team(team_id):
+
+    body = request.get_json()
+    team = db.session.execute(select(Team).where(Team.id == team_id)).scalars().first()
+
+    if team is None:
+        return 'Team dont exist', 400
+
+    if body is None:
+        return 'El cuerpo debe seguir la siguiente estructura, {"name": name, "level": level, "premium": premium, "user_id": user_id}', 400
+    if 'name' in body:
+        team.name = body['name']
+    if 'level' in body:
+        team.level = body['level']
+    if 'premium' in body:
+        team.premium = body['premium']
+    if 'user_id' in body:
+        team.user_id = body['user_id']
+    
+    db.session.commit()
+    
+    return 'Team with id ' + str(team_id) + ' has been edited', 200
+
+@api.route('/team/<int:team_id>', methods=['DELETE'])
+def delete_team(team_id):
+
+    team = db.session.execute(select(Team).where(Team.id == team_id)).scalars().first()
+
+    if team is None:
+        return 'Team dont exist', 400
+
+    db.session.delete(team)
+    db.session.commit()
+
+    return 'Team with id ' + str(team_id) + ' has been deleted', 200
+
+@api.route('/user/tournament', methods=['GET'])
+def get_user_tournaments():
+
+    all_user_tournament =  db.session.execute(select(User_tournament)).scalars().all()
+    if all_user_tournament is None:
+        return 'Cant get User_tournament', 400
+    
+    result = list(map(lambda user_tournament: user_tournament.serialize(), all_user_tournament))
+
+    return jsonify(result), 200
+
+@api.route('/user/tournament/<int:id>', methods=['GET'])
+def get_user_tournament(id):
+
+    user_tournament =  db.session.execute(select(User_tournament).where(User_tournament.id == id)).scalars().first()
+    if user_tournament is None:
+        return 'Cant get the user tournament', 400
+
+    return jsonify(user_tournament.serialize()), 200
+
+@api.route('/user/tournament', methods=['POST'])
+def add_user_tournament():
+
+    body = request.get_json()
+
+    if body is None:
+        return 'El cuerpo debe seguir la siguiente estructura, {"tournament_id": int, "tournament_id": int}', 400
+    if 'tournament_id' not in body:
+        return 'Debes especificar tournament_id', 400
+    if 'tournament_id' not in body:
+        return 'Debes especificar user_id', 400
+
+    
+    new_user_tournament =  User_tournament(
+        tournament_id = body['tournament_id'],
+        user_id = body['user_id']
+    )
+
+    db.session.add(new_user_tournament)
+    db.session.commit()
+    
+    return 'User_tournament successful created', 200
+
+@api.route('/user/tournament/<int:id>', methods=['PUT'])
+def edit_user_tournament(id):
+
+    body = request.get_json()
+    user_tournament = db.session.execute(select(User_tournament).where(User_tournament.id == id)).scalars().first()
+
+    if user_tournament is None:
+        return 'user_tournament dont exist', 400
+
+    if body is None:
+        return 'El cuerpo debe seguir la siguiente estructura, {"tournament_id": int, "user_id": int}', 400
+    if 'tournament_id' in body:
+        user_tournament.tournament_id = body['tournament_id']
+    if 'user_id' in body:
+        user_tournament.user_id = body['user_id']
+    
+    db.session.commit()
+    
+    return 'user_tournament with id ' + str(id) + ' has been edited', 200
+
+@api.route('/user/tournament/<int:id>', methods=['DELETE'])
+def delete_user_tournament(id):
+
+    user_tournament = db.session.execute(select(User_tournament).where(User_tournament.id == id)).scalars().first()
+
+    if user_tournament is None:
+        return 'user_tournament dont exist', 400
+
+    db.session.delete(user_tournament)
+    db.session.commit()
+
+    return 'user_tournament with id ' + str(id) + ' has been deleted', 200
