@@ -19,7 +19,11 @@ export const initialStore=()=>{
     newTournament: [],
     editarTorneo: [{name: null}],
     teams: [],
-    user_tournament: []
+    user_tournament: [],
+    videojuego: [],
+    juego: [],
+    editarVideoJuego: [{videojuegos: null}],
+    newVideoJuego: []
   }
 }
 
@@ -83,10 +87,31 @@ export default function storeReducer(store, action = {}) {
           ...store,
           user_tournament: action.payload
         };
+
+      case 'list_videojuego':
+        const  {juego}  = action.payload
+        return {
+        ...store,
+        videojuego:juego
+      };
+
+      case 'edit_videojuego':
+        return {
+          ...store,
+          editarVideoJuego: action.payload
+        };
+
+      case 'add_videojuego':
+        return {
+        ...store,
+      newVideoJuego: action.payload
+
+    };
     
       default:
         throw Error('Unknown action.');
   
   }
 } 
+
 
