@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Admin, Tournament
+from api.models import db, User, Admin, Tournament, Videojuego
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from sqlalchemy import select
@@ -11,6 +11,18 @@ api = Blueprint('api', __name__)
 
 # Allow CORS requests to this API
 CORS(api)
+
+@api.route('/videojuego', methods=['GET'])
+def get_videojuego():
+
+    all_videojuego = Videojuego.query.all()
+    results = list(map(lambda videojuego : videojuego.serialize(),all_videojuego))
+
+    response_body = {
+        "videojuego": results
+    }
+
+    return jsonify(response_body), 200
 
 
 @api.route('/tournament', methods=['GET'])

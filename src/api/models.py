@@ -57,4 +57,15 @@ class Tournament(db.Model):
             "prize": self.prize,
             # do not serialize the password, its a security breach
         }
+    
+class Videojuego(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    videojuegos: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "videojuegos": self.videojuegos,
+            # do not serialize the password, its a security breach
+        }
 
