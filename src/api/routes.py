@@ -6,6 +6,7 @@ from api.models import db, User, Admin, Tournament, Team, User_tournament, Video
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from sqlalchemy import select
+from flask_jwt_extended import create_access_token
 
 api = Blueprint('api', __name__)
 
@@ -550,3 +551,28 @@ def delete_user_team(id):
     db.session.commit()
 
     return 'user_team with id ' + str(id) + ' has been deleted', 200
+
+@api.route('/admin/login', methods=['POST'])
+def admin_login():
+    body = request.get_json()
+
+    if body is None:
+        return 'El cuerpo debe seguir la siguiente estructura, {"username": username, "password": password}', 400
+    if 'username' not in body:
+        return 'Debes especificar username', 400
+    if 'password' not in body:
+        return 'Debes especificar password', 400
+
+    admin = db.session.execute(select(Admin).where(Admin.username == body['username'], Admin.password == body['password'])).scalars().first()
+
+    if admin is None:
+        return 'Admin not found', 404
+
+    access_token = create_access_token(identity=admin.id)
+
+    response_body = {
+        "msg": "Login successful",
+        "access_token": access_token
+    }
+
+    return jsonify(response_body), 200

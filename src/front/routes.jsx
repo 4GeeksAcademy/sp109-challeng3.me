@@ -33,6 +33,8 @@ import CreateUserTeam from "./pages/CreateUserTeam.jsx";
 import SingleUserTeam from "./pages/SingleUserTeam.jsx";
 import EditUserTeam from "./pages/EditUserTeam.jsx";
 import UserTeamCRUD from "./pages/UserTeamCRUD.jsx";
+import PrivateAdmin from "./pages/PrivateAdmin.jsx";
+import LoginAdmin from "./pages/LoginAdmin.jsx";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -74,6 +76,8 @@ export const router = createBrowserRouter(
         <Route path="/user/team/create" element={<CreateUserTeam/>} />
         <Route path="/user/team/:id" element={<SingleUserTeam/>} />
         <Route path="/user/team/edit/:id" element={<EditUserTeam/>} />
+        <Route path="/admin/dashboard" element={<PrivateAdmin/>} />
+        <Route path="/admin/login" element={<LoginAdmin />} />
       </Route>
     )
 );
