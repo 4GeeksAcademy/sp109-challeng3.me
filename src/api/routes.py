@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Admin, Tournament, Team, User_tournament
+from api.models import db, User, Admin, Tournament, Team, User_tournament, User_team
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from sqlalchemy import select
@@ -407,3 +407,79 @@ def delete_user_tournament(id):
     db.session.commit()
 
     return 'user_tournament with id ' + str(id) + ' has been deleted', 200
+
+@api.route('/user/team', methods=['GET'])
+def get_user_teams():
+
+    all_user_team =  db.session.execute(select(User_team)).scalars().all()
+    if all_user_team is None:
+        return 'Cant get User_team', 400
+    
+    result = list(map(lambda user_team: user_team.serialize(), all_user_team))
+
+    return jsonify(result), 200
+
+@api.route('/user/team/<int:id>', methods=['GET'])
+def get_user_team(id):
+
+    user_team =  db.session.execute(select(User_team).where(User_team.id == id)).scalars().first()
+    if user_team is None:
+        return 'Cant get the user team', 400
+
+    return jsonify(user_team.serialize()), 200
+
+@api.route('/user/team', methods=['POST'])
+def add_user_team():
+
+    body = request.get_json()
+
+    if body is None:
+        return 'El cuerpo debe seguir la siguiente estructura, {"team_id": int, "user_id": int}', 400
+    if 'team_id' not in body:
+        return 'Debes especificar team_id', 400
+    if 'user_id' not in body:
+        return 'Debes especificar user_id', 400
+
+    
+    new_user_team =  User_team(
+        team_id = body['team_id'],
+        user_id = body['user_id']
+    )
+
+    db.session.add(new_user_team)
+    db.session.commit()
+    
+    return 'User_team successful created', 200
+
+@api.route('/user/team/<int:id>', methods=['PUT'])
+def edit_user_team(id):
+
+    body = request.get_json()
+    user_team = db.session.execute(select(User_team).where(User_team.id == id)).scalars().first()
+
+    if user_team is None:
+        return 'user_team dont exist', 400
+
+    if body is None:
+        return 'El cuerpo debe seguir la siguiente estructura, {"team_id": int, "user_id": int}', 400
+    if 'team_id' in body:
+        user_team.team_id = body['team_id']
+    if 'user_id' in body:
+        user_team.user_id = body['user_id']
+    
+    db.session.commit()
+    
+    return 'user_team with id ' + str(id) + ' has been edited', 200
+
+@api.route('/user/team/<int:id>', methods=['DELETE'])
+def delete_user_team(id):
+
+    user_team = db.session.execute(select(User_team).where(User_team.id == id)).scalars().first()
+
+    if user_team is None:
+        return 'user_teamt dont exist', 400
+
+    db.session.delete(user_team)
+    db.session.commit()
+
+    return 'user_team with id ' + str(id) + ' has been deleted', 200

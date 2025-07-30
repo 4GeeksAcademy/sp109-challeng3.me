@@ -20,6 +20,7 @@ class User(db.Model):
 
     team: Mapped[List["Team"]] = relationship(back_populates="user")
     user_tournament: Mapped[List["User_tournament"]] = relationship(back_populates="user")
+    user_team: Mapped[List["User_team"]] = relationship(back_populates="user")
 
     def serialize(self):
         return {
@@ -71,6 +72,8 @@ class Team(db.Model):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     user: Mapped["User"] = relationship(back_populates="team")
 
+    user_team: Mapped[List["User_team"]] = relationship(back_populates="team")
+
     def serialize(self):
         return {
             "id": self.id,
@@ -92,5 +95,20 @@ class User_tournament(db.Model):
         return {
             "id": self.id,
             "tournament_id": self.tournament_id,
+            "user_id": self.user_id
+        }
+    
+class User_team(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    team_id: Mapped[int] = mapped_column(ForeignKey("team.id"))
+    team: Mapped["Team"] = relationship(back_populates="user_team")
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    user: Mapped["User"] = relationship(back_populates="user_team")
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "team_id": self.team_id,
             "user_id": self.user_id
         }

@@ -25,6 +25,10 @@ import UserTournamentCRUD from "./pages/UserTournamentCRUD.jsx";
 import CreateUserTournament from "./pages/CreateUserTournament.jsx";
 import SingleUserTournament from "./pages/SingleUserTournament.jsx";
 import EditUserTournament from "./pages/EditUserTournament.jsx";
+import CreateUserTeam from "./pages/CreateUserTeam.jsx";
+import SingleUserTeam from "./pages/SingleUserTeam.jsx";
+import EditUserTeam from "./pages/EditUserTeam.jsx";
+import UserTeamCRUD from "./pages/UserTeamCRUD.jsx";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -57,6 +61,10 @@ export const router = createBrowserRouter(
         <Route path="/user/tournament/create" element={<CreateUserTournament/>} />
         <Route path="/user/tournament/:id" element={<SingleUserTournament/>} />
         <Route path="/user/tournament/edit/:id" element={<EditUserTournament/>} />
+        <Route path="/user/team" element={<UserTeamCRUD />} />
+        <Route path="/user/team/create" element={<CreateUserTeam/>} />
+        <Route path="/user/team/:id" element={<SingleUserTeam/>} />
+        <Route path="/user/team/edit/:id" element={<EditUserTeam/>} />
       </Route>
     )
 );

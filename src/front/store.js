@@ -19,7 +19,8 @@ export const initialStore=()=>{
     newTournament: [],
     editarTorneo: [{name: null}],
     teams: [],
-    user_tournament: []
+    user_tournament: [],
+    user_team: []
   }
 }
 
@@ -84,6 +85,12 @@ export default function storeReducer(store, action = {}) {
           user_tournament: action.payload
         };
     
+      case 'get_user_team':
+        return {
+          ...store,
+          user_team: action.payload
+        };
+
       default:
         throw Error('Unknown action.');
   
