@@ -21,6 +21,8 @@ class User(db.Model):
     team: Mapped[List["Team"]] = relationship(back_populates="user")
     user_tournament: Mapped[List["User_tournament"]] = relationship(back_populates="user")
     user_team: Mapped[List["User_team"]] = relationship(back_populates="user")
+    
+    user_videojuego: Mapped[List["User_videojuego"]] = relationship(back_populates="user")
 
     def serialize(self):
         return {
@@ -86,6 +88,8 @@ class Videojuego(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     videojuegos: Mapped[str] = mapped_column(nullable=False)
 
+    user_videojuego: Mapped[List["User_videojuego"]] = relationship(back_populates="videojuego")
+
     def serialize(self):
         return {
             "id": self.id,
@@ -120,5 +124,22 @@ class User_team(db.Model):
         return {
             "id": self.id,
             "team_id": self.team_id,
+            "user_id": self.user_id
+        }
+
+class User_videojuego(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    ranking: Mapped[str] = mapped_column(nullable=False)
+
+    videojuego_id: Mapped[int] = mapped_column(ForeignKey("videojuego.id"))
+    videojuego: Mapped["Videojuego"] = relationship(back_populates="user_videojuego")
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    user: Mapped["User"] = relationship(back_populates="user_videojuego")
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "ranking": self.ranking,
+            "videojuego_id": self.videojuego_id,
             "user_id": self.user_id
         }

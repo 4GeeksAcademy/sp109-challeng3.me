@@ -25,17 +25,18 @@ import UserTournamentCRUD from "./pages/UserTournamentCRUD.jsx";
 import CreateUserTournament from "./pages/CreateUserTournament.jsx";
 import SingleUserTournament from "./pages/SingleUserTournament.jsx";
 import EditUserTournament from "./pages/EditUserTournament.jsx";
-<<<<<<< HEAD
-import CreateUserTeam from "./pages/CreateUserTeam.jsx";
-import SingleUserTeam from "./pages/SingleUserTeam.jsx";
-import EditUserTeam from "./pages/EditUserTeam.jsx";
-import UserTeamCRUD from "./pages/UserTeamCRUD.jsx";
-=======
 import { Videojuego } from "./components/VideoJuego.jsx";
 import { EditVideoJuego } from "./components/EditVideoJuego.jsx";
 import { CardVideoJuego } from "./components/CardVideoJuego.jsx";
 import { CreateVideoJuego } from "./components/CreateVideoJuego.jsx";
->>>>>>> develop
+import CreateUserTeam from "./pages/CreateUserTeam.jsx";
+import SingleUserTeam from "./pages/SingleUserTeam.jsx";
+import EditUserTeam from "./pages/EditUserTeam.jsx";
+import UserTeamCRUD from "./pages/UserTeamCRUD.jsx";
+import { UserVideoJuego } from "./components/UserVideoJuego.jsx";
+import { CardUserVideoJuego } from "./components/CardUserVideoJuego.jsx";
+import { EditUserVideoJuego } from "./components/EditUserVideoJuego.jsx";
+import { CreateUserVideoJuego } from "./components/CreateUserVideoJuego.jsx";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -77,6 +78,10 @@ export const router = createBrowserRouter(
         <Route path="/user/team/create" element={<CreateUserTeam/>} />
         <Route path="/user/team/:id" element={<SingleUserTeam/>} />
         <Route path="/user/team/edit/:id" element={<EditUserTeam/>} />
+        <Route path="/user/videojuego" element={<UserVideoJuego />} />
+        <Route path="/user/videojuego/:id" element={<CardUserVideoJuego />} />
+        <Route path="/user/videojuego/edit/:id" element={<EditUserVideoJuego />} />
+        <Route path="/user/videojuego/create" element={<CreateUserVideoJuego />} />
       </Route>
     )
 );
