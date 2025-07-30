@@ -19,6 +19,7 @@ class User(db.Model):
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
 
     team: Mapped[List["Team"]] = relationship(back_populates="user")
+    user_tournament: Mapped[List["User_tournament"]] = relationship(back_populates="user")
 
     def serialize(self):
         return {
@@ -50,6 +51,7 @@ class Tournament(db.Model):
     level: Mapped[str] = mapped_column(nullable=False)
     prize: Mapped[str] = mapped_column(nullable=False)
 
+    user_tournament: Mapped[List["User_tournament"]] = relationship(back_populates="tournament")
 
     def serialize(self):
         return {
@@ -75,5 +77,20 @@ class Team(db.Model):
             "name": self.name,
             "level": self.level,
             "premium": self.premium,
+            "user_id": self.user_id
+        }
+
+class User_tournament(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    tournament_id: Mapped[int] = mapped_column(ForeignKey("tournament.id"))
+    tournament: Mapped["Tournament"] = relationship(back_populates="user_tournament")
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    user: Mapped["User"] = relationship(back_populates="user_tournament")
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "tournament_id": self.tournament_id,
             "user_id": self.user_id
         }

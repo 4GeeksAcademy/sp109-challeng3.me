@@ -16,13 +16,13 @@ export const Navbar = () => {
 						<button className="btn btn-primary">CRUD Admin</button>
 					</Link>
 					<Link to="/tournament">
-						<button className="btn btn-primary">Crud Tournaments</button>
+						<button className="btn btn-primary">CRUD Tournaments</button>
 					</Link>
 					<Link to="/team">
-						<button className="btn btn-primary">Crud Teams</button>
+						<button className="btn btn-primary">CRUD Teams</button>
 					</Link>
-					<Link to="/demo">
-						<button className="btn btn-primary">Check the Context in action</button>
+					<Link to="/user/tournament">
+						<button className="btn btn-primary">CRUD User_Tournament</button>
 					</Link>
 
 				</div>
