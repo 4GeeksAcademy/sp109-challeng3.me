@@ -18,7 +18,8 @@ export const initialStore=()=>{
     tournament: [],
     newTournament: [],
     editarTorneo: [{name: null}],
-    teams: []
+    teams: [],
+    user_tournament: []
   }
 }
 
@@ -75,6 +76,12 @@ export default function storeReducer(store, action = {}) {
         return {
           ...store,
           teams: action.payload
+        };
+
+      case 'get_user_tournament':
+        return {
+          ...store,
+          user_tournament: action.payload
         };
     
       default:
