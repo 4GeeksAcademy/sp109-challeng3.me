@@ -13,7 +13,7 @@ const PrivateAdmin = () => {
       const decoded = jwtDecode(token);
 
       // Verificamos si el rol es "admin"
-      if (decoded?.sub?.role === 'admin') {
+      if (decoded?.role === 'admin') {
         dispatch({ type: 'set_admin_auth', payload: true });
       } else {
         dispatch({ type: 'set_admin_auth', payload: false });

@@ -6,13 +6,13 @@ from api.models import db, User, Admin, Tournament, Team, User_tournament, Video
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from sqlalchemy import select
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
 import json
 
 api = Blueprint('api', __name__)
 
 # Allow CORS requests to this API
-CORS(api)
+CORS(api, supports_credentials=True, expose_headers=["Authorization"])
 
 @api.route('/videojuego', methods=['GET'])
 def get_videojuego():
@@ -101,9 +101,11 @@ def get_tournament_by_id(tournament_id):
     return jsonify(tournament.serialize()), 200
 
 @api.route('/tournament', methods=['POST'])
-
+@jwt_required()
 def add_tournament():
-
+    claims = get_jwt()
+    if claims.get("role") != "admin":
+        return jsonify({"msg": "No autorizado"}), 403
 
     body = request.get_json()
     new_torneo = Tournament(**body)
@@ -120,8 +122,8 @@ def add_tournament():
 @api.route('/tournament/<int:tournament_id>', methods=['PUT'])
 @jwt_required()
 def edit_tournament(tournament_id):
-    identity = get_jwt_identity()
-    if identity.get("role") != "admin":
+    claims = get_jwt()
+    if claims.get("role") != "admin":
         return jsonify({"msg": "No autorizado"}), 403
 
     edit_torneo = Tournament.query.get(tournament_id)
@@ -144,8 +146,8 @@ def edit_tournament(tournament_id):
 @api.route('/tournament/<int:tournament_id>', methods=['DELETE'])
 @jwt_required()
 def delete_tournament(tournament_id):
-    identity = get_jwt_identity()
-    if identity.get("role") != "admin":
+    claims = get_jwt()
+    if claims.get("role") != "admin":
         return jsonify({"msg": "No autorizado"}), 403
     
     tournament_delete = db.session.get(Tournament,tournament_id)
@@ -582,7 +584,10 @@ def admin_login():
     if admin is None:
         return 'Admin not found', 404
 
-    access_token = create_access_token(identity={"id": admin.id, "role": "admin"})
+    access_token = create_access_token(
+        identity=str(admin.id),
+        additional_claims={"role": "admin"}
+    )
 
     response_body = {
         "msg": "Login successful",

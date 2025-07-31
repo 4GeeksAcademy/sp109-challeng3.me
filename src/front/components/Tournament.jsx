@@ -15,7 +15,7 @@ export const Tournament = () => {
         if (token) {
             try {
                 const decoded = jwtDecode(token);
-                if (decoded.sub?.role === "admin") {
+                if (decoded.role === "admin") {
                     setIsAdmin(true);
                 }
             } catch (error) {
