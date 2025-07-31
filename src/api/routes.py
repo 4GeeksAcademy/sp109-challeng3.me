@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Admin, Tournament, Team, User_tournament, Videojuego, User_team
+from api.models import db, User, Admin, Tournament, Team, User_tournament, Videojuego, User_team, User_videojuego
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from sqlalchemy import select
@@ -12,6 +12,74 @@ api = Blueprint('api', __name__)
 
 # Allow CORS requests to this API
 CORS(api)
+
+@api.route('/user/videojuego', methods=['GET'])
+def get_user_videojuego():
+
+    all_user_videojuego = User_videojuego.query.all()
+    results = list(map(lambda user_videojuego : user_videojuego.serialize(),all_user_videojuego))
+
+    response_body = {
+        "user_videojuego": results
+    }
+
+    return jsonify(response_body), 200
+
+@api.route('/user/videojuego/<int:user_videojuego_id>', methods=['GET'])
+def get_user_videojuego_by_id(user_videojuego_id):
+    user_videojuego = db.session.get(User_videojuego, user_videojuego_id)
+    if user_videojuego is None:
+        return 'User_videojuego not found', 404
+
+    return jsonify(user_videojuego.serialize()), 200
+
+@api.route('/user/videojuego', methods=['POST'])
+def add_user_videojuego():
+    body = request.get_json()
+    new_user_videojuego = User_videojuego(**body)
+    db.session.add(new_user_videojuego)
+    db.session.commit()
+
+    response_body = {
+        "user_videojuego": new_user_videojuego.serialize(),
+        "msg": "nuevo user_videojuego"
+    }
+
+    return jsonify(response_body), 200
+
+@api.route('/user/videojuego/<int:user_videojuego_id>', methods=['PUT'])
+def edit_user_videojuego(user_videojuego_id):
+    edit_user_videojuego = User_videojuego.query.get(user_videojuego_id)
+    if edit_user_videojuego is None:
+        return 'User_videojuego not found', 404
+
+    body = request.get_json()
+    for key, value in body.items():
+        setattr(edit_user_videojuego, key, value)
+
+    db.session.commit()
+
+    response_body = {
+        "user_videojuego": edit_user_videojuego.serialize(),
+        "msg": "user_videojuego editado"
+    }
+
+    return jsonify(response_body), 200
+
+@api.route('/user/videojuego/<int:user_videojuego_id>', methods=['DELETE'])
+def delete_user_videojuego(user_videojuego_id):
+    user_videojuego_delete = db.session.get(User_videojuego, user_videojuego_id)
+    if user_videojuego_delete is None:
+        return 'User_videojuego not found', 404
+
+    response_body = {
+        "msg": "se elimino user_videojuego"
+    }
+
+    db.session.delete(user_videojuego_delete)
+    db.session.commit()
+
+    return jsonify(response_body), 200
 
 @api.route('/videojuego', methods=['GET'])
 def get_videojuego():

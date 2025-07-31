@@ -25,7 +25,10 @@ export const initialStore=()=>{
     editarVideoJuego: [{videojuegos: null}],
     newVideoJuego: [],
     user_team: [],
-    admin_auth: false
+    admin_auth: false,
+    userVideoJuego: [],
+    editarUserVideoJuego: [{videoJuego_id: null, user_id: null, ranking: null}],
+    newUserVideoJuego: []
   }
 }
 
@@ -120,6 +123,22 @@ export default function storeReducer(store, action = {}) {
         return {
           ...store,
           admin_auth: action.payload
+        };
+            case 'list_user_videojuego':
+        const { userVideoJuego } = action.payload
+          return {
+          ...store,
+          userVideoJuego: userVideoJuego
+        };
+      case 'edit_user_videojuego':
+        return {
+          ...store,
+          editarUserVideoJuego: action.payload
+        };
+      case 'add_user_videojuego':
+        return {
+          ...store,
+          newUserVideoJuego: action.payload
         };
 
       default:

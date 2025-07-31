@@ -9,6 +9,9 @@ export const Navbar = () => {
 					<span className="navbar-brand mb-0 h1">React Boilerplate</span>
 				</Link>
 				<div className="ml-auto d-flex gap-2">
+					<Link to="/user/videojuego">
+						<button className="btn btn-primary">CRUD User/Videojuego</button>
+					</Link>
 					<Link to="/admin/dashboard">
 						<button className="btn btn-primary">Zona Administración</button>
 					</Link>
