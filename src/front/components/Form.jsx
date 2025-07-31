@@ -1,36 +1,34 @@
 // Import necessary components from react-router-dom and other parts of the application.
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";  // Custom hook for accessing the global state.
 import { useEffect, useState } from "react";
 
 export const Form = () => {
   // Access the global state and dispatch function using the useGlobalReducer hook.
   const { store, dispatch } = useGlobalReducer();
+  const navigate = useNavigate()
   const [torneoNuevo, setTorneoNuevo] = useState({
     name: "",
-    level: "",
-    prize: "",
+    level: 0,
+    prize: 0
   });
 
   useEffect(() => {
     setTorneoNuevo(store.newTournament);
   }, []);
 
-    function newTournament (){
-      const requestOptions = {
+  function newTournament (){
+      fetch(import.meta.env.VITE_BACKEND_URL + "/api/tournament", {
         method: "POST",
-        headers: {'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                  name: torneoNuevo.name,
-                  level: torneoNuevo.level,
-                  prize: torneoNuevo.prize
-              })
-      };
+        headers: {
+            "Content-Type": "application/json"
 
-      fetch(import.meta.env.VITE_BACKEND_URL + "/api/tournament/", requestOptions)
-        .then((response) => response.json())
-        .then((data) => window.location.href = "/tournament")
-}
+            },
+        body: JSON.stringify(torneoNuevo)
+        })
+      .then(response => response.json())
+      .then(result => navigate("/tournament"))
+  }
 
   return (
     <div className="container m-auto mt-5">

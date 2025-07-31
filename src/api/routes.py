@@ -6,7 +6,8 @@ from api.models import db, User, Admin, Tournament, Team, User_tournament, Video
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from sqlalchemy import select
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+import json
 
 api = Blueprint('api', __name__)
 
@@ -100,7 +101,10 @@ def get_tournament_by_id(tournament_id):
     return jsonify(tournament.serialize()), 200
 
 @api.route('/tournament', methods=['POST'])
+
 def add_tournament():
+
+
     body = request.get_json()
     new_torneo = Tournament(**body)
     db.session.add(new_torneo)
@@ -114,7 +118,12 @@ def add_tournament():
     return jsonify(response_body), 200
 
 @api.route('/tournament/<int:tournament_id>', methods=['PUT'])
+@jwt_required()
 def edit_tournament(tournament_id):
+    identity = get_jwt_identity()
+    if identity.get("role") != "admin":
+        return jsonify({"msg": "No autorizado"}), 403
+
     edit_torneo = Tournament.query.get(tournament_id)
     if edit_torneo is None:
         return 'Tournament not found', 404
@@ -133,7 +142,12 @@ def edit_tournament(tournament_id):
     return jsonify(response_body), 200
 
 @api.route('/tournament/<int:tournament_id>', methods=['DELETE'])
+@jwt_required()
 def delete_tournament(tournament_id):
+    identity = get_jwt_identity()
+    if identity.get("role") != "admin":
+        return jsonify({"msg": "No autorizado"}), 403
+    
     tournament_delete = db.session.get(Tournament,tournament_id)
     response_body ={
         "msg":"se elimino torneo"
@@ -429,7 +443,7 @@ def add_user_tournament():
         return 'El cuerpo debe seguir la siguiente estructura, {"tournament_id": int, "tournament_id": int}', 400
     if 'tournament_id' not in body:
         return 'Debes especificar tournament_id', 400
-    if 'tournament_id' not in body:
+    if 'user_id' not in body:
         return 'Debes especificar user_id', 400
 
     
@@ -568,7 +582,7 @@ def admin_login():
     if admin is None:
         return 'Admin not found', 404
 
-    access_token = create_access_token(identity=admin.id)
+    access_token = create_access_token(identity={"id": admin.id, "role": "admin"})
 
     response_body = {
         "msg": "Login successful",

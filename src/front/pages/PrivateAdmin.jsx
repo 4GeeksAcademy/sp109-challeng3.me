@@ -1,16 +1,25 @@
 import React, { useEffect } from 'react';
 import useGlobalReducer from '../hooks/useGlobalReducer';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 const PrivateAdmin = () => {
-    const { store, dispatch } = useGlobalReducer()
-    const token = localStorage.getItem('token')
-    const navigate = useNavigate();
+  const { store, dispatch } = useGlobalReducer()
+  const token = localStorage.getItem('token')
+  const navigate = useNavigate();
 
-   useEffect(() => { 
-    if (!token || store.admin_auth !== true) {
-        navigate('/admin/login')
-    }}, [])
+  useEffect(() => { 
+    if (token) {
+      const decoded = jwtDecode(token);
+
+      // Verificamos si el rol es "admin"
+      if (decoded?.sub?.role === 'admin') {
+        dispatch({ type: 'set_admin_auth', payload: true });
+      } else {
+        dispatch({ type: 'set_admin_auth', payload: false });
+        navigate('/admin/login');
+    }
+  }}, [])
 
     const logout = () => {
         localStorage.removeItem('token')
