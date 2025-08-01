@@ -36,6 +36,9 @@ export const Navbar = () => {
 					<Link to="/user/team">
 						<button className="btn btn-primary">CRUD User_Team</button>
 					</Link>
+					<Link to="/team/tournament">
+						<button className="btn btn-primary">CRUD Team_Tournament</button>
+					</Link>
 
 				</div>
 			</div>

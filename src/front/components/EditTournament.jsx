@@ -10,8 +10,9 @@ export const EditTournament = () => {
 
   const [editTorneo, setEditTorneo] = useState({
     name: "",
-    level: "",
-    prize: ""
+    level: 0,
+    prize: 0,
+    type: ""
   });
   
   function getEditTorneo() {
@@ -76,6 +77,17 @@ export const EditTournament = () => {
                 value={editTorneo.prize}
                 onChange={(e) =>
                   setEditTorneo({ ...editTorneo, prize: e.target.value })
+                }
+              />
+            </div>
+            <div className="col-8">
+              Type:
+              <input
+                type="text"
+                className="form-control mt-2"
+                value={editTorneo.type}
+                onChange={(e) =>
+                  setEditTorneo({ ...editTorneo, type: e.target.value })
                 }
               />
             </div>

@@ -10,7 +10,8 @@ export const Form = () => {
   const [torneoNuevo, setTorneoNuevo] = useState({
     name: "",
     level: 0,
-    prize: 0
+    prize: 0,
+    type: ""
   });
 
   useEffect(() => {
@@ -63,6 +64,15 @@ export const Form = () => {
                     className="form-control mt-2"
                     value={torneoNuevo.prize}
                     onChange={(e) => setTorneoNuevo({...torneoNuevo, prize: e.target.value})}
+                  />
+                </div>
+                <div className="col-8">
+                Type:
+                  <input
+                    type="text"
+                    className="form-control mt-2"
+                    value={torneoNuevo.type}
+                    onChange={(e) => setTorneoNuevo({...torneoNuevo, type: e.target.value})}
                   />
                 </div>
                 <Link className="text-center" to="/tournament">
