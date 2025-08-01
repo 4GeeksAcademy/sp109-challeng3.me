@@ -16,10 +16,16 @@ const PrivateAdmin = () => {
       if (decoded?.role === 'admin') {
         dispatch({ type: 'set_admin_auth', payload: true });
       } else {
-        dispatch({ type: 'set_admin_auth', payload: false });
-        navigate('/admin/login');
+        dispatch({ type: 'set_admin_auth', payload: false })
+        navigate('/admin/login')
+      }
     }
-  }}, [])
+  else {
+      dispatch({ type: 'set_admin_auth', payload: false })
+      navigate('/admin/login')
+    }
+  }, [token])
+
 
     const logout = () => {
         localStorage.removeItem('token')
