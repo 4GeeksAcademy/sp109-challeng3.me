@@ -12,6 +12,9 @@ export const Navbar = () => {
 					<Link to="/user/login">
 						<button className="btn btn-primary">User Login</button>
 					</Link>
+					<Link to="/user/videojuego">
+						<button className="btn btn-primary">CRUD User/Videojuego</button>
+					</Link>
 					<Link to="/admin/dashboard">
 						<button className="btn btn-primary">Zona Administración</button>
 					</Link>
@@ -35,6 +38,9 @@ export const Navbar = () => {
 					</Link>
 					<Link to="/user/team">
 						<button className="btn btn-primary">CRUD User_Team</button>
+					</Link>
+					<Link to="/team/tournament">
+						<button className="btn btn-primary">CRUD Team_Tournament</button>
 					</Link>
 
 				</div>

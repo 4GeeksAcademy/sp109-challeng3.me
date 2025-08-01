@@ -35,6 +35,14 @@ import EditUserTeam from "./pages/EditUserTeam.jsx";
 import UserTeamCRUD from "./pages/UserTeamCRUD.jsx";
 import PrivateAdmin from "./pages/PrivateAdmin.jsx";
 import LoginAdmin from "./pages/LoginAdmin.jsx";
+import { UserVideoJuego } from "./components/UserVideoJuego.jsx";
+import { CardUserVideoJuego } from "./components/CardUserVideoJuego.jsx";
+import { EditUserVideoJuego } from "./components/EditUserVideoJuego.jsx";
+import { CreateUserVideoJuego } from "./components/CreateUserVideoJuego.jsx";
+import TeamTournamentCRUD from "./pages/TeamTournamentCRUD.jsx";
+import CreateTeamTournament from "./pages/CreateTeamTournament.jsx";
+import SingleTeamTournament from "./pages/SingleTeamTournament.jsx";
+import EditTeamTournament from "./pages/EditTeamTournament.jsx";
 import UserLogin from "./pages/UserLogin.jsx";
 import PrivateUser from "./pages/PrivateUser.jsx";
 
@@ -80,6 +88,14 @@ export const router = createBrowserRouter(
         <Route path="/user/team/edit/:id" element={<EditUserTeam/>} />
         <Route path="/admin/dashboard" element={<PrivateAdmin/>} />
         <Route path="/admin/login" element={<LoginAdmin />} />
+        <Route path="/user/videojuego" element={<UserVideoJuego />} />
+        <Route path="/user/videojuego/:id" element={<CardUserVideoJuego />} />
+        <Route path="/user/videojuego/edit/:id" element={<EditUserVideoJuego />} />
+        <Route path="/user/videojuego/create" element={<CreateUserVideoJuego />} />
+        <Route path="/team/tournament" element={<TeamTournamentCRUD />} />
+        <Route path="/team/tournament/create" element={<CreateTeamTournament/>} />
+        <Route path="/team/tournament/:id" element={<SingleTeamTournament/>} />
+        <Route path="/team/tournament/edit/:id" element={<EditTeamTournament/>} />
         <Route path="/user/login" element={<UserLogin />} />
         <Route path="/user/private" element={<PrivateUser />} />
       </Route>

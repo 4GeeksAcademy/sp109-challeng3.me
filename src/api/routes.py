@@ -2,19 +2,85 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Admin, Tournament, Team, User_tournament, Videojuego, User_team
+from api.models import db, User, Admin, Tournament, Team, User_tournament, Videojuego, User_team, User_videojuego, Team_tournament
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from sqlalchemy import select
-from flask_jwt_extended import create_access_token
-from flask_jwt_extended import get_jwt_identity
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
 
 
 api = Blueprint('api', __name__)
 
 # Allow CORS requests to this API
-CORS(api)
+CORS(api, supports_credentials=True, expose_headers=["Authorization"])
+
+@api.route('/user/videojuego', methods=['GET'])
+def get_user_videojuego():
+
+    all_user_videojuego = User_videojuego.query.all()
+    results = list(map(lambda user_videojuego : user_videojuego.serialize(),all_user_videojuego))
+
+    response_body = {
+        "user_videojuego": results
+    }
+
+    return jsonify(response_body), 200
+
+@api.route('/user/videojuego/<int:user_videojuego_id>', methods=['GET'])
+def get_user_videojuego_by_id(user_videojuego_id):
+    user_videojuego = db.session.get(User_videojuego, user_videojuego_id)
+    if user_videojuego is None:
+        return 'User_videojuego not found', 404
+
+    return jsonify(user_videojuego.serialize()), 200
+
+@api.route('/user/videojuego', methods=['POST'])
+def add_user_videojuego():
+    body = request.get_json()
+    new_user_videojuego = User_videojuego(**body)
+    db.session.add(new_user_videojuego)
+    db.session.commit()
+
+    response_body = {
+        "user_videojuego": new_user_videojuego.serialize(),
+        "msg": "nuevo user_videojuego"
+    }
+
+    return jsonify(response_body), 200
+
+@api.route('/user/videojuego/<int:user_videojuego_id>', methods=['PUT'])
+def edit_user_videojuego(user_videojuego_id):
+    edit_user_videojuego = User_videojuego.query.get(user_videojuego_id)
+    if edit_user_videojuego is None:
+        return 'User_videojuego not found', 404
+
+    body = request.get_json()
+    for key, value in body.items():
+        setattr(edit_user_videojuego, key, value)
+
+    db.session.commit()
+
+    response_body = {
+        "user_videojuego": edit_user_videojuego.serialize(),
+        "msg": "user_videojuego editado"
+    }
+
+    return jsonify(response_body), 200
+
+@api.route('/user/videojuego/<int:user_videojuego_id>', methods=['DELETE'])
+def delete_user_videojuego(user_videojuego_id):
+    user_videojuego_delete = db.session.get(User_videojuego, user_videojuego_id)
+    if user_videojuego_delete is None:
+        return 'User_videojuego not found', 404
+
+    response_body = {
+        "msg": "se elimino user_videojuego"
+    }
+
+    db.session.delete(user_videojuego_delete)
+    db.session.commit()
+
+    return jsonify(response_body), 200
 
 @api.route("/user/login", methods=["POST"])
 def user_login():
@@ -116,7 +182,12 @@ def get_tournament_by_id(tournament_id):
     return jsonify(tournament.serialize()), 200
 
 @api.route('/tournament', methods=['POST'])
+@jwt_required()
 def add_tournament():
+    claims = get_jwt()
+    if claims.get("role") != "admin":
+        return jsonify({"msg": "No autorizado"}), 403
+
     body = request.get_json()
     new_torneo = Tournament(**body)
     db.session.add(new_torneo)
@@ -130,7 +201,12 @@ def add_tournament():
     return jsonify(response_body), 200
 
 @api.route('/tournament/<int:tournament_id>', methods=['PUT'])
+@jwt_required()
 def edit_tournament(tournament_id):
+    claims = get_jwt()
+    if claims.get("role") != "admin":
+        return jsonify({"msg": "No autorizado"}), 403
+
     edit_torneo = Tournament.query.get(tournament_id)
     if edit_torneo is None:
         return 'Tournament not found', 404
@@ -149,7 +225,12 @@ def edit_tournament(tournament_id):
     return jsonify(response_body), 200
 
 @api.route('/tournament/<int:tournament_id>', methods=['DELETE'])
+@jwt_required()
 def delete_tournament(tournament_id):
+    claims = get_jwt()
+    if claims.get("role") != "admin":
+        return jsonify({"msg": "No autorizado"}), 403
+    
     tournament_delete = db.session.get(Tournament,tournament_id)
     response_body ={
         "msg":"se elimino torneo"
@@ -445,7 +526,7 @@ def add_user_tournament():
         return 'El cuerpo debe seguir la siguiente estructura, {"tournament_id": int, "tournament_id": int}', 400
     if 'tournament_id' not in body:
         return 'Debes especificar tournament_id', 400
-    if 'tournament_id' not in body:
+    if 'user_id' not in body:
         return 'Debes especificar user_id', 400
 
     
@@ -584,7 +665,10 @@ def admin_login():
     if admin is None:
         return 'Admin not found', 404
 
-    access_token = create_access_token(identity=admin.id)
+    access_token = create_access_token(
+        identity=str(admin.id),
+        additional_claims={"role": "admin"}
+    )
 
     response_body = {
         "msg": "Login successful",
@@ -592,3 +676,79 @@ def admin_login():
     }
 
     return jsonify(response_body), 200
+
+@api.route('/team/tournament', methods=['GET'])
+def get_teams_tournament():
+
+    all_team_tournament =  db.session.execute(select(Team_tournament)).scalars().all()
+    if all_team_tournament is None:
+        return 'Cant get Team_tournament', 400
+    
+    result = list(map(lambda team_tournament: team_tournament.serialize(), all_team_tournament))
+
+    return jsonify(result), 200
+
+@api.route('/team/tournament/<int:id>', methods=['GET'])
+def get_team_tournament(id):
+
+    team_tournament =  db.session.execute(select(Team_tournament).where(Team_tournament.id == id)).scalars().first()
+    if team_tournament is None:
+        return 'Cant get the team_tournament', 400
+
+    return jsonify(team_tournament.serialize()), 200
+
+@api.route('/team/tournament', methods=['POST'])
+def add_team_tournament():
+
+    body = request.get_json()
+
+    if body is None:
+        return 'El cuerpo debe seguir la siguiente estructura, {"team_id": int, "tournament_id": int}', 400
+    if 'team_id' not in body:
+        return 'Debes especificar team_id', 400
+    if 'tournament_id' not in body:
+        return 'Debes especificar tournament_id', 400
+
+    
+    new_team_tournament =  Team_tournament(
+        team_id = body['team_id'],
+        tournament_id = body['tournament_id']
+    )
+
+    db.session.add(new_team_tournament)
+    db.session.commit()
+    
+    return 'Team_Tournament successful created', 200
+
+@api.route('/team/tournament/<int:id>', methods=['PUT'])
+def edit_team_tournament(id):
+
+    body = request.get_json()
+    team_tournament = db.session.execute(select(Team_tournament).where(Team_tournament.id == id)).scalars().first()
+
+    if team_tournament is None:
+        return 'team_tournament dont exist', 400
+
+    if body is None:
+        return 'El cuerpo debe seguir la siguiente estructura, {"team_id": int, "tournament_id": int}', 400
+    if 'team_id' in body:
+        team_tournament.team_id = body['team_id']
+    if 'tournament_id' in body:
+        team_tournament.user_id = body['tournament_id']
+    
+    db.session.commit()
+    
+    return 'user_team with id ' + str(id) + ' has been edited', 200
+
+@api.route('/team/tournament/<int:id>', methods=['DELETE'])
+def delete_team_tournament(id):
+
+    team_tournament = db.session.execute(select(Team_tournament).where(Team_tournament.id == id)).scalars().first()
+
+    if team_tournament is None:
+        return 'team_tournament dont exist', 400
+
+    db.session.delete(team_tournament)
+    db.session.commit()
+
+    return 'team_tournament with id ' + str(id) + ' has been deleted', 200
