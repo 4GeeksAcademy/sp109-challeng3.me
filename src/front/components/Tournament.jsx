@@ -2,13 +2,29 @@ import React, { useEffect,useState } from "react"
 import rigoImageUrl from "../assets/img/rigo-baby.jpg";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { Link } from "react-router-dom";
+import {jwtDecode} from "jwt-decode"
 
 export const Tournament = () => {
 
- const { store, dispatch } = useGlobalReducer()
- const [tournaments, setTournaments] = useState ([])
+    const { store, dispatch } = useGlobalReducer()
+    const [tournaments, setTournaments] = useState ([])
+    const [isAdmin, setIsAdmin] = useState(false)
 
-      function getTournament (){
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                if (decoded.role === "admin") {
+                    setIsAdmin(true);
+                }
+            } catch (error) {
+                console.error("Invalid token", error);
+            }
+        }
+    }, [])
+
+    function getTournament (){
         fetch(import.meta.env.VITE_BACKEND_URL + "/api/tournament")
         .then((response)=>response.json())
         .then((data) =>{
@@ -28,6 +44,9 @@ export const Tournament = () => {
     function deleteTournament (tournament_id) {
         const requestOptions = {
         method: "DELETE",
+        headers: { 
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
         redirect: "follow"
         };
 
@@ -36,13 +55,17 @@ export const Tournament = () => {
             .then((result) => getTournament())
     }
 
+
+
     return (
         <div className="text-center mt-5">
             <div className="d-flex justify-content-between w-50 m-auto">
             <h1 className="display-4">Tournament</h1>
-              <Link to="/form">
-                <button className="btn btn-success mt-4">Create tournament</button>
-              </Link>
+                {isAdmin && (
+                    <Link to="/form">
+                    <button className="btn btn-success mt-4">Create tournament</button>
+                    </Link>
+                )}
             </div>
             {store.tournament.map((tournament) => (
                 <div key={tournament.id} className="card mb-3 w-50 m-auto">
@@ -55,15 +78,15 @@ export const Tournament = () => {
                     <Link to={`/card/${tournament.id}`}>
                        <button className="btn btn-primary m-1">Ver</button>
                     </Link>
-                    <Link to={`/editTournament/${tournament.id}`}>
-                       <button className="btn btn-secondary m-1">Editar</button>
-                    </Link>
-                
-                    <div>
-                    <button className="btn btn-danger m-1" onClick={() => {
-                        deleteTournament(tournament.id)
-                    }}>Delete</button>
-                    </div>
+                    {isAdmin && ( <>
+                        <Link to={`/editTournament/${tournament.id}`}>
+                        <button className="btn btn-secondary m-1">Editar</button>
+                        </Link>
+                    
+                        <button className="btn btn-danger m-1" onClick={() => {
+                            deleteTournament(tournament.id)
+                        }}>Delete</button>
+                    </>)}
                 </div>
                 </div>
             ))}

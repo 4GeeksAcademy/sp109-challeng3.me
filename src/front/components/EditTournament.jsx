@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import PropTypes from "prop-types";
@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 export const EditTournament = () => {
   const { store } = useGlobalReducer();
   const { id } = useParams();
+  const navigate = useNavigate()
 
   const [editTorneo, setEditTorneo] = useState({
     name: "",
@@ -27,17 +28,16 @@ export const EditTournament = () => {
   function editarTorneo() {
     const requestOptions = {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: editTorneo.name,
-        level: editTorneo.level,
-        prize: editTorneo.prize
-      }),
-    };
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      },
+      body: JSON.stringify(editTorneo)
+    }
 
     fetch(import.meta.env.VITE_BACKEND_URL + "/api/tournament/" + id, requestOptions)
       .then((response) => response.json())
-      .then((data) => window.location.href = "/tournament")
+      .then((data) => navigate("/tournament"))
       
   }
 

@@ -3,8 +3,6 @@ from sqlalchemy import String, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import List
 
-
-
 db = SQLAlchemy()
 
 class User(db.Model):
@@ -51,8 +49,8 @@ class Admin(db.Model):
 class Tournament(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
-    level: Mapped[str] = mapped_column(nullable=False)
-    prize: Mapped[str] = mapped_column(nullable=False)
+    level: Mapped[int] = mapped_column(nullable=False)
+    prize: Mapped[int] = mapped_column(nullable=False)
 
     user_tournament: Mapped[List["User_tournament"]] = relationship(back_populates="tournament")
 
