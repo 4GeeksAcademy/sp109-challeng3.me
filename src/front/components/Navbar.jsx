@@ -15,7 +15,7 @@ export const Navbar = () => {
 					<Link to="/user/videojuego">
 						<button className="btn btn-primary">CRUD User/Videojuego</button>
 					</Link>
-					<Link to="/admin/dashboard">
+					<Link to="/admin/login">
 						<button className="btn btn-primary">Zona Administración</button>
 					</Link>
 					<Link to="/videojuego">
