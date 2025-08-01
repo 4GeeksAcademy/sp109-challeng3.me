@@ -28,7 +28,8 @@ export const initialStore=()=>{
     admin_auth: false,
     userVideoJuego: [],
     editarUserVideoJuego: [{videoJuego_id: null, user_id: null, ranking: null}],
-    newUserVideoJuego: []
+    newUserVideoJuego: [],
+    team_tournaments: []
   }
 }
 
@@ -139,6 +140,11 @@ export default function storeReducer(store, action = {}) {
         return {
           ...store,
           newUserVideoJuego: action.payload
+        };
+      case 'get_team_tournament':
+        return {
+          ...store,
+          team_tournaments: action.payload
         };
 
       default:

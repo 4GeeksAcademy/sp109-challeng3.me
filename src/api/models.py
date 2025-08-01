@@ -19,7 +19,6 @@ class User(db.Model):
     team: Mapped[List["Team"]] = relationship(back_populates="user")
     user_tournament: Mapped[List["User_tournament"]] = relationship(back_populates="user")
     user_team: Mapped[List["User_team"]] = relationship(back_populates="user")
-    
     user_videojuego: Mapped[List["User_videojuego"]] = relationship(back_populates="user")
 
     def serialize(self):
@@ -51,8 +50,10 @@ class Tournament(db.Model):
     name: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     level: Mapped[int] = mapped_column(nullable=False)
     prize: Mapped[int] = mapped_column(nullable=False)
+    type: Mapped[str] = mapped_column(nullable=False)
 
     user_tournament: Mapped[List["User_tournament"]] = relationship(back_populates="tournament")
+    team_tournament: Mapped[List["Team_tournament"]] = relationship(back_populates="tournament")
 
     def serialize(self):
         return {
@@ -60,6 +61,7 @@ class Tournament(db.Model):
             "name": self.name,
             "level": self.level,
             "prize": self.prize,
+            "type": self.type,
             # do not serialize the password, its a security breach
         }
     
@@ -73,6 +75,7 @@ class Team(db.Model):
     user: Mapped["User"] = relationship(back_populates="team")
 
     user_team: Mapped[List["User_team"]] = relationship(back_populates="team")
+    team_tournament: Mapped[List["Team_tournament"]] = relationship(back_populates="team")
 
     def serialize(self):
         return {
@@ -140,4 +143,21 @@ class User_videojuego(db.Model):
             "ranking": self.ranking,
             "videojuego_id": self.videojuego_id,
             "user_id": self.user_id
+        }
+    
+class Team_tournament(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    ranking: Mapped[int] = mapped_column(nullable=False)
+
+    team_id: Mapped[int] = mapped_column(ForeignKey("team.id"))
+    team: Mapped["Team"] = relationship(back_populates="team_tournament")
+    tournament_id: Mapped[int] = mapped_column(ForeignKey("tournament.id"))
+    tournament: Mapped["Tournament"] = relationship(back_populates="team_tournament")
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "ranking": self.ranking,
+            "team_id": self.team_id,
+            "tournament_id": self.tournament_id
         }
