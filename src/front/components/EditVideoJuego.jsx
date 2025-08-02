@@ -8,11 +8,14 @@ export const EditVideoJuego = () => {
   const { id } = useParams();
 
   const [editVideoJuego, setEditVideoJuego] = useState({
-    videojuegos: "",
+    name: "",
+    description: "",
+    platforms: "",
+    release_date: ""
   });
 
   function getEditVideoJuego() {
-    fetch(import.meta.env.VITE_BACKEND_URL + "/api/videojuego/" + id)
+    fetch(import.meta.env.VITE_BACKEND_URL + "/api/game/" + id)
       .then((response) => response.json())
       .then((data) => setEditVideoJuego(data));
   }
@@ -25,13 +28,16 @@ export const EditVideoJuego = () => {
   function editarVideoJuego() {
     const requestOptions = {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
       body: JSON.stringify({
         videojuegos: editVideoJuego.videojuegos
       }),
     };
 
-    fetch(import.meta.env.VITE_BACKEND_URL + "/api/videojuego/" + id, requestOptions)
+    fetch(import.meta.env.VITE_BACKEND_URL + "/api/game/" + id, requestOptions)
       .then((response) => response.json())
       .then((data) => window.location.href = "/videojuego")
 
@@ -47,9 +53,42 @@ export const EditVideoJuego = () => {
               <input
                 type="text"
                 className="form-control mt-2"
-                value={editVideoJuego.videojuegos}
+                value={editVideoJuego.name}
                 onChange={(e) =>
-                  setEditVideoJuego({ ...editVideoJuego, videojuegos: e.target.value })
+                  setEditVideoJuego({ ...editVideoJuego, name: e.target.value })
+                }
+              />
+            </div>
+            <div className="col-8 mb-5">
+              Description:
+              <textarea
+                type="text"
+                className="form-control mt-2 h-100"
+                value={editVideoJuego.description}
+                onChange={(e) =>
+                  setEditVideoJuego({ ...editVideoJuego, description: e.target.value })
+                }
+              />
+            </div>
+            <div className="col-8">
+              Platforms:
+              <input
+                type="text"
+                className="form-control mt-2"
+                value={editVideoJuego.platforms}
+                onChange={(e) =>
+                  setEditVideoJuego({ ...editVideoJuego, platforms: e.target.value })
+                }
+              />
+            </div>
+            <div className="col-8">
+              Release Date:
+              <input
+                type="text"
+                className="form-control mt-2"
+                value={editVideoJuego.release_date}
+                onChange={(e) =>
+                  setEditVideoJuego({ ...editVideoJuego, release_date: e.target.value })
                 }
               />
             </div>

@@ -23,7 +23,7 @@ export const CreateVideoJuego = () => {
               })
       };
 
-      fetch(import.meta.env.VITE_BACKEND_URL + "/api/videojuego/", requestOptions)
+      fetch(import.meta.env.VITE_BACKEND_URL + "/api/game/", requestOptions)
         .then((response) => response.json())
         .then((data) => window.location.href = "/videojuego")
 }

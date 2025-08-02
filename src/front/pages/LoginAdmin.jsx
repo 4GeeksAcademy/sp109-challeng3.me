@@ -9,8 +9,10 @@ const LoginAdmin = () => {
         username: "",
         password: ""
     })
+    const [error, setError] = useState(null)
 
     const login = () => {
+        setError(null)
         fetch(import.meta.env.VITE_BACKEND_URL + "/api/admin/login", {
             method: "POST",
             headers: {
@@ -29,6 +31,9 @@ const LoginAdmin = () => {
             dispatch({ type: "set_admin_auth", payload: true })
             localStorage.setItem("token", data.access_token)
             navigate("/admin/dashboard")
+        })
+        .catch(err => {
+            setError("Contraseña o usuario incorrecto"); // 👈 mensaje visible
         })
     }
 
@@ -63,6 +68,9 @@ const LoginAdmin = () => {
                         value={user.password}
                         onChange={(e) => setUser({ ...user, password: e.target.value })}
                     />
+                    {error && (
+                        <p className="errorpass mt-1 mb-0">{error}</p>
+                    )}
                 </div>
                 <button
                     className="btn btn-success px-4 py-2 rounded-md

@@ -82,7 +82,7 @@ def delete_user_videojuego(user_videojuego_id):
 
     return jsonify(response_body), 200
 
-@api.route('/videojuego', methods=['GET'])
+@api.route('/game', methods=['GET'])
 def get_videojuego():
 
     all_videojuego = Videojuego.query.all()
@@ -94,7 +94,7 @@ def get_videojuego():
 
     return jsonify(response_body), 200
 
-@api.route('/videojuego/<int:videojuego_id>', methods=['GET'])
+@api.route('/game/<int:videojuego_id>', methods=['GET'])
 def get_videojuego_by_id(videojuego_id):
     videojuego = db.session.get(Videojuego, videojuego_id)
     if videojuego is None:
@@ -102,8 +102,13 @@ def get_videojuego_by_id(videojuego_id):
 
     return jsonify(videojuego.serialize()), 200
 
-@api.route('/videojuego', methods=['POST'])
+@api.route('/game', methods=['POST'])
+@jwt_required()
 def add_videojuego():
+    claims = get_jwt()
+    if claims.get("role") != "admin":
+        return jsonify({"msg": "No autorizado"}), 403   
+
     body = request.get_json()
     new_videojuego = Videojuego(**body)
     db.session.add(new_videojuego)
@@ -116,8 +121,13 @@ def add_videojuego():
 
     return jsonify(response_body), 200
 
-@api.route('/videojuego/<int:videojuego_id>', methods=['PUT'])
+@api.route('/game/<int:videojuego_id>', methods=['PUT'])
+@jwt_required()
 def edit_videojuego(videojuego_id):
+    claims = get_jwt()
+    if claims.get("role") != "admin":
+        return jsonify({"msg": "No autorizado"}), 403
+    
     edit_videojuego = Videojuego.query.get(videojuego_id)
     if edit_videojuego is None:
         return 'Videojuego not found', 404
@@ -135,8 +145,13 @@ def edit_videojuego(videojuego_id):
 
     return jsonify(response_body), 200
 
-@api.route('/videojuego/<int:videojuego_id>', methods=['DELETE'])
+@api.route('/game/<int:videojuego_id>', methods=['DELETE'])
+@jwt_required()
 def delete_videojuego(videojuego_id):
+    claims = get_jwt()
+    if claims.get("role") != "admin":
+        return jsonify({"msg": "No autorizado"}), 403
+    
     videojuego_delete = db.session.get(Videojuego, videojuego_id)
     if videojuego_delete is None:
         return 'Videojuego not found', 404

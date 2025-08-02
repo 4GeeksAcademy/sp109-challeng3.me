@@ -43,6 +43,7 @@ import TeamTournamentCRUD from "./pages/TeamTournamentCRUD.jsx";
 import CreateTeamTournament from "./pages/CreateTeamTournament.jsx";
 import SingleTeamTournament from "./pages/SingleTeamTournament.jsx";
 import EditTeamTournament from "./pages/EditTeamTournament.jsx";
+import ApiIntegration from "./pages/ApiIntegration.jsx";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -94,6 +95,7 @@ export const router = createBrowserRouter(
         <Route path="/team/tournament/create" element={<CreateTeamTournament/>} />
         <Route path="/team/tournament/:id" element={<SingleTeamTournament/>} />
         <Route path="/team/tournament/edit/:id" element={<EditTeamTournament/>} />
+        <Route path="/api-integration" element={<ApiIntegration />} />
       </Route>
     )
 );

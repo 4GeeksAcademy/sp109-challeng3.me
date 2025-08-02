@@ -12,18 +12,25 @@ export const CardVideoJuego = props => {
   const [videojuego, setVideojuego] = useState({});
 
   const { id } = useParams();
-
+  console.log(videojuego)
   useEffect(() => {
-            fetch(import.meta.env.VITE_BACKEND_URL + "/api/videojuego/" + id)
+            fetch(import.meta.env.VITE_BACKEND_URL + "/api/game/" + id)
             .then((response) => response.json())
             .then((data) => 
               setVideojuego(data))
             },[]);
 
   return (
-    <div className="container text-center w-50 m-auto mt-5">
-      <h1>{videojuego.videojuegos} </h1>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro doloremque nihil, id recusandae in inventore tempora est molestiae quas optio dolorem iusto, explicabo temporibus vel ipsum. Optio a reiciendis cum?</p>
+    <div className="container text-center w-50 m-auto mt-5 border p-5 rounded shadow">
+      <img
+        src={videojuego.img}
+        className='rounded-circle gameimg m-2'
+        alt={videojuego.name || "Videojuego"}
+      />
+      <h1 className="mb-4">{videojuego.name} </h1>
+      <p>{videojuego.description}</p>
+      <p>{videojuego.platforms}</p>
+      <p>{videojuego.release_date}</p>
       <Link to="/videojuego">
         <span className="btn btn-primary btn-sm" href="#" role="button">
           Back home

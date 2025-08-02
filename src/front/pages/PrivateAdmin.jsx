@@ -11,6 +11,14 @@ const PrivateAdmin = () => {
   useEffect(() => { 
     if (token) {
       const decoded = jwtDecode(token);
+      const currentTime = Math.floor(Date.now() / 1000); // tiempo actual en segundos
+
+      if (decoded.exp && decoded.exp < currentTime) {
+        setIsAdmin(false);
+        alert('Token expirado. Por favor, inicia sesión nuevamente.');
+        localStorage.removeItem("token")
+        navigate('/admin/login')
+      }
 
       // Verificamos si el rol es "admin"
       if (decoded?.role === 'admin') {
@@ -18,8 +26,12 @@ const PrivateAdmin = () => {
       } else {
         dispatch({ type: 'set_admin_auth', payload: false });
         navigate('/admin/login');
-    }
-  }}, [])
+      }} 
+    else {
+        dispatch({ type: 'set_admin_auth', payload: false });
+        navigate('/admin/login');
+      }
+    }, [])
 
     const logout = () => {
         localStorage.removeItem('token')

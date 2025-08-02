@@ -1,5 +1,4 @@
 import React, { useEffect,useState } from "react"
-import rigoImageUrl from "../assets/img/rigo-baby.jpg";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { Link } from "react-router-dom";
 
@@ -9,7 +8,7 @@ export const Videojuego = () => {
  const [videojuegos, setVideojuegos] = useState ([])
 
       function getVideojuego (){
-        fetch(import.meta.env.VITE_BACKEND_URL + "/api/videojuego")
+        fetch(import.meta.env.VITE_BACKEND_URL + "/api/game")
         .then((Response)=>Response.json())
         .then((data) =>{
             setVideojuegos(data.videojuego);
@@ -23,15 +22,21 @@ export const Videojuego = () => {
 
     useEffect (()=>{
         getVideojuego ()
+        console.log(store.videojuego)
     },[]);
 
     function deleteVideojuego (videojuego_id) {
+        const token = localStorage.getItem('token');
         const requestOptions = {
         method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+         },
         redirect: "follow"
         };
 
-            fetch(import.meta.env.VITE_BACKEND_URL + "/api/videojuego/" + videojuego_id, requestOptions)
+            fetch(import.meta.env.VITE_BACKEND_URL + "/api/game/" + videojuego_id, requestOptions)
             .then((response) => response.text())
             .then((result) => getVideojuego())
     }
@@ -40,14 +45,29 @@ export const Videojuego = () => {
         <div className="text-center mt-5">
             <div className="d-flex justify-content-between w-50 m-auto">
             <h1 className="display-4">Videojuegos</h1>
-              <Link to="/createVideoJuego">
+              <Link to="/api-integration">
                 <button className="btn btn-success mt-4">Create videojuego</button>
               </Link>
             </div>
-            {store.videojuego.map((videojuego) => (
+            {videojuegos.map((videojuego) => (
                 <div key={videojuego.id} className="card mb-3 w-50 m-auto">
-                    <div className="card-body">
-                        <h5 className="card-title">{videojuego.videojuegos}</h5>
+                    <div className="d-flex align-items-center position-relative">
+                        <img
+                        src={videojuego.img}
+                        className="rounded-circle gameimg m-3 position-absolute "
+                        alt={videojuego.name || "Videojuego"}
+                        style={{ width: '75px',
+                                height: '75px',
+                                objectFit: 'cover',
+                                top: '50%',
+                                left: '20px',
+                                transform: 'translateY(-50%)' }}
+                        />
+                        <div className="card-body">
+                        <h5 className="card-title mb-0">{videojuego.name}</h5>
+                        
+                        <span>ID: {videojuego.id}</span>
+                    </div>
                     </div>
                     <div className="d-flex justify-content-center">
                     <Link to={`/cardVideojuego/${videojuego.id}`}>
