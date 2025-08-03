@@ -14,7 +14,6 @@ const PrivateAdmin = () => {
       const currentTime = Math.floor(Date.now() / 1000); // tiempo actual en segundos
 
       if (decoded.exp && decoded.exp < currentTime) {
-        setIsAdmin(false);
         alert('Token expirado. Por favor, inicia sesión nuevamente.');
         localStorage.removeItem("token")
         navigate('/admin/login')
