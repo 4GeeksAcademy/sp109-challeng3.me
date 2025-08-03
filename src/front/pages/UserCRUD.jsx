@@ -3,10 +3,13 @@ import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { Link } from "react-router-dom";
 import CreateUserModal from "../components/CreateUserModal.jsx";
 import EditUserModal from "../components/EditUserModal.jsx"
+import {jwtDecode} from "jwt-decode"
+
 
 const UserCRUD = () => {
     const {store, dispatch} = useGlobalReducer()
     const [users, setUsers] = useState([])
+    const [isAdmin, setIsAdmin] = useState(false)
 
     const getUsers = () => {
         fetch(import.meta.env.VITE_BACKEND_URL +'/api/user')
@@ -20,7 +23,10 @@ const UserCRUD = () => {
 
     const deleteUser = (id) => {
         fetch(import.meta.env.VITE_BACKEND_URL +'/api/user/' + id, {
-            method: 'DELETE'
+            method: 'DELETE',
+                    headers: { 
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
         })
         .then(response => {
             if (response.ok) {
@@ -33,6 +39,17 @@ const UserCRUD = () => {
     }
 
     useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                if (decoded.role === "admin") {
+                    setIsAdmin(true);
+                }
+            } catch (error) {
+                console.error("Invalid token", error);
+            }
+        }
         getUsers()
     }, [])
 
@@ -43,13 +60,19 @@ const UserCRUD = () => {
                 {users.map(user => (<p key={user.id} className="border p-2 d-flex justify-content-between">
                     <Link to={`/user/${user.id}`}>{user.username}</Link>
                     <span className="d-flex justify-content-between gap-2 align-items-center">
+                        {isAdmin && (
                         <span><EditUserModal userId={user.id} onUserModified={getUsers}/></span>
+                    )}
+                    {isAdmin && (
                         <button className="btn btn-outline-danger align-self-end" onClick={() => deleteUser(user.id)}>X</button>
+                    )}
                     </span>
                     </p>))}
             </div>
             <div className="row">
-                <CreateUserModal onUserCreated={getUsers}/>
+                {isAdmin && (
+                    <CreateUserModal onUserCreated={getUsers}/>
+                )}
             </div>
         </div>
     )

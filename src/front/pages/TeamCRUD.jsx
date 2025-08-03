@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { Link } from "react-router-dom";
+import {jwtDecode} from "jwt-decode"
 
 const TeamCRUD = () => {
     const [teams, setTeams] = useState([])
     const {store, dispatch} = useGlobalReducer()
+    const [isAdmin, setIsAdmin] = useState(false)
 
     const getTeams = () => {
         fetch(import.meta.env.VITE_BACKEND_URL +'/api/team')
@@ -17,7 +19,10 @@ const TeamCRUD = () => {
 
     const deleteTeam = (id) => {
         fetch(import.meta.env.VITE_BACKEND_URL + '/api/team/' + id, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: { 
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
         })
         .then(response => {
             if (response.ok) {
@@ -30,7 +35,20 @@ const TeamCRUD = () => {
         })
     }
 
-    useEffect(() => {getTeams()}, [])
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                if (decoded.role === "admin") {
+                    setIsAdmin(true);
+                }
+            } catch (error) {
+                console.error("Invalid token", error);
+            }
+        }
+        getTeams()
+    }, [])
 
     return (
         <div className="container my-4">
@@ -41,16 +59,22 @@ const TeamCRUD = () => {
                     <Link to={`/team/${team.id}`}>{team.name}</Link>
                     <span className="d-flex justify-content-between gap-2 align-items-center">
                         <span>
+                        {isAdmin && (
                             <Link to={`/team/edit/${team.id}`}><button className="btn btn-primary" >✎</button></Link>
+                        )}
                         </span>
-                        <button className="btn btn-outline-danger align-self-end" onClick={() => deleteTeam(team.id)}>X</button>
+                        {isAdmin && (
+                            <button className="btn btn-outline-danger align-self-end" onClick={() => deleteTeam(team.id)}>X</button>
+                        )}
                     </span>
                     </p>
                 ))}
             </div>
             <div>
                 <Link to="/team/create">
-                    <button className="btn btn-success">Crear Equipo</button>
+                    {isAdmin && (
+                        <button className="btn btn-success">Crear Equipo</button>
+                    )}
                 </Link>
             </div>
         </div>

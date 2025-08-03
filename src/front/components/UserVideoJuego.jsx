@@ -2,11 +2,13 @@ import React, { useEffect,useState } from "react"
 import rigoImageUrl from "../assets/img/rigo-baby.jpg";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { Link } from "react-router-dom";
+import {jwtDecode} from "jwt-decode"
 
 export const UserVideoJuego = () => {
 
  const { store, dispatch } = useGlobalReducer()
  const [userVideoJuego, setUserVideoJuego] = useState ([])
+ const [isAdmin, setIsAdmin] = useState(false)
 
       function getUserVideoJuego (){
         fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/videojuego")
@@ -22,12 +24,26 @@ export const UserVideoJuego = () => {
     }
 
     useEffect (()=>{
+        const token = localStorage.getItem("token");
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                if (decoded.role === "admin") {
+                    setIsAdmin(true);
+                }
+            } catch (error) {
+                console.error("Invalid token", error);
+            }
+        }
         getUserVideoJuego ()
     },[]);
 
     function deleteUserVideoJuego (user_videojuego_id) {
         const requestOptions = {
         method: "DELETE",
+        headers: { 
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
         redirect: "follow"
         };
 
@@ -40,9 +56,11 @@ export const UserVideoJuego = () => {
         <div className="text-center mt-5">
             <div className="d-flex justify-content-between w-50 m-auto">
             <h1 className="display-4">Usuarios-Videojuegos</h1>
+            {isAdmin && (
               <Link to="/user/videojuego/create">
                 <button className="btn btn-success mt-4 btn-sm">Create User/videojuego</button>
               </Link>
+            )}
             </div>
             {store.userVideoJuego.map((userVideoJuego) => (
                 <div key={userVideoJuego.id} className="card mb-3 w-50 m-auto">
@@ -55,14 +73,17 @@ export const UserVideoJuego = () => {
                     <Link to={`/user/videojuego/${userVideoJuego.id}`}>
                        <button className="btn btn-primary m-1">Ver</button>
                     </Link>
+                    {isAdmin && (
                     <Link to={`/user/videojuego/edit/${userVideoJuego.id}`}>
                        <button className="btn btn-secondary m-1">Editar</button>
                     </Link>
-                
+                    )}
                     <div>
+                    {isAdmin && (
                     <button className="btn btn-danger m-1" onClick={() => {
                         deleteUserVideoJuego(userVideoJuego.id)
                     }}>Delete</button>
+                    )}
                     </div>
                 </div>
                 </div>
