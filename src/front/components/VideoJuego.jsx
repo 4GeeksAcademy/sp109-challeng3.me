@@ -1,11 +1,13 @@
 import React, { useEffect,useState } from "react"
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { Link } from "react-router-dom";
+import {jwtDecode} from "jwt-decode"
 
 export const Videojuego = () => {
 
  const { store, dispatch } = useGlobalReducer()
  const [videojuegos, setVideojuegos] = useState ([])
+ const [isAdmin, setIsAdmin] = useState(false)
 
       function getVideojuego (){
         fetch(import.meta.env.VITE_BACKEND_URL + "/api/game")
@@ -21,6 +23,17 @@ export const Videojuego = () => {
     }
 
     useEffect (()=>{
+        const token = localStorage.getItem("token");
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                if (decoded.role === "admin") {
+                    setIsAdmin(true);
+                }
+            } catch (error) {
+                console.error("Invalid token", error);
+            }
+        }   
         getVideojuego ()
         console.log(store.videojuego)
     },[]);
@@ -45,8 +58,10 @@ export const Videojuego = () => {
         <div className="text-center mt-5">
             <div className="d-flex justify-content-between w-50 m-auto">
             <h1 className="display-4">Videojuegos</h1>
-              <Link to="/api-integration">
+              <Link to="/createVideoJuego">
+            {isAdmin && (
                 <button className="btn btn-success mt-4">Create videojuego</button>
+            )}
               </Link>
             </div>
             {videojuegos.map((videojuego) => (
@@ -74,13 +89,16 @@ export const Videojuego = () => {
                        <button className="btn btn-primary m-1">Ver</button>
                     </Link>
                     <Link to={`/editVideojuego/${videojuego.id}`}>
+                    {isAdmin && (
                        <button className="btn btn-secondary m-1">Editar</button>
+                    )}
                     </Link>
-                
                     <div>
+                    {isAdmin && (
                     <button className="btn btn-danger m-1" onClick={() => {
                         deleteVideojuego(videojuego.id)
                     }}>Delete</button>
+                    )}
                     </div>
                 </div>
                 </div>

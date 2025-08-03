@@ -29,7 +29,8 @@ export const initialStore=()=>{
     userVideoJuego: [],
     editarUserVideoJuego: [{videoJuego_id: null, user_id: null, ranking: null}],
     newUserVideoJuego: [],
-    team_tournaments: []
+    team_tournaments: [],
+    user_auth: false
   }
 }
 
@@ -146,7 +147,11 @@ export default function storeReducer(store, action = {}) {
           ...store,
           team_tournaments: action.payload
         };
-
+      case 'set_auth':
+        return {
+          ...store,
+          user_auth: action.payload
+        };
       default:
         throw Error('Unknown action.');
   
