@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { Link } from "react-router-dom";
+import {jwtDecode} from "jwt-decode"
 
 const TeamTournamentCRUD = () => {
     const [teamTournament, setTeamTournament] = useState([])
     const {store, dispatch} = useGlobalReducer()
+    const [isAdmin, setIsAdmin] = useState(false)
 
     const getTeamTournament = () => {
         fetch(import.meta.env.VITE_BACKEND_URL +'/api/team/tournament')
@@ -17,7 +19,10 @@ const TeamTournamentCRUD = () => {
 
     const deleteTeamTournament = (id) => {
         fetch(import.meta.env.VITE_BACKEND_URL + '/api/team/tournament/' + id, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: { 
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
         })
         .then(response => {
             if (response.ok) {
@@ -30,7 +35,20 @@ const TeamTournamentCRUD = () => {
         })
     }
 
-    useEffect(() => {getTeamTournament()}, [])
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            try {
+                const decoded = jwtDecode(token);
+                if (decoded.role === "admin") {
+                    setIsAdmin(true);
+                }
+            } catch (error) {
+                console.error("Invalid token", error);
+            }
+        }
+        getTeamTournament()
+    }, [])
 
     return (
         <div className="container my-4">
@@ -41,16 +59,22 @@ const TeamTournamentCRUD = () => {
                     <Link to={`/team/tournament/${team_tournament.id}`}>{team_tournament.id}</Link>
                     <span className="d-flex justify-content-between gap-2 align-items-center">
                         <span>
+                            {isAdmin && (
                             <Link to={`/team/tournament/edit/${team_tournament.id}`}><button className="btn btn-primary" >✎</button></Link>
+                            )}
                         </span>
-                        <button className="btn btn-outline-danger align-self-end" onClick={() => deleteTeamTournament(team_tournament.id)}>X</button>
+                        {isAdmin && (
+                            <button className="btn btn-outline-danger align-self-end" onClick={() => deleteTeamTournament(team_tournament.id)}>X</button>
+                        )}
                     </span>
                     </p>
                 ))}
             </div>
             <div>
                 <Link to="/team/tournament/create">
-                    <button className="btn btn-success">Crear Team_Tournament</button>
+                    {isAdmin && (
+                        <button className="btn btn-success">Crear Team_Tournament</button>
+                    )}
                 </Link>
             </div>
         </div>
