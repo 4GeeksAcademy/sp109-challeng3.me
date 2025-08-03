@@ -20,3 +20,15 @@
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     z-index: 1001;
 }
+
+.errorpass {
+    color: red;
+    font-size: 0.7rem; /* Tamaño de fuente más pequeño */
+}
+
+.gameimg {
+    width: 100px; /* Ajusta el tamaño de la imagen */
+    height: 100px; /* Ajusta el tamaño de la imagen */
+    border-radius: 50%; /* Hace que la imagen sea circular */
+    object-fit: cover; /* Asegura que la imagen se recorte correctamente */
+}

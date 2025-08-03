@@ -87,14 +87,24 @@ class Team(db.Model):
         }
 class Videojuego(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
-    videojuegos: Mapped[str] = mapped_column(nullable=False)
+    name: Mapped[str] = mapped_column(unique=True ,nullable=False)
+    description: Mapped[str] = mapped_column(nullable=True)
+    platforms: Mapped[str] = mapped_column(nullable=True)
+    release_date: Mapped[str] = mapped_column(nullable=True)
+    img: Mapped[str] = mapped_column(nullable=True)
+    genre: Mapped[str] = mapped_column(nullable=True)
 
     user_videojuego: Mapped[List["User_videojuego"]] = relationship(back_populates="videojuego")
 
     def serialize(self):
         return {
             "id": self.id,
-            "videojuegos": self.videojuegos,
+            "name": self.name,
+            "description": self.description,
+            "platforms": self.platforms,
+            "release_date": self.release_date,
+            "img": self.img,
+            "genre": self.genre,
             # do not serialize the password, its a security breach
         }
 
