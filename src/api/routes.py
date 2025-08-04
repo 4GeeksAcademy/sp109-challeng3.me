@@ -34,6 +34,17 @@ def get_user_videojuego_by_id(user_videojuego_id):
 
     return jsonify(user_videojuego.serialize()), 200
 
+@api.route('/user/game/<int:id>', methods=['GET'])
+def get_user_videojuego_by_user(id):
+    user_videojuegos = db.session.execute(select(User_videojuego).where(User_videojuego.user_id == id)).scalars().all()
+    if user_videojuegos is None:
+        return jsonify([]), 200
+    
+    result = list(map(lambda user_videojuego: user_videojuego.serialize(), user_videojuegos))
+
+    return jsonify(result), 200
+
+
 @api.route('/user/videojuego', methods=['POST'])
 def add_user_videojuego():
     body = request.get_json()
@@ -86,14 +97,24 @@ def delete_user_videojuego(user_videojuego_id):
 def user_login():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
-    user = db.session.execute(select(User).where(User.email == email)).scalar_one_or_none()
-    if user is None:
-        return jsonify({"msg": "Bad email or password"}), 401
-    if password != user.password:
-       return jsonify({"msg": "Bad email or password"}), 401
 
-    access_token = create_access_token(identity=email)
-    return jsonify(access_token=access_token), 200
+    user = db.session.execute(select(User).where(User.email == email)).scalar_one_or_none()
+    if user and user.password == password:
+        access_token = create_access_token(
+            identity=str(user.id), 
+            additional_claims={"role": "user"}
+        )
+        return jsonify(access_token=access_token), 200
+
+    admin = db.session.execute(select(Admin).where(Admin.username == email)).scalar_one_or_none()
+    if admin and admin.password == password:
+        access_token = create_access_token(
+            identity=str(admin.id), 
+            additional_claims={"role": "admin"}
+        )
+        return jsonify(access_token=access_token), 200
+
+    return jsonify({"msg": "Bad email or password"}), 401
 
 @api.route('/game', methods=['GET'])
 def get_videojuego():

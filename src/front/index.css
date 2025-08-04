@@ -12,13 +12,14 @@
 }
 
 .modal-content {
-    background: white;
+    background: rgb(33, 37, 41);
     padding: 2rem;
     border-radius: 10px;
     max-width: 500px;
     width: 90%;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     z-index: 1001;
+    color: white;
 }
 
 .errorpass {
@@ -31,4 +32,9 @@
     height: 100px; /* Ajusta el tamaño de la imagen */
     border-radius: 50%; /* Hace que la imagen sea circular */
     object-fit: cover; /* Asegura que la imagen se recorte correctamente */
+}
+
+.small-text {
+    font-size: 0.8rem; /* Tamaño de fuente más pequeño */
+    color: #6c757d; /* Color gris claro */
 }

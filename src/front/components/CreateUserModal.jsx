@@ -49,7 +49,10 @@ const CreateUserModal = ({onUserCreated}) => {
 
     return (
         <div>
-            <button className="btn btn-success" onClick={openPopup}>Crear Usuario</button>
+            <span className="small-text" style={{ color: 'lightblue', textDecoration: 'underline', cursor: 'pointer' }}
+                onClick={openPopup}>
+            Regístrate aquí
+            </span>
 
             {isPopupOpen && (
                 <div className="modal-overlay">
