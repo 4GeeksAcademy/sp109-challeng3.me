@@ -140,7 +140,7 @@ class User_team(db.Model):
 
 class User_videojuego(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
-    ranking: Mapped[str] = mapped_column(nullable=False)
+    ranking: Mapped[str] = mapped_column(nullable=True)
 
     videojuego_id: Mapped[int] = mapped_column(ForeignKey("videojuego.id"))
     videojuego: Mapped["Videojuego"] = relationship(back_populates="user_videojuego")

@@ -106,7 +106,7 @@ def user_login():
         )
         return jsonify(access_token=access_token), 200
 
-    admin = db.session.execute(select(Admin).where(Admin.username == email)).scalar_one_or_none()
+    admin = db.session.execute(select(Admin).where(Admin.email == email)).scalar_one_or_none()
     if admin and admin.password == password:
         access_token = create_access_token(
             identity=str(admin.id), 

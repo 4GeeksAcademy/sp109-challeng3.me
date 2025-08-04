@@ -9,6 +9,12 @@ export default function UserDashboard() {
     const [userTeams, setUserTeams] = useState([])
     const [userGames, setUserGames] = useState([])
     const [gameDetails, setGameDetails] = useState([])
+    const [user, setUser] = useState({
+        id: "",
+        name: "",
+        email: "",
+        length: 0,
+    })
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -33,10 +39,10 @@ export default function UserDashboard() {
         if (token) {
             const decoded = jwtDecode(token)
             const userId = decoded.sub || null
+            getUserInfo(userId)
             fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/game/' + userId)
                 .then(res => res.json())
                 .then(async (userGameLinks) => {
-                    console.log(userGameLinks)
                     if (!Array.isArray(userGameLinks) || userGameLinks.length === 0) {
                         alert("No tienes juegos asociados.")
                         return
@@ -44,12 +50,14 @@ export default function UserDashboard() {
 
                     // Obtener detalles de todos los juegos por su ID
                     const gameDetailPromises = userGameLinks.map(link =>
-                        fetch(import.meta.env.VITE_BACKEND_URL + '/api/game/' + link.game_id)
+                        fetch(import.meta.env.VITE_BACKEND_URL + '/api/game/' + link.videojuego_id)
                             .then(res => res.json())
-                    );
-
+                    )
                     const gameDetails = await Promise.all(gameDetailPromises);
-                    setUserGames(gameDetails);
+                    setUserGames(userGameLinks)
+                    setGameDetails(gameDetails)
+                    console.log("Detalles de juegos del usuario:", gameDetails);
+
                 })
                 .catch(err => {
                     console.error("Error al cargar los juegos del usuario:", err);
@@ -57,31 +65,50 @@ export default function UserDashboard() {
         }
     }, [])
 
+    const getUserInfo = (userId) => {
+        fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/' + userId)
+            .then(res => res.json())
+            .then(data => {
+                setUser({
+                    id: data.id,
+                    name: data.name,
+                    email: data.email,
+                    level: data.level,
+                })
+            })
+            .catch(err => console.error("Error al cargar la información del usuario:", err))
+    }
+       
+
     return (
         <div className="container">
-            <h1 className="text-center">User Dashboard</h1>
-            <p className="text-center">Welcome to your dashboard! Here you can manage your profile, view your activities, and more.</p>
+            <h1 className="text-center">Welcome {user.name}</h1>
+            <p className="text-center"><strong>Email: </strong>{user.email}</p>
             {/* Additional user dashboard content can be added here */}
-            <div className="row">
+            <div className="row my-4">
                 <div className="col-4 text-center">
                     <h4>Mis juegos</h4>
                     <ul>
-                        {userGames.length > 0 
-                        ? (userGames.map((game, index) => (
-                            <li key={index}>
-                                <h3>{game.name}</h3>
-                                <p>{game.description}</p>
+                        {gameDetails.length > 0 
+                        ? (gameDetails.map((game) => (
+                            <li key={game.id} className="border p-1 d-flex align-items-center flex-nowrap">
+                                <img 
+                                    src={game.img} 
+                                    alt={game.name}
+                                    className="mini-gameimg p-2 mx-2"
+                                    />
+                                <span>{game.name}</span>
                             </li>
                         )))
-                        : <span className="m-auto">No tienes juegos vinculados, 
+                        : <span className="m-auto">No tienes juegos vinculados,&nbsp;
                         <Link to="/select-game">selecciona tus juego favorito</Link></span>}
                     </ul>
                 </div>
-                <div className="col-4">
-                    
+                <div className="col-4 text-center border-end border-start">
+                    <h4>Mis Equipos</h4> 
                 </div>
-                <div className="col-4">
-                    
+                <div className="col-4 text-center">
+                    <h4>Mis Torneos</h4>
                 </div>
             </div>
         </div>

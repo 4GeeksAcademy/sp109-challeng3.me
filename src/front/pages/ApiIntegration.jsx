@@ -11,6 +11,7 @@ const ApiIntegration = () => {
   const [error, setError] = useState(null)
   const [created, setCreated] = useState(false)
   const [showDropdown, setShowDropdown] = useState(false)
+  const [input, setInput] = useState({})
   const dropdownRef = useRef(null)
   const { store, dispatch } = useGlobalReducer()
   const navigate = useNavigate()
@@ -108,6 +109,10 @@ const ApiIntegration = () => {
   };
 
   const createGame = () => {
+    if (input.name && input.description && input.platforms && input.release_date && input.genre && input.img) {
+      setSelectedGame(input)
+    }
+
     fetch(import.meta.env.VITE_BACKEND_URL + "/api/game", {
       method: "POST",
       headers: {
@@ -173,7 +178,60 @@ const ApiIntegration = () => {
           ))}
         </ul>
       )}
-
+      {!selectedGame && (
+        <div className="m-4 mx-auto p-4 border rounded shadow container fs-1">
+          <h2 className="font-semibold">Nombre</h2>
+          <input
+            type="text"
+            className="form-control mt-2"
+            value={input.name || ''}
+            onChange={(e) => setInput({ ...input, name: e.target.value })}
+          />
+          <h2 className="font-semibold mt-3">Descripción</h2>
+          <textarea
+            className="form-control mt-2"
+            rows="3"
+            value={input.description || ''}
+            onChange={(e) => setInput({ ...input, description: e.target.value })}
+          />
+          <h2 className="font-semibold mt-3">Plataformas</h2>
+          <input
+            type="text"
+            className="form-control mt-2"
+            value={input.platforms || ''}
+            onChange={(e) => setInput({ ...input, platforms: e.target.value })}
+          />
+          <h2 className="font-semibold mt-3">Fecha de Lanzamiento</h2>
+          <input
+            type="date"
+            className="form-control mt-2"
+            value={input.release_date || ''}
+            onChange={(e) => setInput({ ...input, release_date: e.target.value })}
+          />
+          <h2 className="font-semibold mt-3">Género</h2>
+          <input
+            type="text"
+            className="form-control mt-2"
+            value={input.genre || ''}
+            onChange={(e) => setInput({ ...input, genre: e.target.value })}
+          />
+          <h2 className="font-semibold mt-3">Imagen URL</h2>
+          <input
+            type="text"
+            className="form-control mt-2"
+            value={input.img || ''}
+            onChange={(e) => setInput({ ...input, img: e.target.value })}
+          />
+          <button
+            className="btn btn-success mt-3"
+            onClick={createGame}
+          >
+            Crear Juego
+          </button>
+          {error && <p className="text-danger text-sm mt-1">{error}</p>}
+          {created && <p className="text-success text-sm mt-1">Juego creado exitosamente!</p>}
+        </div>
+      )}
       {selectedGame && (
         <div className="mt-4 p-4 border rounded shadow container">
           <img

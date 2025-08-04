@@ -34,7 +34,19 @@
     object-fit: cover; /* Asegura que la imagen se recorte correctamente */
 }
 
+.mini-gameimg {
+    width: 50px; /* Ajusta el tamaño de la imagen */
+    height: 50px; /* Ajusta el tamaño de la imagen */
+    border-radius: 50%; /* Hace que la imagen sea circular */
+    object-fit: cover; /* Asegura que la imagen se recorte correctamente */
+}
+
 .small-text {
     font-size: 0.8rem; /* Tamaño de fuente más pequeño */
     color: #6c757d; /* Color gris claro */
+}
+
+ul li {
+    list-style-type: none; /* Elimina los puntos de la lista */
+    margin-bottom: 0.5rem; /* Espacio entre elementos de la lista */
 }

@@ -4,6 +4,7 @@ import useGlobalReducer from "../hooks/useGlobalReducer";  // Custom hook for ac
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CreateUserModal from "../components/CreateUserModal.jsx";
+import { jwtDecode } from "jwt-decode";
 
 const UserLogin = () => {
   // Access the global state and dispatch function using the useGlobalReducer hook.
@@ -13,34 +14,50 @@ const UserLogin = () => {
   const navigate = useNavigate();
 
   
-    function accesLogin (e){
-      e.preventDefault()
-      const requestOptions = {
-        method: "POST",
-        headers: {'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: email,
-          password: password
-        })
-      };
+  function accesLogin (e){
+    e.preventDefault()
+    const requestOptions = {
+      method: "POST",
+      headers: {'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
+    }
       
   fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/login", requestOptions)
-      .then(async (response) => {
-        const data = await response.json();
-        if (response.status === 200 && data.access_token) {
-          localStorage.setItem("token", data.access_token);
-          dispatch({ type: "set_auth", payload: true });
-          setEmail("");
-          setPassword("");
-          navigate("/user/dashboard");
-        } else {
-          alert(data.msg || "Email o contraseña incorrectos");
-        }
-      })
-      .catch((error) => {
-        console.error("Login error:", error);
-        alert("Error de red o del servidor");
-      });
+  .then(async (response) => {
+    const data = await response.json();
+
+    if (response.status === 200 && data.access_token) {
+      localStorage.setItem("token", data.access_token);
+
+      // Decodifica el token para obtener el rol
+      const decoded = jwtDecode(data.access_token);
+      const role = decoded.role;
+
+      // Establece auth en el store según el rol
+      if (role === "admin") {
+        dispatch({ type: "set_admin_auth", payload: true });
+        navigate("/admin/dashboard");
+      } else if (role === "user") {
+        dispatch({ type: "set_auth", payload: true });
+        navigate("/user/dashboard");
+      } else {
+        alert("Rol no reconocido.");
+        return;
+      }
+
+      setEmail("");
+      setPassword("");
+    } else {
+      alert(data.msg || "Email o contraseña incorrectos");
+    }
+  })
+  .catch((error) => {
+    console.error("Login error:", error);
+    alert("Error de red o del servidor");
+  })
   }
 
   return (

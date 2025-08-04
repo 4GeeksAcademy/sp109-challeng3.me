@@ -58,7 +58,7 @@ export const Videojuego = () => {
         <div className="text-center mt-5">
             <div className="d-flex justify-content-between w-50 m-auto">
             <h1 className="display-4">Videojuegos</h1>
-              <Link to="/createVideoJuego">
+              <Link to="/api-integration">
             {isAdmin && (
                 <button className="btn btn-success mt-4">Create videojuego</button>
             )}

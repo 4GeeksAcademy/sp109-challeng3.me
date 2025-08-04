@@ -2,11 +2,13 @@ import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
 	const { store } = useGlobalReducer()
 	const [isAdmin, setIsAdmin] = useState(false)
 	const [isUser, setIsUser] = useState(false)
+	const navigate = useNavigate()
 
 	useEffect(() => {
 		const token = localStorage.getItem("token");
@@ -34,6 +36,13 @@ export const Navbar = () => {
 		}
 	}, [store.admin_auth, store.user_auth])
 
+	const logout = () => {
+		localStorage.removeItem("token")
+		setIsAdmin(false)
+		setIsUser(false)
+		navigate('/user/login')
+	}
+
 
 
 	return (
@@ -42,9 +51,18 @@ export const Navbar = () => {
 				<Link to="/">
 					<span className="navbar-brand mb-0 h1">Challeng3.me</span>
 				</Link>
+				{isUser || isAdmin ? (
+					<div className="ml-auto d-flex gap-2">
+						<Link to="/user/dashboard">
+							<button className="btn btn-primary">User Dashboard</button>
+						</Link>
+						<button className="btn btn-primary" onClick={logout}>Logout</button>
+					</div>
+				) : (
 					<Link to="/user/login">
 						<button className="btn btn-primary">User Login</button>
 					</Link>
+				)}
 					{isAdmin && (
 					<div className="ml-auto d-flex gap-2">
 						<div>
