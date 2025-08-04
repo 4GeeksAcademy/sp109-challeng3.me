@@ -39,7 +39,7 @@ const LoginAdmin = () => {
 
     return (
         <div className="w-50 flex flex-col items-center justify-center h-screen bg-gray-100 border rounded shadow m-auto my-5">
-            <div className="bg-white p-8 rounded-lg shadow-md d-flex justify-center flex-column">
+            <div className="p-8 rounded-lg shadow-md d-flex justify-center flex-column">
                 <h2 className="text-2xl font-bold mb-6 text-center my-4">
                     Admin Login
                 </h2>
@@ -74,7 +74,7 @@ const LoginAdmin = () => {
                 </div>
                 <button
                     className="btn btn-success px-4 py-2 rounded-md
-                    hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-50 mx-auto mb-4"
                     onClick={login}
                 >
                     Login

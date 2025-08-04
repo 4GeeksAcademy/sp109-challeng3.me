@@ -46,6 +46,7 @@ import EditTeamTournament from "./pages/EditTeamTournament.jsx";
 import UserLogin from "./pages/UserLogin.jsx";
 import PrivateUser from "./pages/PrivateUser.jsx";
 import ApiIntegration from "./pages/ApiIntegration.jsx";
+import UserDashboard from "./pages/UserDashboard.jsx";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -92,13 +93,13 @@ export const router = createBrowserRouter(
         <Route path="/user/videojuego" element={<UserVideoJuego />} />
         <Route path="/user/videojuego/:id" element={<CardUserVideoJuego />} />
         <Route path="/user/videojuego/edit/:id" element={<EditUserVideoJuego />} />
-        <Route path="/user/videojuego/create" element={<CreateUserVideoJuego />} />
+        <Route path="/select-game" element={<CreateUserVideoJuego />} />
         <Route path="/team/tournament" element={<TeamTournamentCRUD />} />
         <Route path="/team/tournament/create" element={<CreateTeamTournament/>} />
         <Route path="/team/tournament/:id" element={<SingleTeamTournament/>} />
         <Route path="/team/tournament/edit/:id" element={<EditTeamTournament/>} />
         <Route path="/user/login" element={<UserLogin />} />
-        <Route path="/user/private" element={<PrivateUser />} />
+        <Route path="/user/dashboard" element={<UserDashboard />} />
         <Route path="/api-integration" element={<ApiIntegration />} />
       </Route>
     )

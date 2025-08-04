@@ -2,18 +2,36 @@
 import { Link } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";  // Custom hook for accessing the global state.
 import { useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode"; 
+import { useNavigate } from "react-router-dom";
 
 export const CreateUserVideoJuego = () => {
-  // Access the global state and dispatch function using the useGlobalReducer hook.
   const { store } = useGlobalReducer();
+  const navigate = useNavigate()
+  const [videojuegos, setVideojuegos] = useState([])
   const [userVideoJuego, setUserVideoJuego] = useState({
     videojuego_id: "",
     user_id: "",
     ranking: ""
   });
+  
 
   useEffect(() => {
-    setUserVideoJuego(store.newUserVideoJuego);
+    const token = localStorage.getItem("token")
+
+    if (store.user_auth == true && token !== null) {
+      const decoded = jwtDecode(token)
+      userVideoJuego.user_id = decoded.sub || null
+      userVideoJuego.ranking = "0"
+    } else {
+      alert('No estás autenticado. Por favor, inicia sesión.')
+      navigate('/user/login')
+    }
+
+    fetch(import.meta.env.VITE_BACKEND_URL + "/api/game") 
+    .then(res => res.json())
+    .then(data => setVideojuegos(data.videojuego))
+    .catch(err => console.error("Error al cargar videojuegos:", err))
   }, []);
 
     function newUserVideoJuego (){
@@ -29,7 +47,7 @@ export const CreateUserVideoJuego = () => {
 
       fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/videojuego/", requestOptions)
         .then((response) => response.json())
-        .then((data) => window.location.href = "/user/videojuego/")
+        .then((data) => navigate("/user/dashboard/"))
 }
 
   return (
@@ -42,30 +60,20 @@ export const CreateUserVideoJuego = () => {
               <div className="input-group input-group-sm mb-3 row d-flex justify-content-center">
                 <div className="col-8">
                 videojuego_id:
-                 <input
-                  type="text"
-                  className="form-control mt-2"
-                  value={userVideoJuego.videojuego_id}
-                  onChange={(e) => setUserVideoJuego({...userVideoJuego, videojuego_id: e.target.value})}
-                  />
-                </div>
-                <div className="col-8">
-                User_Id:
-                <input
-                  type="text"
-                  className="form-control mt-2"
-                  value={userVideoJuego.user_id}
-                  onChange={(e) => setUserVideoJuego({...userVideoJuego, user_id: e.target.value})}
-                />
-                </div>
-                <div className="col-8">
-                Ranking:
-                <input
-                  type="text"
-                  className="form-control mt-2"
-                  value={userVideoJuego.ranking}
-                  onChange={(e) => setUserVideoJuego({...userVideoJuego, ranking: e.target.value})}
-                />
+                 <select
+                    className="form-control mt-2"
+                    value={userVideoJuego.videojuego_id}
+                    onChange={(e) =>
+                      setUserVideoJuego({ ...userVideoJuego, videojuego_id: e.target.value })
+                    }
+                 >
+                  <option value="">Selecciona un videojuego</option>
+                  {videojuegos.map((vj) => (
+                    <option key={vj.id} value={vj.id}>
+                      {vj.name}
+                    </option>
+                    ))}
+                 </select>
                 </div>
                 <Link className="text-center" to="/user/videojuego/">
                 <button className="btn btn-success m-1 w-50 mt-4" 

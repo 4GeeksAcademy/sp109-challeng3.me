@@ -4,6 +4,7 @@ import useGlobalReducer from "../hooks/useGlobalReducer";  // Custom hook for ac
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CreateUserModal from "../components/CreateUserModal.jsx";
+import { jwtDecode } from "jwt-decode";
 
 const UserLogin = () => {
   // Access the global state and dispatch function using the useGlobalReducer hook.
@@ -13,55 +14,75 @@ const UserLogin = () => {
   const navigate = useNavigate();
 
   
-    function accesLogin (e){
-      e.preventDefault()
-      const requestOptions = {
-        method: "POST",
-        headers: {'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: email,
-          password: password
-        })
-      };
+  function accesLogin (e){
+    e.preventDefault()
+    const requestOptions = {
+      method: "POST",
+      headers: {'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
+    }
       
-      fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/login", requestOptions)
-      .then((response) => {
-        if (response.status == 200){
-          dispatch({ 
-            type: "set_auth", 
-            payload: true })
-          }
-          return response.json() 
-        })
-        .then((data) => {
-          localStorage.setItem("token", data.access_token);
-          setEmail("")
-          setPassword("")
-                navigate("/user/private");
+  fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/login", requestOptions)
+  .then(async (response) => {
+    const data = await response.json();
 
-              }
-        )
-}
+    if (response.status === 200 && data.access_token) {
+      localStorage.setItem("token", data.access_token);
+
+      // Decodifica el token para obtener el rol
+      const decoded = jwtDecode(data.access_token);
+      const role = decoded.role;
+
+      // Establece auth en el store según el rol
+      if (role === "admin") {
+        dispatch({ type: "set_admin_auth", payload: true });
+        navigate("/admin/dashboard");
+      } else if (role === "user") {
+        dispatch({ type: "set_auth", payload: true });
+        navigate("/user/dashboard");
+      } else {
+        alert("Rol no reconocido.");
+        return;
+      }
+
+      setEmail("");
+      setPassword("");
+    } else {
+      alert(data.msg || "Email o contraseña incorrectos");
+    }
+  })
+  .catch((error) => {
+    console.error("Login error:", error);
+    alert("Error de red o del servidor");
+  })
+  }
 
   return (
     <div className="container mt-5 w-75">
-               {/* <div className="d-flex justify-content-end">
-                <CreateUserModal /> 
-              </div> */}
-                <h1 className="text-center">User Login</h1>
-             <form className="w-75 m-auto" onSubmit={accesLogin}>
-                <div className="mb-3">
-                    <label for="exampleInputEmail1" className="form-label">Email</label>
-                    <input value= {email} onChange={(e) => setEmail(e.target.value)} type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>
-                </div>
-                <div className="mb-3">
-                    <label for="exampleInputPassword1" className="form-label">Password</label>
-                    <input value= {password} onChange={(e) => setPassword(e.target.value)} type="password" className="form-control" id="exampleInputPassword1"/>
-                </div>
-                <div className="d-flex justify-content-between">
-                  <button type="submit" className="btn btn-primary">Login</button>
-                </div>
-             </form>
+      <h1 className="text-center">Accede a tu cuenta</h1>
+        <form className="w-50 m-auto border p-4 shadow rounded" onSubmit={accesLogin}>
+          <div className="mb-3">
+              <label for="exampleInputEmail1" className="form-label">Email</label>
+              <input value= {email} onChange={(e) => setEmail(e.target.value)} type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>
+          </div>
+          <div className="mb-3">
+              <label for="exampleInputPassword1" className="form-label">Password</label>
+              <input value= {password} onChange={(e) => setPassword(e.target.value)} type="password" className="form-control" id="exampleInputPassword1"/>
+          </div>
+          <div className="d-flex gap-2 flex-column">
+            <button type="submit" className="btn btn-success">Login</button>
+            <div className="d-flex gap-1 small-text align-self-center">
+              ¿No tienes cuenta? 
+              <CreateUserModal/>
+              </div>
+              <div className="d-flex gap-1 small-text align-self-center">
+              ¿Olvidaste la contraseña?
+              </div>
+          </div>
+        </form>
     </div>
   );
 };
