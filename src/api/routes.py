@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Admin, Tournament, Team, User_tournament, Videojuego, User_team, User_videojuego, Team_tournament
+from api.models import db, User, Admin, Tournament, Team, User_tournament, Videojuego, User_team, User_videojuego, Team_tournament, Game_team
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from sqlalchemy import select
@@ -788,3 +788,82 @@ def delete_team_tournament(id):
     db.session.commit()
 
     return 'team_tournament with id ' + str(id) + ' has been deleted', 200
+
+@api.route('/game/team', methods=['GET'])
+def get_game_teams():
+
+    all_game_teams =  db.session.execute(select(Game_team)).scalars().all()
+    if all_game_teams is None:
+        return 'Cant get Game_teams', 400
+    
+    result = list(map(lambda game_team: game_team.serialize(), all_game_teams))
+
+    return jsonify(result), 200
+
+@api.route('/game/team/<int:id>', methods=['GET'])
+def get_game_team(id):
+
+    game_team =  db.session.execute(select(Game_team).where(Game_team.id == id)).scalars().first()
+    if game_team is None:
+        return 'Cant get the game_team', 400
+
+    return jsonify(game_team.serialize()), 200
+
+@api.route('/game/team', methods=['POST'])
+def add_game_team():
+
+    body = request.get_json()
+
+    if body is None:
+        return 'El cuerpo debe seguir la siguiente estructura, {"videojuego_id": int, "team_id": int}', 400
+    if 'team_id' not in body:
+        return 'Debes especificar team_id', 400
+    if 'videojuego_id' not in body:
+        return 'Debes especificar game_id', 400
+
+    
+    new_game_team =  Game_team(
+        team_id = body['team_id'],
+        videojuego_id = body['videojuego_id'],
+        ranking = 0,
+    )
+
+    db.session.add(new_game_team)
+    db.session.commit()
+    
+    return 'Game_team successful created', 200
+
+@api.route('/game/team/<int:id>', methods=['PUT'])
+def edit_game_team(id):
+
+    body = request.get_json()
+    game_team = db.session.execute(select(Game_team).where(Game_team.id == id)).scalars().first()
+
+    if game_team is None:
+        return 'team_tournament dont exist', 400
+
+    if body is None:
+        return 'El cuerpo debe seguir la siguiente estructura, {"videojuego_id": int, "team_id": int, "ranking": int}', 400
+    if 'team_id' in body:
+        game_team.team_id = body['team_id']
+    if 'tournament_id' in body:
+        game_team.videojuego_id = body['videojuego_id']
+    if 'ranking' in body:
+        game_team.ranking = body['ranking']
+    
+    db.session.commit()
+    
+    return 'game_team with id ' + str(id) + ' has been edited', 200
+
+@api.route('/game/team/<int:id>', methods=['DELETE'])
+def delete_game_team(id):
+
+    game_team = db.session.execute(select(Game_team).where(Game_team.id == id)).scalars().first()
+
+    if game_team is None:
+        return 'game_team dont exist', 400
+
+    db.session.delete(game_team)
+    db.session.commit()
+
+    return 'Game_team with id ' + str(id) + ' has been deleted', 200
