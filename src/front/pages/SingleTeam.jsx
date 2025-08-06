@@ -47,6 +47,7 @@ const SingleTeam = () => {
             <ul></ul>
             <button className="btn btn-primary mx-2" onClick={() => navigate("/user/dashboard")}>Atras</button>
             <button className="btn btn-secondary mx-2" onClick={() => navigate("/team/edit/" + team_id)}>Editar Equipo</button>
+            <button className="btn btn-danger mx-2" onClick={() => navigate("/team/aplication/" + team_id)}>Solicitudes</button>
         </div>
     )
 }

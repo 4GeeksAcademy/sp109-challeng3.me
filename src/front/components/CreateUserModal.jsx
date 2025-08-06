@@ -41,9 +41,6 @@ const CreateUserModal = ({onUserCreated}) => {
                 closePopup()
                 onUserCreated()
             }
-            else {
-                alert('No se puede crear ese usuario')
-            }
         })
     }
 

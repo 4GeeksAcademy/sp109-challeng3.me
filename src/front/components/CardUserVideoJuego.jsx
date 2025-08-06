@@ -26,9 +26,9 @@ export const CardUserVideoJuego = props => {
       <h5>VideoJuego Id: {userVideoJuego.videojuego_id} </h5>
       <h5>User Id: {userVideoJuego.user_id} </h5>
       <h5>Ranking: {userVideoJuego.ranking} </h5>
-      <Link to="/user/videojuego">
+      <Link to="/user/dashboard">
         <span className="btn btn-primary btn-sm" href="#" role="button">
-          Back home
+          Atras
         </span>
       </Link>
     </div>

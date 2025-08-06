@@ -311,8 +311,6 @@ def add_users():
         return 'Debes especificar password', 400
     if 'email' not in body:
         return 'Debes especificar email', 400
-    if 'img' not in body:
-        return 'Debes especificar img', 400
     
     new_user =  User(
         username = body['username'],
@@ -322,7 +320,7 @@ def add_users():
         points = 0,
         premium = False,
         is_active = True,
-        img = body['img']
+        img = "",
     )
 
     db.session.add(new_user)
@@ -482,13 +480,15 @@ def add_team():
     body = request.get_json()
 
     if body is None:
-        return 'El cuerpo debe seguir la siguiente estructura, {"name": name, "user_id": user_id, "img": Link}', 400
+        return 'El cuerpo debe seguir la siguiente estructura, {"name": name, "user_id": user_id, "img": Link, "videojuego_id" int}', 400
     if 'name' not in body:
         return 'Debes especificar name', 400
     if 'user_id' not in body:
         return 'Debes especificar user_id', 400
     if 'img' not in body:
         return 'Debes especificar img', 400
+    if 'videojuego_id' not in body:
+        return 'Debes especificar videojuego_id', 400
 
     
     new_team =  Team(
@@ -496,7 +496,8 @@ def add_team():
         level = 1,
         premium = False,
         user_id = body['user_id'],
-        img = body['img']
+        img = body['img'],
+        videojuego_id = body['videojuego_id']
     )
 
     db.session.add(new_team)
@@ -514,7 +515,7 @@ def edit_team(team_id):
         return 'Team dont exist', 400
 
     if body is None:
-        return 'El cuerpo debe seguir la siguiente estructura, {"name": name, "level": level, "premium": premium, "user_id": user_id, "img": link}', 400
+        return 'El cuerpo debe seguir la siguiente estructura, {"name": name, "level": level, "premium": premium, "user_id": user_id, "img": link, "videojuego_ir": int}', 400
     if 'name' in body:
         team.name = body['name']
     if 'level' in body:
@@ -525,6 +526,8 @@ def edit_team(team_id):
         team.user_id = body['user_id']
     if 'img' in body:
         team.img = body['img']
+    if 'videojuego_id' in body:
+        team.videojuego_id = body['videojuego_id']
     
     db.session.commit()
     
@@ -641,6 +644,17 @@ def get_teams_by_users(user_id):
 
     return jsonify(result), 200
 
+@api.route('/team-by-user/<int:user_id>', methods=['GET'])
+def get_other_teams_by_users(user_id):
+
+    all_teams_by_user =  db.session.execute(select(User_team).where(User_team.user_id == user_id)).scalars().all()
+    if all_teams_by_user is None:
+        return 'Cant get User_team', 400
+    
+    result = list(map(lambda user_team: user_team.serialize(), all_teams_by_user))
+
+    return jsonify(result), 200
+
 @api.route('/user/team/<int:id>', methods=['GET'])
 def get_user_team(id):
 
@@ -665,7 +679,8 @@ def add_user_team():
     
     new_user_team =  User_team(
         team_id = body['team_id'],
-        user_id = body['user_id']
+        user_id = body['user_id'],
+        status = "pending"  # Default status can be set here
     )
 
     db.session.add(new_user_team)
@@ -683,11 +698,13 @@ def edit_user_team(id):
         return 'user_team dont exist', 400
 
     if body is None:
-        return 'El cuerpo debe seguir la siguiente estructura, {"team_id": int, "user_id": int}', 400
+        return 'El cuerpo debe seguir la siguiente estructura, {"team_id": int, "user_id": int, "status": pending/acepted/denied}', 400
     if 'team_id' in body:
         user_team.team_id = body['team_id']
     if 'user_id' in body:
         user_team.user_id = body['user_id']
+    if 'status' in body:
+        user_team.status = body['status']
     
     db.session.commit()
     

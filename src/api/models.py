@@ -102,7 +102,7 @@ class Videojuego(db.Model):
     img: Mapped[str] = mapped_column(nullable=True)
     genre: Mapped[str] = mapped_column(nullable=True)
 
-    teams: Mapped[List["Team"]] = relationship(back_populates="videojuego")
+    team: Mapped[List["Team"]] = relationship(back_populates="videojuego")
 
     user_videojuego: Mapped[List["User_videojuego"]] = relationship(back_populates="videojuego")
 
