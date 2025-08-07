@@ -6,6 +6,7 @@ import { jwtDecode } from "jwt-decode";
 
 const CreateTeam = () => {
     const navigate = useNavigate();
+    const [videojuegos, setVideojuegos] = useState([])
     const [user, setUser] = useState({
         id: "",
         name: "",
@@ -17,6 +18,7 @@ const CreateTeam = () => {
         premium: false,
         user_id: 0,
         img: "",
+        videojuego_id: 0
     })
 
     const getUserInfo = () => {
@@ -44,11 +46,20 @@ const CreateTeam = () => {
         }
     }
 
+    const getGames = () => {
+        fetch(import.meta.env.VITE_BACKEND_URL + "/api/game") 
+        .then(res => res.json())
+        .then(data => setVideojuegos(data.videojuego))
+        .catch(err => console.error("Error al cargar videojuegos:", err))
+    }
+
     useEffect(() => {
         getUserInfo()
+        getGames()
     }, [])
 
     const addTeam = () => {
+        console.log(team)
         fetch(import.meta.env.VITE_BACKEND_URL +'/api/team', {
             method: 'POST',
             headers: {
@@ -72,6 +83,7 @@ const CreateTeam = () => {
         })
     }
 
+
     return (
         <div className="container my-4">
                     <h3 className="display-5 mb-4">Crea tu Equipo</h3>
@@ -80,6 +92,22 @@ const CreateTeam = () => {
                         <input type="text" name="name" id="name" value={team.name} onChange={(e) => setTeam({ ...team, name: e.target.value })}/>
                         <label htmlFor="img" className="mx-2 mt-4">Link del logo del equipo</label>
                         <input type="text" name="img" id="img" value={team.img} onChange={(e) => setTeam({ ...team, img: e.target.value })}/>
+                        <label htmlFor="img" className="mx-2 mt-4">Selecciona el juego de tu equipo</label>
+                        <select
+                            className="form-control mt-2"
+                            value={videojuegos.videojuego_id}
+                            onChange={(e) =>
+                            setTeam({ ...team, videojuego_id: e.target.value })
+                            }
+                        >
+                        <option value="">Selecciona un videojuego</option>
+                        {videojuegos.map((vj) => (
+                            <option key={vj.id} value={vj.id}>
+                            {vj.name}
+                            </option>
+                            ))}
+                        </select>
+                    
                     </div>
                     <div className="text-center">
                         <button className="btn btn-danger mx-2" onClick={() => navigate("/user/dashboard")}>Atras</button>

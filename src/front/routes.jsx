@@ -47,6 +47,8 @@ import UserLogin from "./pages/UserLogin.jsx";
 import PrivateUser from "./pages/PrivateUser.jsx";
 import ApiIntegration from "./pages/ApiIntegration.jsx";
 import UserDashboard from "./pages/UserDashboard.jsx";
+import SearchTeam from "./pages/SearchTeam.jsx";
+import TeamAplication from "./pages/TeamAplication.jsx";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -101,6 +103,8 @@ export const router = createBrowserRouter(
         <Route path="/user/login" element={<UserLogin />} />
         <Route path="/user/dashboard" element={<UserDashboard />} />
         <Route path="/api-integration" element={<ApiIntegration />} />
+        <Route path="/search/team" element={<SearchTeam />} />
+        <Route path="/team/aplication/:team_id" element={<TeamAplication />} />
       </Route>
     )
 );
