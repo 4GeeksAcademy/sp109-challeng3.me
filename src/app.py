@@ -12,6 +12,7 @@ from api.admin import setup_admin
 from api.commands import setup_commands
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
+from datetime import timedelta
 
 # from models import Person
 
@@ -33,6 +34,7 @@ else:
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 MIGRATE = Migrate(app, db, compare_type=True)
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
 db.init_app(app)
 
 # add the admin
@@ -46,6 +48,7 @@ app.register_blueprint(api, url_prefix='/api')
 
 app.config["JWT_SECRET_KEY"] = "challeng3.me-lamejorwebdelmundo"  # ¡Cambia las palabras "super-secret" por otra cosa!
 jwt = JWTManager(app)
+
 # Handle/serialize errors like a JSON object
 
 

@@ -6,9 +6,6 @@ const EditUserModal = ({onUserModified, userId}) => {
         username: "",
         password: "",
         email: "",
-        level: "",
-        points: 0,
-        premium: false
     })
 
     const openPopup = () => setPopupOpen(true)
@@ -67,7 +64,7 @@ const EditUserModal = ({onUserModified, userId}) => {
 
     return (
         <div>
-            <button className="btn btn-primary" onClick={openPopup}>✎</button>
+            <button className="border shadow rounded bg-dark text-info no-link small-text" onClick={openPopup}>Editar perfil</button>
 
             {isPopupOpen && (
                 <div className="modal-overlay">
@@ -79,12 +76,8 @@ const EditUserModal = ({onUserModified, userId}) => {
                         <input type="password" name="Password" id="Password" value={user.password} onChange={(e) => setUser({ ...user, password: e.target.value })}/>
                         <label htmlFor="Email">Email</label>
                         <input type="email" name="Email" id="Email" value={user.email} onChange={(e) => setUser({ ...user, email: e.target.value })}/>
-                        <label htmlFor="level">Level</label>
-                        <input type="number" name="level" id="level" value={user.level} onChange={(e) => setUser({ ...user, level: e.target.value })}/>
-                         <label htmlFor="points">Points</label>
-                        <input type="number" name="points" id="points" value={user.points} onChange={(e) => setUser({ ...user, points: e.target.value })}/>
-                         <label htmlFor="premium">Premium</label>
-                        <input type="checkbox" name="premium" id="premium" value={user.premium} onChange={(e) => setUser({ ...user, premium: e.target.checked })}/>
+                        <label htmlFor="img">Avatar</label>
+                        <input type="text" name="img" id="img" value={user.img} onChange={(e) => setUser({ ...user, img: e.target.value })}/>
                         <div className="d-flex justify-content-around">
                         <button className="btn btn-success mt-3" onClick={() => editUser(user.id)}>Editar Usuario</button>
                         <button className="btn btn-secondary mt-3" onClick={closePopup}>Cerrar</button>
