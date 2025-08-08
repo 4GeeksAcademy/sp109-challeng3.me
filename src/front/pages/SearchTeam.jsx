@@ -87,7 +87,8 @@ export default function SearchTeam() {
         getUserTeams()
     }, []);
 
-    const userGameIds = userGames.map(g => g.videojuego_id);
+    const gamesPlayedByThisUser = userGames.filter(g => user.id == g.user_id)
+    const userGameIds = gamesPlayedByThisUser.map(g => g.videojuego_id);
 
     const filteredTeams = teams.filter(team => {
         // Evitar mostrar los equipos del propio usuario

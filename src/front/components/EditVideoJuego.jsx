@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import PropTypes from "prop-types";
@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 export const EditVideoJuego = () => {
   const { store } = useGlobalReducer();
   const { id } = useParams();
+  const navigate = useNavigate()
 
   const [editVideoJuego, setEditVideoJuego] = useState({
     name: "",
@@ -32,14 +33,12 @@ export const EditVideoJuego = () => {
         "Content-Type": "application/json",
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       },
-      body: JSON.stringify({
-        videojuegos: editVideoJuego.videojuegos
-      }),
+      body: JSON.stringify(editVideoJuego),
     };
 
     fetch(import.meta.env.VITE_BACKEND_URL + "/api/game/" + id, requestOptions)
       .then((response) => response.json())
-      .then((data) => window.location.href = "/videojuego")
+      .then((data) => navigate("/videojuego"))
 
   }
 
@@ -97,14 +96,14 @@ export const EditVideoJuego = () => {
                 className="btn btn-success m-1 w-50 mt-4"
                 onClick={editarVideoJuego}
               >
-                Save
+                Guardar
               </button>
             </Link>
           </div>
         </li>
       </ul>
       <Link to="/videojuego">
-        <button className="btn btn-primary mt-2">Back home</button>
+        <button className="btn btn-primary mt-2">Atrás</button>
       </Link>
     </div>
   );

@@ -15,6 +15,7 @@ const ApiIntegration = () => {
   const dropdownRef = useRef(null)
   const { store, dispatch } = useGlobalReducer()
   const navigate = useNavigate()
+  const [ignoreNextQuery, setIgnoreNextQuery] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -78,6 +79,11 @@ const ApiIntegration = () => {
   };
 
   useEffect(() => {
+    if (ignoreNextQuery) {
+      setIgnoreNextQuery(false)
+      return
+    }
+    
     const timeout = setTimeout(() => {
       if (query.length > 1) {
         fetchGames()
@@ -102,6 +108,7 @@ const ApiIntegration = () => {
   }, []);
 
   const handleSelectGame = (game) => {
+    setIgnoreNextQuery(true)
     setSelectedGame(game)
     setQuery(game.name)
     setShowDropdown(false)
@@ -109,8 +116,28 @@ const ApiIntegration = () => {
   };
 
   const createGame = () => {
-    if (input.name && input.description && input.platforms && input.release_date && input.genre && input.img) {
-      setSelectedGame(input)
+    const gameData = selectedGame
+      ? {
+          name: selectedGame.name,
+          description: selectedGame.deck,
+          platforms: selectedGame.platforms?.map(p => p.name).join(', ') || '',
+          release_date: selectedGame.original_release_date || '',
+          img: selectedGame.image?.medium_url || '',
+          genre: selectedGame.genres?.map(g => g.name).join(', ') || ''
+        }
+      : {
+          name: input.name,
+          description: input.description,
+          platforms: input.platforms,
+          release_date: input.release_date,
+          img: input.img,
+          genre: input.genre
+        };
+
+    // Validación básica
+    if (!gameData.name || !gameData.description || !gameData.platforms || !gameData.release_date || !gameData.img || !gameData.genre) {
+      setError("Por favor, completa todos los campos.");
+      return;
     }
 
     fetch(import.meta.env.VITE_BACKEND_URL + "/api/game", {
@@ -119,14 +146,7 @@ const ApiIntegration = () => {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${localStorage.getItem('token')}`
       },
-      body: JSON.stringify({
-        name: selectedGame.name,
-        description: selectedGame.deck,
-        platforms: selectedGame.platforms.map(p => p.name).join(', '),
-        release_date: selectedGame.original_release_date || null,
-        img: selectedGame.image?.medium_url,
-        genre: selectedGame.genres ? selectedGame.genres.map(g => g.name).join(', ') : null
-      })
+      body: JSON.stringify(gameData)
     })
     .then(response => {
       if (!response.ok) {
@@ -152,20 +172,24 @@ const ApiIntegration = () => {
   }
 
   return (
-    <div className="relative max-w-xl mx-auto mt-8 text-center" ref={dropdownRef}>
+    <div className="relative max-w-xl mx-auto mt-8 text-center">
       <input
         type="text"
         className="w-full border p-2 rounded"
         placeholder="Buscar juego..."
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onFocus={() => query && games.length > 0 && setShowDropdown(true)}
+        onChange={(e) => {
+          setQuery(e.target.value)
+          setSelectedGame(null)
+          }
+        }
+        onFocus={() => query && games.length > 0 && !selectedGame && setShowDropdown(true)}
       />
 
       {loading && <p className="text-sm mt-1">Cargando...</p>}
 
       {showDropdown && games.length > 0 && (
-        <ul className="dropdown-menu position-relative show w-25 border border-secondary rounded mt-1 overflow-auto shadow bg-white max-h-60 mx-auto">
+        <ul className="dropdown-menu position-relative show w-25 border border-secondary rounded mt-1 overflow-auto shadow bg-white max-h-60 mx-auto" ref={dropdownRef}>
           {games.map((game) => (
             <li
                 key={game.id}

@@ -34,7 +34,7 @@ export const Navbar = () => {
 			setIsUser(false);
 			localStorage.removeItem("token");
 		}
-	}, [store.admin_auth, store.user_auth])
+	}, [store.admin_auth, store.user_auth, navigate])
 
 	const logout = () => {
 		localStorage.removeItem("token")

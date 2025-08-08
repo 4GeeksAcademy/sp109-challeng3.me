@@ -50,10 +50,15 @@ const UserLogin = () => {
 
       setEmail("");
       setPassword("");
-    } 
-  })
+    } else if (response.status === 401 || response.status === 400) {
+        // Si credenciales inválidas
+        alert("Email o contraseña inválido.");
+      } else {
+        // Otros errores
+        alert(data?.msg || "Error desconocido.");
+      }
+    })
   .catch((error) => {
-    console.error("Login error:", error);
     alert("Error de red o del servidor");
   })
   }

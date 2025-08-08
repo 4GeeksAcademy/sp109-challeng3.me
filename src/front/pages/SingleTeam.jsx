@@ -9,6 +9,7 @@ const SingleTeam = () => {
     const [user, setUser] = useState({})
     const navigate = useNavigate()
     const [owner, setOwner] = useState(true)
+    const [ownerData, setOwnerData] = useState([])
 
     const getTeam = () => {
         fetch(import.meta.env.VITE_BACKEND_URL +'/api/team/' + team_id)
@@ -37,15 +38,28 @@ const SingleTeam = () => {
         })
     }
 
+    const getOwner = () => {
+        fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/' + team.user_id)
+        .then(res => res.json())
+        .then(data => {
+            setOwnerData(data)
+        })
+    }
+
     useEffect(() => {
         getTeam()
         getUserInfo()
-        if (team.user_id != user.id) {
-            setOwner(false)
-        }
 
     }, [])
 
+    useEffect(() => {
+    if (team && user && team.user_id !== user.id) {
+        setOwner(false)
+        getOwner()
+    } else if (team && user && team.user_id === user.id) {
+        setOwner(true)
+    }
+    }, [team, user])
 
     return (
         <div className="container text-center w-50 my-5 border p-4">
@@ -53,9 +67,13 @@ const SingleTeam = () => {
             <img src={team.img} alt="Team Logo" className="gameimg mb-3" />
             <h3>{team.name}</h3>
             <p>Level: {team.level}</p>
-            <p>Premium: {team.premium}</p>
-            <p>Founder: {user.username}</p>
-            <p>Members:</p>
+            <p>Premium: {team.premium ? "Premium" : "Free"}</p>
+            {owner ? (
+                <p>Founder: {user.username}</p>
+            ) : (
+                <p>Founder: {ownerData.username}</p>
+            )}
+            <p>Members: </p>
             <ul></ul>
             <button className="btn btn-primary mx-2" onClick={() => navigate("/user/dashboard")}>Atras</button>
             {owner && (<>
