@@ -11,8 +11,10 @@ export default function UserDashboard() {
     const [userTeams, setUserTeams] = useState([])
     const [otherTeams, setOtherTeams] = useState([])
     const [userGames, setUserGames] = useState([])
+    const [userTournaments, setUserTournaments] = useState([])
     const [gameDetails, setGameDetails] = useState([])
     const [allTeams, setAllTeams] = useState([])
+    const [tournamentDetails, setTournamentDetails] = useState([])
     const [user, setUser] = useState({
         id: "",
         name: "",
@@ -62,6 +64,38 @@ export default function UserDashboard() {
                 })
         }
     }
+
+    useEffect(() => {
+        const token = localStorage.getItem("token")
+        if (token) {
+            const decoded = jwtDecode(token)
+            const tournament_id = decoded.sub || null
+            
+            getUserInfo(tournament_id)
+            fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/tournament/')
+                .then(res => res.json())
+                .then(async (userTournamentLinks) => {
+                    if (!Array.isArray(userTournamentLinks) || userTournamentLinks.length === 0) {
+                        alert("No tienes torneos asociados.")
+                        return
+                    }
+
+                    // Obtener detalles de todos los torneos por su ID
+                    const tournamentDetailPromises = userTournamentLinks.map(link =>
+                        fetch(import.meta.env.VITE_BACKEND_URL + '/api/tournament/' + link.tournament_id)
+                            .then(res => res.json())
+                    )
+                    const tournamentDetails = await Promise.all(tournamentDetailPromises);
+                    setUserTournaments(userTournamentLinks)
+                    setTournamentDetails(tournamentDetails)
+                    console.log("Detalles de torneos del usuario:", tournamentDetails);
+
+                })
+                .catch(err => {
+                    console.error("Error al cargar los torneos del usuario:", err);
+                });
+        }
+    }, [])
 
     const getUserInfo = (userId) => {
         fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/' + userId)
@@ -153,8 +187,7 @@ export default function UserDashboard() {
                                 <span>{game.name}</span>
                             </li>
                         )))
-                        : <span className="m-auto">No tienes juegos vinculados,&nbsp;
-                        <Link to="/select-game">selecciona tus juego favorito</Link></span>}
+                        : <span className="m-auto">No tienes juegos vinculados,&nbsp;</span>}
                     </ul>
                     {gameDetails.length > 0 && (
                     <button className="btn btn-success mt-2" onClick={() => navigate("/select-game")}>Selecciona más juegos</button>)}
@@ -225,12 +258,22 @@ export default function UserDashboard() {
                     </Link>
                 </div>
             </div>
-            <div className="container">
-                <h4>Mis Torneos</h4>
-                <div>
-
+            <div className="d-flex justify-content-center w-100">
+                <div className="text-center">
+                <h1>Mis Torneos</h1>
+                    <ul>
+                        {tournamentDetails.length > 0 
+                        ? (tournamentDetails.map((tournament) => (
+                            <li key={tournament.id} className="border p-1 d-flex align-items-center flex-nowrap">
+                                <span>{tournament.name}</span>
+                            </li>
+                        )))
+                        : <span className="">No tienes torneos vinculados. &nbsp;</span>}
+                    </ul>
+                        <Link className="d-flex justify-content-center" to="/select-tournament">
+                             <button className="btn btn-info">Buscar Torneos</button>
+                        </Link>
                 </div>
-                <button className="btn btn-info">Buscar Torneos</button>
             </div>
         </div>
     );
