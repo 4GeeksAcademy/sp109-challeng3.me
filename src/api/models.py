@@ -6,6 +6,7 @@ from typing import List
 db = SQLAlchemy()
 
 class User(db.Model):
+    __tablename__ = "user"
     id: Mapped[int] = mapped_column(primary_key=True)
     username : Mapped[str] = mapped_column(nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
@@ -58,6 +59,9 @@ class Tournament(db.Model):
     user_tournament: Mapped[List["User_tournament"]] = relationship(back_populates="tournament")
     team_tournament: Mapped[List["Team_tournament"]] = relationship(back_populates="tournament")
 
+    videojuego_id: Mapped[int] = mapped_column(ForeignKey("videojuego.id"))
+    videojuego: Mapped["Videojuego"] = relationship(back_populates="tournament")
+
     def serialize(self):
         return {
             "id": self.id,
@@ -103,6 +107,7 @@ class Videojuego(db.Model):
     genre: Mapped[str] = mapped_column(nullable=True)
 
     team: Mapped[List["Team"]] = relationship(back_populates="videojuego")
+    tournament: Mapped[List["Tournament"]] = relationship(back_populates="videojuego")
 
     user_videojuego: Mapped[List["User_videojuego"]] = relationship(back_populates="videojuego")
 

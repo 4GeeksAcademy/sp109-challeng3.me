@@ -223,7 +223,7 @@ def add_tournament():
     claims = get_jwt()
     if claims.get("role") != "admin":
         return jsonify({"msg": "No autorizado"}), 403
-
+    
     body = request.get_json()
     new_torneo = Tournament(**body)
     db.session.add(new_torneo)
@@ -470,7 +470,7 @@ def get_team(team_id):
 
     team =  db.session.execute(select(Team).where(Team.id == team_id)).scalars().first()
     if team is None:
-        return 'Cant get the team', 400
+        return jsonify('Cant get the team'), 400
 
     return jsonify(team.serialize()), 200
 

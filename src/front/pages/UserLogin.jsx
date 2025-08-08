@@ -50,9 +50,7 @@ const UserLogin = () => {
 
       setEmail("");
       setPassword("");
-    } else {
-      alert(data.msg || "Email o contraseña incorrectos");
-    }
+    } 
   })
   .catch((error) => {
     console.error("Login error:", error);

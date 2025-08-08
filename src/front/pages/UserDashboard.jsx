@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { jwtDecode } from "jwt-decode";
 import { use } from "react";
+import EditUserModal from "../components/EditUserModal.jsx"
 
 export default function UserDashboard() {
     const { store } = useGlobalReducer()
@@ -47,7 +48,6 @@ export default function UserDashboard() {
                 .then(res => res.json())
                 .then(async (userGameLinks) => {
                     if (!Array.isArray(userGameLinks) || userGameLinks.length === 0) {
-                        alert("No tienes juegos asociados.")
                         return
                     }
 
@@ -67,12 +67,7 @@ export default function UserDashboard() {
         fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/' + userId)
             .then(res => res.json())
             .then(data => {
-                setUser({
-                    id: data.id,
-                    name: data.name,
-                    email: data.email,
-                    level: data.level,
-                })
+                setUser(data)
             })
             .catch(err => console.error("Error al cargar la información del usuario:", err))
     }
@@ -95,7 +90,6 @@ export default function UserDashboard() {
             .then(res => res.json())
             .then(data => {
                 setOtherTeams(data || [])
-                console.log("Equipos del usuario:", data)
             })
     }
 
@@ -125,12 +119,28 @@ export default function UserDashboard() {
 
     return (
         <div className="container">
-            <h1 className="text-center">Welcome {user.name}</h1>
-            <p className="text-center"><strong>Email: </strong>{user.email}</p>
+            <div className="d-flex justify-content-center align-items-center gap-4 my-4">
+                <div className="constainer border-end p-4">
+                    <img
+                        src={user.img}
+                        alt={user.username}
+                        className="gameimg"
+                    />
+                </div>
+                <div className="align-items-left">
+                    <h1>Welcome {user.username}</h1>
+                    <p><strong>Email: </strong>{user.email}</p>
+                    <p><strong>Nivel: </strong>{user.level}</p>
+                    <div className="text-center">
+                        <EditUserModal userId={user.id} onUserModified={getUserInfo}/>
+                    </div>
+                </div>
+            </div>
+            
             {/* Additional user dashboard content can be added here */}
             <div className="row my-4">
                 <div className="col-4 text-center">
-                    <h4>Mis juegos</h4>
+                    <h4 className="text-start text-uppercase">Mis juegos</h4>
                     <ul className="m-0 p-0">
                         {gameDetails.length > 0 
                         ? (gameDetails.map((game) => (
@@ -150,7 +160,7 @@ export default function UserDashboard() {
                     <button className="btn btn-success mt-2" onClick={() => navigate("/select-game")}>Selecciona más juegos</button>)}
                 </div>
                 <div className="col-4 text-center border-end border-start">
-                    <h4>Mis Equipos</h4>
+                    <h4 className="text-start text-uppercase">Mis Equipos</h4>
                     <ul className="m-0 p-0">
                         {userTeams.length > 0 
                         ? (userTeams.map((team) => (
@@ -175,13 +185,10 @@ export default function UserDashboard() {
                         <Link to="/team/create">
                             <button className="btn btn-success">Crear Equipo</button>
                         </Link>
-                        <Link to="/search/team">
-                            <button className="btn btn-info">Unirse a un Equipo</button>
-                        </Link>
                     </div>
                 </div>
                 <div className="col-4 text-center">
-                    <h4>Equipos en los que participo</h4>
+                    <h4 className="text-start text-uppercase">Otros Equipos</h4>
                     <ul className="m-0 p-0">
                         {otherTeams.length > 0 ? (
                             otherTeams.map((team, index) => {
@@ -210,10 +217,20 @@ export default function UserDashboard() {
                                 )
                             })    
                         ) : (
-                            <span className="m-auto">No participas en ningún equipo</span>
+                            <span className="m-auto">No participas en ningún otro equipo</span>
                         )}
                     </ul>
+                    <Link to="/search/team">
+                        <button className="btn btn-info my-2">Unirse a un Equipo</button>
+                    </Link>
                 </div>
+            </div>
+            <div className="container">
+                <h4>Mis Torneos</h4>
+                <div>
+
+                </div>
+                <button className="btn btn-info">Buscar Torneos</button>
             </div>
         </div>
     );

@@ -8,6 +8,7 @@ const SingleTeam = () => {
     const { team_id } = useParams()
     const [user, setUser] = useState({})
     const navigate = useNavigate()
+    const [owner, setOwner] = useState(true)
 
     const getTeam = () => {
         fetch(import.meta.env.VITE_BACKEND_URL +'/api/team/' + team_id)
@@ -30,10 +31,21 @@ const SingleTeam = () => {
         }
     }
 
+    const deleteTeam = () => {
+        fetch(import.meta.env.VITE_BACKEND_URL + '/api/team/' + team_id, {
+            method: 'DELETE'
+        })
+    }
+
     useEffect(() => {
         getTeam()
         getUserInfo()
+        if (team.user_id != user.id) {
+            setOwner(false)
+        }
+
     }, [])
+
 
     return (
         <div className="container text-center w-50 my-5 border p-4">
@@ -46,8 +58,12 @@ const SingleTeam = () => {
             <p>Members:</p>
             <ul></ul>
             <button className="btn btn-primary mx-2" onClick={() => navigate("/user/dashboard")}>Atras</button>
-            <button className="btn btn-secondary mx-2" onClick={() => navigate("/team/edit/" + team_id)}>Editar Equipo</button>
-            <button className="btn btn-danger mx-2" onClick={() => navigate("/team/aplication/" + team_id)}>Solicitudes</button>
+            {owner && (<>
+                <button className="btn btn-secondary mx-2" onClick={() => navigate("/team/edit/" + team_id)}>Editar Equipo</button>
+                <button className="btn btn-danger mx-2" onClick={() => navigate("/team/aplication/" + team_id)}>Solicitudes</button>
+                <button className="btn btn-danger mx-2" onClick={() => navigate("/user/dashboard")}>Eliminar</button>
+            </>)}
+
         </div>
     )
 }

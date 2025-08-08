@@ -74,6 +74,9 @@ export default function SearchTeam() {
                 team_id: teamId,
             })
         })
+        .then(response => {
+            getUserTeams()
+        })
     }
 
     useEffect(() => {
@@ -84,44 +87,54 @@ export default function SearchTeam() {
         getUserTeams()
     }, []);
 
+    const userGameIds = userGames.map(g => g.videojuego_id);
+
+    const filteredTeams = teams.filter(team => {
+        // Evitar mostrar los equipos del propio usuario
+        if (team.user_id === user.id) return false;
+
+        // Ocultar equipos donde el usuario ya fue aceptado
+        const alreadyAccepted = userTeams.some(ut => ut.team_id === team.id && ut.status === "accepted");
+        if (alreadyAccepted) return false;
+
+        // Solo mostrar equipos que juegan a los mismos juegos que el usuario
+        return userGameIds.includes(team.videojuego_id);
+    });
+
     return (
         <div className="container mt-5">
             <h1 className="text-center">Buscar Equipos</h1>
             <p className="text-center">Aquí podrás buscar equipos que jueguen los mismos juegos que tu.</p>
             <ul>
                 {
-                teams
-                    .filter(team => {
-                        // Evitar mostrar los equipos del propio usuario
-                        if (team.user_id === user.id) return false;
+                filteredTeams.map(team => {
+                    const game = games.find(g => g.id === team.videojuego_id);
+                    const pendingRequest = userTeams.some(ut => ut.team_id === team.id && ut.status === "pending");
 
-                        // Revisar si el videojuego del equipo está en los videojuegos del usuario
-                        const userGameIds = userGames.map(g => g.videojuego_id);
-                        return userGameIds.includes(team.videojuego_id);
-                    })
-                    .map(team => {
-                        const game = games.find(g => g.id === team.videojuego_id)
-                        const pendingRequest = userTeams.some(ut => ut.team_id === team.id && ut.status === "pending")
-                        return (
-                            <li key={team.id} className="border p-2">
-                                <div className="d-flex justify-content-between align-items-center flex-nowrap">
-                                    <img src={team.img} alt={team.name} className="mini-gameimg p-2 mx-2" />
-                                    <h4>{team.name}</h4>
-                                    <div className="d-flex flex-column align-items-end">
-                                        <span>Nivel: {team.level}</span>
-                                        <span>Premium: {team.premium ? "Sí" : "No"}</span>
-                                    </div>
-                                <p>{game ? game.name : "Desconocido"}</p>
-                                {pendingRequest ? 
-                                    <span className="text-warning">Solicitud pendiente</span> : 
-                                    <button className="btn btn-warning" onClick={() => inscribirseAlEquipo(team.id)}>Solicitar unirse</button>   
-                                }
-                                    <Link to={`/team/${team.id}`} className="btn btn-primary"><i class="fa-solid fa-eye"></i></Link>   
+                    return (
+                        <li key={team.id} className="border p-2">
+                            <div className="d-flex justify-content-between align-items-center flex-nowrap">
+                                <img src={team.img} alt={team.name} className="mini-gameimg p-2 mx-2" />
+                                <h4>{team.name}</h4>
+                                <div className="d-flex flex-column align-items-end">
+                                    <span>Nivel: {team.level}</span>
+                                    <span>Premium: {team.premium ? "Sí" : "No"}</span>
                                 </div>
-                            </li>
-                        )
-                    })
-            }
+                                <p>{game ? game.name : "Desconocido"}</p>
+
+                                {pendingRequest ? (
+                                    <span className="text-warning">Solicitud pendiente</span>
+                                ) : (
+                                    <button className="btn btn-warning" onClick={() => inscribirseAlEquipo(team.id)}>Solicitar unirse</button>   
+                                )}
+
+                                <Link to={`/team/${team.id}`} className="btn btn-primary">
+                                    <i className="fa-solid fa-eye"></i>
+                                </Link>   
+                            </div>
+                        </li>
+                    );
+                })}
             </ul>
         </div>
 
