@@ -7,15 +7,24 @@ export const Form = () => {
   // Access the global state and dispatch function using the useGlobalReducer hook.
   const { store, dispatch } = useGlobalReducer();
   const navigate = useNavigate()
+  const [games, setGames] = useState([])
   const [torneoNuevo, setTorneoNuevo] = useState({
     name: "",
     level: 0,
     prize: 0,
-    type: ""
+    type: "",
+    videojuego: 0
   });
+
+  const getGames = () => {
+    fetch(import.meta.env.VITE_BACKEND_URL + '/api/game')
+    .then(response => response.json())
+    .then(data => setGames(data.videojuego))
+  }
 
   useEffect(() => {
     setTorneoNuevo(store.newTournament);
+    getGames()
   }, []);
 
   function newTournament (){
@@ -28,7 +37,8 @@ export const Form = () => {
         body: JSON.stringify(torneoNuevo)
         })
       .then(response => response.json())
-      .then(result => navigate("/tournament"))
+      .then(result => {
+      })
   }
 
   return (
@@ -51,7 +61,7 @@ export const Form = () => {
                 <div className="col-8">
                 Level:
                   <input
-                    type="text"
+                    type="number"
                     className="form-control mt-2"
                     value={torneoNuevo.level}
                     onChange={(e) => setTorneoNuevo({...torneoNuevo, level: e.target.value})}
@@ -60,7 +70,7 @@ export const Form = () => {
                 <div className="col-8">
                 Prize:
                   <input
-                    type="text"
+                    type="number"
                     className="form-control mt-2"
                     value={torneoNuevo.prize}
                     onChange={(e) => setTorneoNuevo({...torneoNuevo, prize: e.target.value})}
@@ -68,12 +78,36 @@ export const Form = () => {
                 </div>
                 <div className="col-8">
                 Type:
-                  <input
-                    type="text"
+                  <select
+                    id="type"
                     className="form-control mt-2"
                     value={torneoNuevo.type}
-                    onChange={(e) => setTorneoNuevo({...torneoNuevo, type: e.target.value})}
-                  />
+                    onChange={(e) =>
+                      setTorneoNuevo({ ...torneoNuevo, type: e.target.value })
+                    }
+                  >
+                    <option value="">Selecciona una opción</option>
+                    <option value="individual">Individual</option>
+                    <option value="equipo">Equipo</option>
+                  </select>
+                </div>
+                  <div className="col-8">
+                Juego:
+                  <select
+                    id="videojuego"
+                    className="form-control mt-2"
+                    value={torneoNuevo.videojuego}
+                    onChange={(e) =>
+                      setTorneoNuevo({ ...torneoNuevo, videojuego: parseInt(e.target.value) })
+                    }
+                  >
+                    <option value="">Selecciona un videojuego</option>
+                  {games.map((vj) => (
+                    <option key={vj.id} value={vj.id}>
+                      {vj.name}
+                    </option>
+                    ))}
+                  </select>
                 </div>
                 <button className="btn btn-success m-1 w-50 mt-4" 
                   onClick={newTournament}>

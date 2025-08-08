@@ -27,7 +27,7 @@ const EditTeam = () => {
         })
         .then(response => {
             if (response.ok) {
-                navigate("/team")
+                navigate("/user/dashboard")
             }
         })
     }
@@ -36,10 +36,10 @@ const EditTeam = () => {
         <div className="container my-4">
                     <h3 className="display-5 mb-4">Edita tu Equipo</h3>
                     <div className="container text-center w-50 my-5 border p-4 d-flex flex-column">
-                        <label htmlFor="name" className="mx-2">Name</label>
+                        <label htmlFor="name" className="mx-2">Nombre</label>
                         <input type="text" name="name" id="name" value={team.name} onChange={(e) => setTeam({ ...team, name: e.target.value })}/>
-                        <label htmlFor="user_id" className="mx-2 mt-4">User ID</label>
-                        <input type="number" name="user_id" id="user_id" value={team.user_id} onChange={(e) => setTeam({ ...team, user_id: e.target.value })}/>
+                        <label htmlFor="img" className="mx-2 mt-4">Imágen</label>
+                        <input type="text" name="img" id="img" value={team.img} onChange={(e) => setTeam({ ...team, img: e.target.value })}/>
                     </div>
                     <div className="text-center">
                             <button className="btn btn-success" onClick={editTeam}>Edita Equipo</button>

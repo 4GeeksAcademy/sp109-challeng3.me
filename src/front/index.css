@@ -50,3 +50,8 @@ ul li {
     list-style-type: none; /* Elimina los puntos de la lista */
     margin-bottom: 0.5rem; /* Espacio entre elementos de la lista */
 }
+
+.no-link {
+    text-decoration: none; /* Elimina el subrayado */
+    color: inherit; /* Hereda el color del texto */
+}

@@ -59,7 +59,7 @@ export const CreateUserVideoJuego = () => {
   
               <div className="input-group input-group-sm mb-3 row d-flex justify-content-center">
                 <div className="col-8">
-                videojuego_id:
+                Selecciona un juego para añadirlo a tu perfil:
                  <select
                     className="form-control mt-2"
                     value={userVideoJuego.videojuego_id}
@@ -78,14 +78,14 @@ export const CreateUserVideoJuego = () => {
                 <Link className="text-center" to="/user/videojuego/">
                 <button className="btn btn-success m-1 w-50 mt-4" 
                   onClick={newUserVideoJuego}>
-                  Save
+                  Guardar
                 </button>
                 </Link>
               </div>
             </li>
       </ul>
-      <Link to="/user/dashboard">
-        <button className="btn btn-primary mt-2">Back home</button>
+      <Link to="/user/dashboard/">
+        <button className="btn btn-primary mt-2">Atrás</button>
       </Link>
     </div>
   );

@@ -6,6 +6,7 @@ from typing import List
 db = SQLAlchemy()
 
 class User(db.Model):
+    __tablename__ = "user"
     id: Mapped[int] = mapped_column(primary_key=True)
     username : Mapped[str] = mapped_column(nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
@@ -58,6 +59,9 @@ class Tournament(db.Model):
     user_tournament: Mapped[List["User_tournament"]] = relationship(back_populates="tournament")
     team_tournament: Mapped[List["Team_tournament"]] = relationship(back_populates="tournament")
 
+    videojuego_id: Mapped[int] = mapped_column(ForeignKey("videojuego.id"))
+    videojuego: Mapped["Videojuego"] = relationship(back_populates="tournament")
+
     def serialize(self):
         return {
             "id": self.id,
@@ -77,10 +81,11 @@ class Team(db.Model):
 
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     user: Mapped["User"] = relationship(back_populates="team")
+    videojuego_id: Mapped[int] = mapped_column(ForeignKey("videojuego.id"))
+    videojuego: Mapped["Videojuego"] = relationship(back_populates="team")
 
     user_team: Mapped[List["User_team"]] = relationship(back_populates="team")
     team_tournament: Mapped[List["Team_tournament"]] = relationship(back_populates="team")
-    videojuego_team: Mapped[List["Game_team"]] = relationship(back_populates="team")
 
     def serialize(self):
         return {
@@ -88,7 +93,9 @@ class Team(db.Model):
             "name": self.name,
             "level": self.level,
             "premium": self.premium,
-            "user_id": self.user_id
+            "user_id": self.user_id,
+            "videojuego_id": self.videojuego_id,
+            "img": self.img,
         }
 class Videojuego(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -99,8 +106,10 @@ class Videojuego(db.Model):
     img: Mapped[str] = mapped_column(nullable=True)
     genre: Mapped[str] = mapped_column(nullable=True)
 
+    team: Mapped[List["Team"]] = relationship(back_populates="videojuego")
+    tournament: Mapped[List["Tournament"]] = relationship(back_populates="videojuego")
+
     user_videojuego: Mapped[List["User_videojuego"]] = relationship(back_populates="videojuego")
-    videojuego_team: Mapped[List["Game_team"]] = relationship(back_populates="videojuego")
 
     def serialize(self):
         return {
@@ -178,22 +187,4 @@ class Team_tournament(db.Model):
             "ranking": self.ranking,
             "team_id": self.team_id,
             "tournament_id": self.tournament_id
-        }
-
-class Game_team(db.Model):
-    id: Mapped[int] = mapped_column(primary_key=True)
-    ranking: Mapped[int] = mapped_column(nullable=True)
-
-    videojuego_id: Mapped[int] = mapped_column(ForeignKey("videojuego.id"))
-    videojuego: Mapped["Videojuego"] = relationship(back_populates="videojuego_team")
-    team_id: Mapped[int] = mapped_column(ForeignKey("team.id"))
-    team: Mapped["Team"] = relationship(back_populates="videojuego_team")
-    
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "ranking": self.ranking,
-            "videojuego_id": self.videojuego_id,
-            "team_id": self.team_id
         }
