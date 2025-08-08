@@ -223,7 +223,7 @@ def add_tournament():
     claims = get_jwt()
     if claims.get("role") != "admin":
         return jsonify({"msg": "No autorizado"}), 403
-
+    
     body = request.get_json()
     new_torneo = Tournament(**body)
     db.session.add(new_torneo)
