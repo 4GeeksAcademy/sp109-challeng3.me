@@ -7,13 +7,8 @@ export const EditTournament = () => {
   const { store } = useGlobalReducer();
   const { id } = useParams();
   const navigate = useNavigate()
-
-  const [editTorneo, setEditTorneo] = useState({
-    name: "",
-    level: 0,
-    prize: 0,
-    type: ""
-  });
+  const [games, setGames] = useState([])
+  const [editTorneo, setEditTorneo] = useState([])
   
   function getEditTorneo() {
     fetch(import.meta.env.VITE_BACKEND_URL + "/api/tournament/" + id)
@@ -21,10 +16,16 @@ export const EditTournament = () => {
       .then((data) => setEditTorneo(data));
   }
 
-    useEffect(() => {
-    getEditTorneo();
-    }, []);
+  const getGames = () => {
+    fetch(import.meta.env.VITE_BACKEND_URL + '/api/game')
+    .then(response => response.json())
+    .then(data => setGames(data.videojuego))
+  }
 
+    useEffect(() => {
+    getEditTorneo()
+    getGames()
+    }, []);
 
   function editarTorneo() {
     const requestOptions = {
@@ -41,6 +42,7 @@ export const EditTournament = () => {
       .then((data) => navigate("/tournament"))
       
   }
+  console.log(editTorneo, games)
 
   return (
     <div className="container">
@@ -82,15 +84,37 @@ export const EditTournament = () => {
             </div>
             <div className="col-8">
               Type:
-              <input
-                type="text"
-                className="form-control mt-2"
-                value={editTorneo.type}
-                onChange={(e) =>
-                  setEditTorneo({ ...editTorneo, type: e.target.value })
-                }
-              />
+              <select
+                    id="type"
+                    className="form-control mt-2"
+                    value={editTorneo.type}
+                    onChange={(e) =>
+                      setEditTorneo({ ...editTorneo, type: e.target.value })
+                    }
+                  >
+                    <option value="">Selecciona una opción</option>
+                    <option value="individual">Individual</option>
+                    <option value="equipo">Equipo</option>
+                  </select>
             </div>
+            <div className="col-8">
+                Juego:
+                  <select
+                    id="videojuego"
+                    className="form-control mt-2"
+                    value={editTorneo.videojuego_id}
+                    onChange={(e) =>
+                      setEditTorneo({ ...editTorneo, videojuego_id: parseInt(e.target.value) })
+                    }
+                  >
+                    <option value="">Selecciona un videojuego</option>
+                  {games.map((vj) => (
+                    <option key={vj.id} value={vj.id}>
+                      {vj.name}
+                    </option>
+                    ))}
+                  </select>
+                </div>
             <Link className="text-center" to="/tournament">
               <button
                 className="btn btn-success m-1 w-50 mt-4"

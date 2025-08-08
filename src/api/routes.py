@@ -316,7 +316,7 @@ def add_users():
         username = body['username'],
         password = body['password'],
         email = body['email'],
-        level = 0,
+        level = 1©,
         points = 0,
         premium = False,
         is_active = True,

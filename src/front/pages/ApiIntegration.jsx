@@ -135,7 +135,7 @@ const ApiIntegration = () => {
         };
 
     // Validación básica
-    if (!gameData.name || !gameData.description || !gameData.platforms || !gameData.release_date || !gameData.img || !gameData.genre) {
+    if (!gameData.name || !gameData.description || !gameData.platforms || !gameData.release_date || !gameData.img) {
       setError("Por favor, completa todos los campos.");
       return;
     }
