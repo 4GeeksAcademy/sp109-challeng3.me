@@ -48,7 +48,6 @@ export default function UserDashboard() {
                 .then(res => res.json())
                 .then(async (userGameLinks) => {
                     if (!Array.isArray(userGameLinks) || userGameLinks.length === 0) {
-                        alert("No tienes juegos asociados.")
                         return
                     }
 
@@ -141,7 +140,7 @@ export default function UserDashboard() {
             {/* Additional user dashboard content can be added here */}
             <div className="row my-4">
                 <div className="col-4 text-center">
-                    <h4 className="text-start">Mis juegos</h4>
+                    <h4 className="text-start text-uppercase">Mis juegos</h4>
                     <ul className="m-0 p-0">
                         {gameDetails.length > 0 
                         ? (gameDetails.map((game) => (
@@ -161,7 +160,7 @@ export default function UserDashboard() {
                     <button className="btn btn-success mt-2" onClick={() => navigate("/select-game")}>Selecciona más juegos</button>)}
                 </div>
                 <div className="col-4 text-center border-end border-start">
-                    <h4 className="text-start">Mis Equipos</h4>
+                    <h4 className="text-start text-uppercase">Mis Equipos</h4>
                     <ul className="m-0 p-0">
                         {userTeams.length > 0 
                         ? (userTeams.map((team) => (
@@ -189,7 +188,7 @@ export default function UserDashboard() {
                     </div>
                 </div>
                 <div className="col-4 text-center">
-                    <h4 className="text-start">Equipos en los que participo</h4>
+                    <h4 className="text-start text-uppercase">Otros Equipos</h4>
                     <ul className="m-0 p-0">
                         {otherTeams.length > 0 ? (
                             otherTeams.map((team, index) => {
@@ -218,7 +217,7 @@ export default function UserDashboard() {
                                 )
                             })    
                         ) : (
-                            <span className="m-auto">No participas en ningún equipo</span>
+                            <span className="m-auto">No participas en ningún otro equipo</span>
                         )}
                     </ul>
                     <Link to="/search/team">
