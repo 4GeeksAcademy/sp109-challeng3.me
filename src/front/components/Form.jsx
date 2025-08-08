@@ -8,13 +8,7 @@ export const Form = () => {
   const { store, dispatch } = useGlobalReducer();
   const navigate = useNavigate()
   const [games, setGames] = useState([])
-  const [torneoNuevo, setTorneoNuevo] = useState({
-    name: "",
-    level: 0,
-    prize: 0,
-    type: "",
-    videojuego: 0
-  });
+  const [torneoNuevo, setTorneoNuevo] = useState([]);
 
   const getGames = () => {
     fetch(import.meta.env.VITE_BACKEND_URL + '/api/game')
@@ -23,7 +17,6 @@ export const Form = () => {
   }
 
   useEffect(() => {
-    setTorneoNuevo(store.newTournament);
     getGames()
   }, []);
 
@@ -38,6 +31,7 @@ export const Form = () => {
         })
       .then(response => response.json())
       .then(result => {
+        navigate("/tournament")
       })
   }
 
@@ -98,7 +92,7 @@ export const Form = () => {
                     className="form-control mt-2"
                     value={torneoNuevo.videojuego}
                     onChange={(e) =>
-                      setTorneoNuevo({ ...torneoNuevo, videojuego: parseInt(e.target.value) })
+                      setTorneoNuevo({ ...torneoNuevo, videojuego_id: parseInt(e.target.value) })
                     }
                   >
                     <option value="">Selecciona un videojuego</option>

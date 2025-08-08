@@ -76,7 +76,6 @@ export default function UserDashboard() {
                 .then(res => res.json())
                 .then(async (userTournamentLinks) => {
                     if (!Array.isArray(userTournamentLinks) || userTournamentLinks.length === 0) {
-                        alert("No tienes torneos asociados.")
                         return
                     }
 
@@ -187,10 +186,9 @@ export default function UserDashboard() {
                                 <span>{game.name}</span>
                             </li>
                         )))
-                        : <span className="m-auto">No tienes juegos vinculados,&nbsp;</span>}
+                        : <span className="m-auto">No tienes juegos vinculados.</span>}
                     </ul>
-                    {gameDetails.length > 0 && (
-                    <button className="btn btn-success mt-2" onClick={() => navigate("/select-game")}>Selecciona más juegos</button>)}
+                    <button className="btn btn-success mt-3" onClick={() => navigate("/select-game")}>Selecciona más juegos</button>
                 </div>
                 <div className="col-4 text-center border-end border-start">
                     <h4 className="text-start text-uppercase">Mis Equipos</h4>
@@ -254,7 +252,7 @@ export default function UserDashboard() {
                         )}
                     </ul>
                     <Link to="/search/team">
-                        <button className="btn btn-info my-2">Unirse a un Equipo</button>
+                        <button className="btn btn-info mt-3">Unirse a un Equipo</button>
                     </Link>
                 </div>
             </div>

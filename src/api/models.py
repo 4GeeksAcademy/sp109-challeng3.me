@@ -69,6 +69,7 @@ class Tournament(db.Model):
             "level": self.level,
             "prize": self.prize,
             "type": self.type,
+            "videojuego_id": self.videojuego_id,
             # do not serialize the password, its a security breach
         }
     
