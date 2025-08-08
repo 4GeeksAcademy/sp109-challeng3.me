@@ -84,7 +84,7 @@ export const CreateUserVideoJuego = () => {
               </div>
             </li>
       </ul>
-      <Link to="/user/videojuego/">
+      <Link to="/user/dashboard">
         <button className="btn btn-primary mt-2">Back home</button>
       </Link>
     </div>

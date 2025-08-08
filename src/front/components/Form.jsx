@@ -75,12 +75,10 @@ export const Form = () => {
                     onChange={(e) => setTorneoNuevo({...torneoNuevo, type: e.target.value})}
                   />
                 </div>
-                <Link className="text-center" to="/tournament">
                 <button className="btn btn-success m-1 w-50 mt-4" 
                   onClick={newTournament}>
                   Save
                 </button>
-                </Link>
               </div>
             </li>
       </ul>

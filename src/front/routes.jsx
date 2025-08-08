@@ -22,7 +22,7 @@ import CreateTeam from "./pages/CreateTeam.jsx";
 import SingleTeam from "./pages/SingleTeam.jsx";
 import EditTeam from "./pages/EditTeam.jsx";
 import UserTournamentCRUD from "./pages/UserTournamentCRUD.jsx";
-import CreateUserTournament from "./pages/CreateUserTournament.jsx";
+import AddTournament from "./pages/AddTournament.jsx";
 import SingleUserTournament from "./pages/SingleUserTournament.jsx";
 import EditUserTournament from "./pages/EditUserTournament.jsx";
 import { Videojuego } from "./components/VideoJuego.jsx";
@@ -47,6 +47,7 @@ import UserLogin from "./pages/UserLogin.jsx";
 import PrivateUser from "./pages/PrivateUser.jsx";
 import ApiIntegration from "./pages/ApiIntegration.jsx";
 import UserDashboard from "./pages/UserDashboard.jsx";
+
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -77,7 +78,7 @@ export const router = createBrowserRouter(
         <Route path="/team/edit/:team_id" element={<EditTeam/>} />
         <Route path="/editTournament/:id" element={ <EditTournament />} />
         <Route path="/user/tournament" element={<UserTournamentCRUD />} />
-        <Route path="/user/tournament/create" element={<CreateUserTournament/>} />
+        <Route path="/user/tournament/create" element={<AddTournament/>} />
         <Route path="/user/tournament/:id" element={<SingleUserTournament/>} />
         <Route path="/user/tournament/edit/:id" element={<EditUserTournament/>} />
         <Route path="/videojuego" element={<Videojuego />} />
@@ -101,6 +102,7 @@ export const router = createBrowserRouter(
         <Route path="/user/login" element={<UserLogin />} />
         <Route path="/user/dashboard" element={<UserDashboard />} />
         <Route path="/api-integration" element={<ApiIntegration />} />
+        <Route path="/select-tournament" element={<AddTournament />} />
       </Route>
     )
 );

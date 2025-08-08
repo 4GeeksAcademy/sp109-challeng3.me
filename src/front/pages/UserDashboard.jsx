@@ -8,7 +8,9 @@ export default function UserDashboard() {
     const [isUser, setIsUser] = useState(store.user_auth)
     const [userTeams, setUserTeams] = useState([])
     const [userGames, setUserGames] = useState([])
+    const [userTournaments, setUserTournaments] = useState([])
     const [gameDetails, setGameDetails] = useState([])
+    const [tournamentDetails, setTournamentDetails] = useState([])
     const [user, setUser] = useState({
         id: "",
         name: "",
@@ -65,6 +67,38 @@ export default function UserDashboard() {
         }
     }, [])
 
+    useEffect(() => {
+        const token = localStorage.getItem("token")
+        if (token) {
+            const decoded = jwtDecode(token)
+            const tournament_id = decoded.sub || null
+            
+            getUserInfo(tournament_id)
+            fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/tournament/')
+                .then(res => res.json())
+                .then(async (userTournamentLinks) => {
+                    if (!Array.isArray(userTournamentLinks) || userTournamentLinks.length === 0) {
+                        alert("No tienes torneos asociados.")
+                        return
+                    }
+
+                    // Obtener detalles de todos los torneos por su ID
+                    const tournamentDetailPromises = userTournamentLinks.map(link =>
+                        fetch(import.meta.env.VITE_BACKEND_URL + '/api/tournament/' + link.tournament_id)
+                            .then(res => res.json())
+                    )
+                    const tournamentDetails = await Promise.all(tournamentDetailPromises);
+                    setUserTournaments(userTournamentLinks)
+                    setTournamentDetails(tournamentDetails)
+                    console.log("Detalles de torneos del usuario:", tournamentDetails);
+
+                })
+                .catch(err => {
+                    console.error("Error al cargar los torneos del usuario:", err);
+                });
+        }
+    }, [])
+
     const getUserInfo = (userId) => {
         fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/' + userId)
             .then(res => res.json())
@@ -100,8 +134,8 @@ export default function UserDashboard() {
                                 <span>{game.name}</span>
                             </li>
                         )))
-                        : <span className="m-auto">No tienes juegos vinculados,&nbsp;
-                        <Link to="/select-game">selecciona tus juego favorito</Link></span>}
+                        : <span className="m-auto">No tienes juegos vinculados,&nbsp;</span>}
+                        <Link to="/select-game">selecciona tu juego favorito</Link>
                     </ul>
                 </div>
                 <div className="col-4 text-center border-end border-start">
@@ -109,6 +143,16 @@ export default function UserDashboard() {
                 </div>
                 <div className="col-4 text-center">
                     <h4>Mis Torneos</h4>
+                    <ul>
+                        {tournamentDetails.length > 0 
+                        ? (tournamentDetails.map((tournament) => (
+                            <li key={tournament.id} className="border p-1 d-flex align-items-center flex-nowrap">
+                                <span>{tournament.name}</span>
+                            </li>
+                        )))
+                        : <span className="m-auto">No tienes torneos vinculados,&nbsp;</span>}
+                        <Link to="/select-tournament">Inscripcion a Torneos</Link>
+                    </ul>
                 </div>
             </div>
         </div>
