@@ -5,7 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
-	const { store } = useGlobalReducer()
+	const { store, dispatch } = useGlobalReducer()
 	const [isAdmin, setIsAdmin] = useState(false)
 	const [isUser, setIsUser] = useState(false)
 	const navigate = useNavigate()
@@ -40,6 +40,8 @@ export const Navbar = () => {
 		localStorage.removeItem("token")
 		setIsAdmin(false)
 		setIsUser(false)
+		dispatch({ type: 'set_admin_auth', payload: false })
+		dispatch({ type: 'set_auth', payload: false })
 		navigate('/user/login')
 	}
 
