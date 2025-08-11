@@ -8,6 +8,7 @@ const CreateTeam = () => {
     const navigate = useNavigate();
     const [videojuegos, setVideojuegos] = useState([])
     const [userGames, setUserGames] = useState([])
+    const [uploading, setUploading] = useState(false)
     const [user, setUser] = useState({
         id: "",
         name: "",
@@ -68,7 +69,6 @@ const CreateTeam = () => {
     }, [])
 
     const addTeam = () => {
-        console.log(team)
         fetch(import.meta.env.VITE_BACKEND_URL +'/api/team', {
             method: 'POST',
             headers: {
@@ -92,12 +92,35 @@ const CreateTeam = () => {
         })
     }
 
+    const handleImageUpload = async (file) => {
+        setUploading(true);
+        const formData = new FormData()
+        formData.append("file", file)
+        formData.append("upload_preset", "Challeng3.me")
+        formData.append("cloud_name", "da35l3kmn")
+
+        try {
+            const res = await fetch(
+                "https://api.cloudinary.com/v1_1/da35l3kmn/image/upload",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            )
+            const data = await res.json()
+            setTeam(prev => ({ ...prev, img: data.secure_url }))
+        } catch (err) {
+            console.error("Error subiendo imagen", err)
+        } finally {
+            setUploading(false)
+        }
+    }
+
     const userGameIds = userGames
     .filter(ug => ug.user_id === user.user)
     .map(ug => ug.videojuego_id)
 
     const filteredGames = videojuegos.filter(g => userGameIds.includes(g.id))
-    console.log(userGames, videojuegos, user)
 
     return (
         <div className="container my-4">
@@ -105,8 +128,21 @@ const CreateTeam = () => {
                     <div className="container text-center w-50 my-5 border p-4 d-flex flex-column">
                         <label htmlFor="name" className="mx-2">Nombre</label>
                         <input type="text" name="name" id="name" value={team.name} onChange={(e) => setTeam({ ...team, name: e.target.value })}/>
-                        <label htmlFor="img" className="mx-2 mt-4">Link del logo del equipo</label>
-                        <input type="text" name="img" id="img" value={team.img} onChange={(e) => setTeam({ ...team, img: e.target.value })}/>
+                        <label htmlFor="img" className="mx-2 mt-4">Logo del equipo</label>
+                        <input type="file" 
+                            name="img" 
+                            id="img" 
+                            accept="image/*"
+                            onChange={(e) => handleImageUpload(e.target.files[0])}/>
+                        {uploading && <p>Subiendo imagen...</p>}
+                        {team.img && (
+                            <img
+                                src={team.img}
+                                alt="Avatar preview"
+                                style={{ width: "80px", height: "80px", borderRadius: "50%" }}
+                            />
+                        )}
+                        
                         <label htmlFor="img" className="mx-2 mt-4">Selecciona el juego de tu equipo</label>
                         <select
                             className="form-control mt-2"
