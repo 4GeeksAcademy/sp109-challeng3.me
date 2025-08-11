@@ -16,6 +16,7 @@ const ApiIntegration = () => {
   const { store, dispatch } = useGlobalReducer()
   const navigate = useNavigate()
   const [ignoreNextQuery, setIgnoreNextQuery] = useState(false)
+  const [uploading, setUploading] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -171,6 +172,30 @@ const ApiIntegration = () => {
   })
   }
 
+  const handleImageUpload = async (file) => {
+        setUploading(true);
+        const formData = new FormData()
+        formData.append("file", file)
+        formData.append("upload_preset", "Challeng3.me")
+        formData.append("cloud_name", "da35l3kmn")
+
+        try {
+            const res = await fetch(
+                "https://api.cloudinary.com/v1_1/da35l3kmn/image/upload",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            )
+            const data = await res.json()
+            setInput(prev => ({ ...prev, img: data.secure_url }))
+        } catch (err) {
+            console.error("Error subiendo imagen", err)
+        } finally {
+            setUploading(false)
+        }
+    };
+
   return (
     <div className="relative max-w-xl mx-auto mt-8 text-center">
       <input
@@ -189,7 +214,7 @@ const ApiIntegration = () => {
       {loading && <p className="text-sm mt-1">Cargando...</p>}
 
       {showDropdown && games.length > 0 && (
-        <ul className="dropdown-menu position-relative show w-25 border border-secondary rounded mt-1 overflow-auto shadow bg-white max-h-60 mx-auto" ref={dropdownRef}>
+        <ul className="dropdown-menu position-relative show w-25 border border-secondary rounded mt-1 overflow-auto shadow max-h-60 mx-auto" ref={dropdownRef}>
           {games.map((game) => (
             <li
                 key={game.id}
@@ -203,7 +228,7 @@ const ApiIntegration = () => {
         </ul>
       )}
       {!selectedGame && (
-        <div className="m-4 mx-auto p-4 border rounded shadow container fs-1">
+        <div className="m-4 mx-auto p-4 border rounded shadow container">
           <h2 className="font-semibold">Nombre</h2>
           <input
             type="text"
@@ -239,15 +264,25 @@ const ApiIntegration = () => {
             value={input.genre || ''}
             onChange={(e) => setInput({ ...input, genre: e.target.value })}
           />
-          <h2 className="font-semibold mt-3">Imagen URL</h2>
+          <h2 className="font-semibold mt-3">Imagen</h2>
           <input
-            type="text"
-            className="form-control mt-2"
-            value={input.img || ''}
-            onChange={(e) => setInput({ ...input, img: e.target.value })}
+              type="file"
+              id="img"
+              accept="image/*"
+              onChange={(e) =>
+                  handleImageUpload(e.target.files[0])
+              }
           />
+          {uploading && <p>Subiendo imagen...</p>}
+          {input.img && (
+              <img
+                  src={input.img}
+                  alt="Avatar preview"
+                  style={{ width: "80px", height: "80px", borderRadius: "50%" }}
+              />
+          )}
           <button
-            className="btn btn-success mt-3"
+            className="btn btn-success mt-3 w-100"
             onClick={createGame}
           >
             Crear Juego
