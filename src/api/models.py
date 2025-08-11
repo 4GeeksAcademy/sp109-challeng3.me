@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean, ForeignKey
+from sqlalchemy import String, Boolean, ForeignKey, Float
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import List
 
@@ -17,6 +17,8 @@ class User(db.Model):
     premium_end_date: Mapped[int] = mapped_column(nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
     img: Mapped[str] = mapped_column(nullable=True)
+    latitude: Mapped[float] = mapped_column(Float, nullable=True)
+    longitude: Mapped[float] = mapped_column(Float, nullable=True)
 
     team: Mapped[List["Team"]] = relationship(back_populates="user")
     user_tournament: Mapped[List["User_tournament"]] = relationship(back_populates="user")
@@ -33,6 +35,8 @@ class User(db.Model):
             "premium": self.premium,
             "premium_end_date": self.premium_end_date,
             "img": self.img,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
         }
     
 class Admin(db.Model):

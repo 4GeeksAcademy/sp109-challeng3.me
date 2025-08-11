@@ -169,8 +169,7 @@ export default function UserDashboard() {
                     </div>
                 </div>
             </div>
-            
-            {/* Additional user dashboard content can be added here */}
+
             <div className="row my-4">
                 <div className="col-4 text-center">
                     <h4 className="text-start text-uppercase">Mis juegos</h4>
