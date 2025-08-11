@@ -356,6 +356,10 @@ def edit_users(user_id):
         user.premium_end_date = body['premium_end_date']
     if 'img' in body:
         user.img = body['img']
+    if 'latitude' in body:
+        user.latitude = body['latitude']
+    if 'longitude' in body:
+        user.longitude = body['longitude']
     
     db.session.commit()
     

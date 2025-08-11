@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { MapContainer, TileLayer } from "react-leaflet";
+import DraggableMarker from "./DraggableMarker";
+import "leaflet/dist/leaflet.css";
 
 const EditUserModal = ({onUserModified, userId}) => {
     const [isPopupOpen, setPopupOpen] = useState(false)
     const [uploading, setUploading] = useState(false)
+    const [position, setPosition] = useState([40.4168, -3.7038])
     const [user, setUser] = useState({
         username: "",
         password: "",
@@ -29,6 +33,9 @@ const EditUserModal = ({onUserModified, userId}) => {
         .then(response => response.json())
         .then(data => {
             setUser(data)
+            if (data.latitude && data.longitude) {
+                    setPosition([data.latitude, data.longitude]);
+                }
         })
     }
 
@@ -37,6 +44,14 @@ const EditUserModal = ({onUserModified, userId}) => {
             get_user(userId)
         }
     }, [userId])
+
+    useEffect(() => {
+        setUser((prev) => ({
+            ...prev,
+            latitude: position[0],
+            longitude: position[1]
+        }));
+    }, [position])
 
     const handleImageUpload = async (file) => {
         setUploading(true);
@@ -75,7 +90,10 @@ const EditUserModal = ({onUserModified, userId}) => {
                 setUser({
                     username: "",
                     password: "",
-                    email: ""
+                    email: "",
+                    img: "",
+                    latitude: null,
+                    longitude: null
                 })
                 closePopup()
                 onUserModified()
@@ -115,6 +133,37 @@ const EditUserModal = ({onUserModified, userId}) => {
                                 style={{ width: "80px", height: "80px", borderRadius: "50%" }}
                             />
                         )}
+                        <label>Latitud</label>
+                        <input
+                            type="number"
+                            step="any"
+                            value={user.latitude || ""}
+                            onChange={(e) => {
+                                const lat = e.target.value === "" ? null : parseFloat(e.target.value)
+                                setPosition([lat, position[1]])
+                            }}
+                        />
+
+                        <label>Longitud</label>
+                        <input
+                            type="number"
+                            step="any"
+                            value={user.longitude || ""}
+                            onChange={(e) => {
+                                const lng = e.target.value === "" ? null : parseFloat(e.target.value)
+                                setPosition([position[0], lng])
+                            }}
+                        />
+
+                        <MapContainer
+                            center={position}
+                            zoom={13}
+                            style={{ height: "200px", width: "100%" }}
+                        >
+                            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                            <DraggableMarker position={position} setPosition={setPosition} />
+                        </MapContainer>
+
                         <div className="d-flex justify-content-around">
                         <button className="btn btn-success mt-3" onClick={() => editUser(user.id)}>Editar Usuario</button>
                         <button className="btn btn-secondary mt-3" onClick={closePopup}>Cerrar</button>
