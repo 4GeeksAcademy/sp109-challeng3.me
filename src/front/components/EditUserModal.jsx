@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 const EditUserModal = ({onUserModified, userId}) => {
     const [isPopupOpen, setPopupOpen] = useState(false)
+    const [uploading, setUploading] = useState(false)
     const [user, setUser] = useState({
         username: "",
         password: "",
@@ -31,12 +32,35 @@ const EditUserModal = ({onUserModified, userId}) => {
         })
     }
 
-    
     useEffect(() => {
         if (userId) {
             get_user(userId)
         }
-    }, [userId]);
+    }, [userId])
+
+    const handleImageUpload = async (file) => {
+        setUploading(true);
+        const formData = new FormData()
+        formData.append("file", file)
+        formData.append("upload_preset", "Challeng3.me")
+        formData.append("cloud_name", "da35l3kmn")
+
+        try {
+            const res = await fetch(
+                "https://api.cloudinary.com/v1_1/da35l3kmn/image/upload",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            )
+            const data = await res.json()
+            setUser(prev => ({ ...prev, img: data.secure_url }))
+        } catch (err) {
+            console.error("Error subiendo imagen", err)
+        } finally {
+            setUploading(false)
+        }
+    };
 
     const editUser = (userId) => {
         fetch(import.meta.env.VITE_BACKEND_URL +'/api/user/' + userId, {
@@ -77,7 +101,20 @@ const EditUserModal = ({onUserModified, userId}) => {
                         <label htmlFor="Email">Email</label>
                         <input type="email" name="Email" id="Email" value={user.email} onChange={(e) => setUser({ ...user, email: e.target.value })}/>
                         <label htmlFor="img">Avatar</label>
-                        <input type="text" name="img" id="img" value={user.img} onChange={(e) => setUser({ ...user, img: e.target.value })}/>
+                        <input type="file"
+                            id="img"
+                            accept="image/*"
+                            onChange={(e) =>
+                            handleImageUpload(e.target.files[0])
+                            } />
+                        {uploading && <p>Subiendo imagen...</p>}
+                        {user.img && (
+                            <img
+                                src={user.img}
+                                alt="Avatar preview"
+                                style={{ width: "80px", height: "80px", borderRadius: "50%" }}
+                            />
+                        )}
                         <div className="d-flex justify-content-around">
                         <button className="btn btn-success mt-3" onClick={() => editUser(user.id)}>Editar Usuario</button>
                         <button className="btn btn-secondary mt-3" onClick={closePopup}>Cerrar</button>
