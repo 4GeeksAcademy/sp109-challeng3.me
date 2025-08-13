@@ -48,7 +48,7 @@ export const Navbar = () => {
 
 
 	return (
-		<nav className="navbar navbar-light">
+		<nav className="navbar bg-body-secondary">
 			<div className="container">
 				<Link to="/">
 					<span className="navbar-brand mb-0 h1">Challeng3.me</span>
@@ -56,47 +56,47 @@ export const Navbar = () => {
 				{isUser || isAdmin ? (
 					<div className="ml-auto d-flex gap-2">
 						<Link to="/user/dashboard">
-							<button className="btn btn-primary">User Dashboard</button>
+							<button className="btn btn-light">User Dashboard</button>
 						</Link>
-						<button className="btn btn-primary" onClick={logout}>Logout</button>
+						<button className="btn btn-light" onClick={logout}>Logout</button>
 					</div>
 				) : (
 					<Link to="/user/login">
-						<button className="btn btn-primary">User Login</button>
+						<button className="btn btn-light">User Login</button>
 					</Link>
 				)}
 					{isAdmin && (
 					<div className="ml-auto d-flex gap-2">
 						<div>
 						<Link to="/user/videojuego">
-						<button className="btn btn-primary">CRUD User/Videojuego</button>
+						<button className="btn btn-light">CRUD User/Videojuego</button>
 						</Link>
 						<Link to="/admin/dashboard">
-							<button className="btn btn-primary">Zona Administración</button>
+							<button className="btn btn-light">Zona Administración</button>
 						</Link>
 						<Link to="/videojuego">
-							<button className="btn btn-primary">CRUD Videojuego</button>
+							<button className="btn btn-light">CRUD Videojuego</button>
 						</Link>
 						<Link to="/user">
-							<button className="btn btn-primary">CRUD User</button>
+							<button className="btn btn-light">CRUD User</button>
 						</Link>
 						<Link to="/admin">
-							<button className="btn btn-primary">CRUD Admin</button>
+							<button className="btn btn-light">CRUD Admin</button>
 						</Link>
 						<Link to="/tournament">
-							<button className="btn btn-primary">CRUD Tournaments</button>
+							<button className="btn btn-light">CRUD Tournaments</button>
 						</Link>
 						<Link to="/team">
-							<button className="btn btn-primary">CRUD Teams</button>
+							<button className="btn btn-light">CRUD Teams</button>
 						</Link>
 						<Link to="/user/tournament">
-							<button className="btn btn-primary">CRUD User_Tournament</button>
+							<button className="btn btn-light">CRUD User_Tournament</button>
 						</Link>
 						<Link to="/user/team">
-							<button className="btn btn-primary">CRUD User_Team</button>
+							<button className="btn btn-light">CRUD User_Team</button>
 						</Link>
 						<Link to="/team/tournament">
-							<button className="btn btn-primary">CRUD Team_Tournament</button>
+							<button className="btn btn-light">CRUD Team_Tournament</button>
 						</Link>
 						</div>
 					</div>

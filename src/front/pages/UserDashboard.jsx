@@ -11,10 +11,9 @@ export default function UserDashboard() {
     const [userTeams, setUserTeams] = useState([])
     const [otherTeams, setOtherTeams] = useState([])
     const [userGames, setUserGames] = useState([])
-    const [userTournaments, setUserTournaments] = useState([])
     const [gameDetails, setGameDetails] = useState([])
     const [allTeams, setAllTeams] = useState([])
-    const [tournamentDetails, setTournamentDetails] = useState([])
+    const [filteredTournaments, setFilteredTournaments] = useState([])
     const [user, setUser] = useState({
         id: "",
         name: "",
@@ -69,30 +68,11 @@ export default function UserDashboard() {
         const token = localStorage.getItem("token")
         if (token) {
             const decoded = jwtDecode(token)
-            const tournament_id = decoded.sub || null
+            const uid = decoded.sub || null
             
-            getUserInfo(tournament_id)
-            fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/tournament/')
-                .then(res => res.json())
-                .then(async (userTournamentLinks) => {
-                    if (!Array.isArray(userTournamentLinks) || userTournamentLinks.length === 0) {
-                        return
-                    }
-
-                    // Obtener detalles de todos los torneos por su ID
-                    const tournamentDetailPromises = userTournamentLinks.map(link =>
-                        fetch(import.meta.env.VITE_BACKEND_URL + '/api/tournament/' + link.tournament_id)
-                            .then(res => res.json())
-                    )
-                    const tournamentDetails = await Promise.all(tournamentDetailPromises);
-                    setUserTournaments(userTournamentLinks)
-                    setTournamentDetails(tournamentDetails)
-                    console.log("Detalles de torneos del usuario:", tournamentDetails);
-
-                })
-                .catch(err => {
-                    console.error("Error al cargar los torneos del usuario:", err);
-                });
+            fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/' + uid + '/videogame-tournaments')
+            .then(res => res.json())
+            .then(data => setFilteredTournaments(data))
         }
     }, [])
 
@@ -148,11 +128,35 @@ export default function UserDashboard() {
     }
     }, [user.id])
 
-       
+    const addUserTournament = (tournamentId) => {
+        if (!user || !user.id) {
+            alert("Error: No se ha podido identificar al usuario.");
+            return;
+        }
+
+        const payload = {
+        tournament_id: tournamentId,
+        user_id: user.id
+        };
+
+        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/user/tournament`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+        })
+        .then((response) => {
+            if (response.ok) {
+            alert("¡Te has unido al torneo con éxito!")
+            } else {
+            response.json().then(err => alert(`No se pudo unir al torneo: ${err.message || 'Error desconocido'}`))
+            }
+        })
+        .catch((err) => console.error("Error al unirse al torneo:", err))
+    }
 
     return (
-        <div className="container">
-            <div className="d-flex justify-content-center align-items-center gap-4 my-4">
+        <div className="container bg-dark">
+            <div className="d-flex justify-content-center align-items-center gap-4 my-4 bg-body-secondary col-6 m-auto p-4 rounded shadow">
                 <div className="constainer border-end p-4">
                     <img
                         src={user.img}
@@ -160,7 +164,7 @@ export default function UserDashboard() {
                         className="gameimg"
                     />
                 </div>
-                <div className="align-items-left">
+                <div className="align-items-left text-emphasis">
                     <h1>Welcome {user.username}</h1>
                     <p><strong>Email: </strong>{user.email}</p>
                     <p><strong>Nivel: </strong>{user.level}</p>
@@ -173,103 +177,135 @@ export default function UserDashboard() {
             <div className="row my-4">
                 <div className="col-4 text-center">
                     <h4 className="text-start text-uppercase">Mis juegos</h4>
-                    <ul className="m-0 p-0">
+                    <div className="row g-3">
                         {gameDetails.length > 0 
-                        ? (gameDetails.map((game) => (
-                            <li key={game.id} className="border p-1 d-flex align-items-center flex-nowrap">
-                                <img 
-                                    src={game.img} 
-                                    alt={game.name}
-                                    className="mini-gameimg p-2 mx-2"
+                            ? gameDetails.map((game) => (
+                                <div key={game.id} className="col-6">
+                                <div className="card widget-flat bg-body-secondary p-1 text-center">
+                                    <div className="card-body">
+                                    <img 
+                                        src={game.img} 
+                                        alt={game.name}
+                                        className="mini-gameimg p-2 mx-auto row mb-2"
                                     />
-                                <span>{game.name}</span>
-                            </li>
-                        )))
-                        : <span className="m-auto">No tienes juegos vinculados.</span>}
-                    </ul>
-                    <button className="btn btn-success mt-3" onClick={() => navigate("/select-game")}>Selecciona más juegos</button>
+                                    <span>{game.name}</span>
+                                    </div>
+                                </div>
+                                </div>
+                            ))
+                            : <span className="m-auto">No tienes juegos vinculados.</span>}
+                    </div>
+                    <button className="btn btn-danger mt-3" onClick={() => navigate("/select-game")}>Selecciona más juegos</button>
                 </div>
                 <div className="col-4 text-center border-end border-start">
                     <h4 className="text-start text-uppercase">Mis Equipos</h4>
-                    <ul className="m-0 p-0">
+                    <div className="row g-3">
                         {userTeams.length > 0 
-                        ? (userTeams.map((team) => (
-                            <Link to={`/team/${team.id}`} className="no-link" key={team.id}>
-                                <li key={team.id} className="border p-1 d-flex align-items-center flex-nowrap justify-content-between">
-                                    <img 
-                                        src={team.img} 
-                                        alt={team.name}
-                                        className="mini-gameimg p-2 mx-2"
-                                        />
-                                    <span>{team.name}</span>
-                                    <div className="d-flex flex-column mx-2">
-                                        <span className="mx-2 small-text">Nivel: {team.level}</span>
-                                        <span className="mx-2 small-text">{team.premium ? "Premium" : "Free"}</span>
-                                    </div>
-                                </li>
-                            </Link>
-                        ))) 
-                        : <span className="m-auto">No tienes equipos creados</span>}
-                    </ul>
+                            ? userTeams.map((team) => (
+                                <div key={team.id} className="col-6">
+                                    <Link to={`/team/${team.id}`} className="no-link">
+                                        <div className="card widget-flat bg-body-secondary p-1 text-center">
+                                            <div className="card-body">
+                                                <img 
+                                                    src={team.img} 
+                                                    alt={team.name}
+                                                    className="mini-gameimg p-2 mx-auto mb-2"
+                                                />
+                                                <span className="d-block fw-bold">{team.name}</span>
+                                                <div className="mt-2">
+                                                    <span className="small-text">Nivel: {team.level}</span>
+                                                    &nbsp;
+                                                    <span className="small-text">{team.premium ? "Premium" : "Free"}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                </div>
+                            )) 
+                            : <span className="m-auto">No tienes equipos creados</span>
+                        }
+                    </div>
                     <div className="d-flex justify-content-around mt-3">
                         <Link to="/team/create">
-                            <button className="btn btn-success">Crear Equipo</button>
+                            <button className="btn btn-danger">Crear Equipo</button>
                         </Link>
                     </div>
                 </div>
                 <div className="col-4 text-center">
                     <h4 className="text-start text-uppercase">Otros Equipos</h4>
-                    <ul className="m-0 p-0">
+                    <div className="row g-3">
                         {otherTeams.length > 0 ? (
                             otherTeams.map((team, index) => {
-                                const myOtherTeam = allTeams.find(ut => ut.id === team.team_id && team.status == "accepted")
+                            const myOtherTeam = allTeams.find(
+                                ut => ut.id === team.team_id && team.status === "accepted"
+                            );
 
-                                if (!myOtherTeam) return null
+                            if (!myOtherTeam) return null;
 
-                                return (
-                                    <Link to={`/team/${team.id}`} className="no-link" key={index}>
-                                        <li key={index} className="border p-1 d-flex align-items-center flex-nowrap justify-content-between">
-                                            <img 
-                                                src={myOtherTeam.img} 
-                                                alt={myOtherTeam.name}
-                                                className="mini-gameimg p-2 mx-2"
-                                            />
-                                            <span>{myOtherTeam.name}</span>
-                                            <div className="d-flex flex-column mx-2">
-                                                <span className="mx-2 small-text">Nivel: {myOtherTeam.level}</span>
-                                                <span className="mx-2 small-text">{myOtherTeam.premium ? "Premium" : "Free"}</span>
-                                            </div>
-                                            {myOtherTeam && myOtherTeam.status === "pending" && (
-                                                <span className="text-warning">Solicitud pendiente</span>
-                                            )}
-                                        </li>
-                                    </Link>
-                                )
-                            })    
+                            return (
+                                <div key={index} className="col-6">
+                                <Link to={`/team/${team.id}`} className="no-link">
+                                    <div className="card widget-flat bg-body-secondary p-1 text-center">
+                                    <div className="card-body">
+                                        <img
+                                        src={myOtherTeam.img}
+                                        alt={myOtherTeam.name}
+                                        className="mini-gameimg p-2 mx-auto mb-2"
+                                        />
+                                        <span className="d-block fw-bold">{myOtherTeam.name}</span>
+                                        <div className="mt-2">
+                                        <span className="small-text">Nivel: {myOtherTeam.level}</span>
+                                        &nbsp;
+                                        <span className="small-text">{myOtherTeam.premium ? "Premium" : "Free"}</span>
+                                        </div>
+                                        {myOtherTeam.status === "pending" && (
+                                        <div className="mt-2 text-warning">Solicitud pendiente</div>
+                                        )}
+                                    </div>
+                                    </div>
+                                </Link>
+                                </div>
+                            );
+                            })
                         ) : (
                             <span className="m-auto">No participas en ningún otro equipo</span>
-                        )}
-                    </ul>
+                    )}
+                    </div>
                     <Link to="/search/team">
-                        <button className="btn btn-info mt-3">Unirse a un Equipo</button>
+                        <button className="btn btn-danger mt-3">Unirse a un Equipo</button>
                     </Link>
                 </div>
             </div>
             <div className="d-flex justify-content-center w-100">
-                <div className="text-center">
-                <h1>Mis Torneos</h1>
-                    <ul>
-                        {tournamentDetails.length > 0 
-                        ? (tournamentDetails.map((tournament) => (
-                            <li key={tournament.id} className="border p-1 d-flex align-items-center flex-nowrap">
-                                <span>{tournament.name}</span>
-                            </li>
-                        )))
-                        : <span className="">No tienes torneos vinculados. &nbsp;</span>}
-                    </ul>
-                        <Link className="d-flex justify-content-center" to="/select-tournament">
-                             <button className="btn btn-info">Buscar Torneos</button>
-                        </Link>
+                <div className="w-100 mt-4">
+                <h4 className="text-start text-uppercase">Torneos</h4>
+                    <div className="table-responsive rounded shadow">
+                        <table className="mb-0 table table-hover">
+                            <tbody >
+                                {filteredTournaments.map(t => (
+                                <tr key={t.id} className="bg-body-secondary p-2">
+                                        <td className="font-14 my-1 ">
+                                            <h5>{t.name}</h5>
+                                            <span className="text-muted">{t.type}</span>
+                                        </td>
+                                        <td>
+                                            <span className="text-muted">Nivel necesario: {t.level}</span>
+                                        </td>
+                                        <td>
+                                            <img className="mini-gameimg mx-2" src={t.videojuego_img} alt={t.videojuego_name} />
+                                        </td>
+                                        <td className="text-end">
+                                            {t.is_registered ? (
+                                            <button className="btn btn-dissable" disabled>Inscrito</button>
+                                            ) : (
+                                            <button className="btn btn-light" onClick={() => addUserTournament(t.id)}>Unirse</button>
+                                            )}                  
+                                        </td>
+                                    </tr>)
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
