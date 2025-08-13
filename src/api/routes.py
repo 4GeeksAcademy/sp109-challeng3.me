@@ -570,6 +570,17 @@ def get_user_tournament(id):
 
     return jsonify(user_tournament.serialize()), 200
 
+@api.route('/user/tournaments/<int:id>', methods=['GET'])
+def get_user_tournament_by_user(id):
+
+    user_tournament =  db.session.execute(select(User_tournament).where(User_tournament.user_id == id)).scalars().all()
+    if user_tournament is None:
+        return 'Cant get the user tournament', 400
+
+    result = list(map(lambda user_tournament: user_tournament.serialize(), user_tournament))
+
+    return jsonify(result), 200
+
 @api.route('/user/tournament', methods=['POST'])
 def add_user_tournament():
 
@@ -830,3 +841,31 @@ def delete_team_tournament(id):
     db.session.commit()
 
     return 'team_tournament with id ' + str(id) + ' has been deleted', 200
+
+@api.route("/user/<int:user_id>/videogame-tournaments", methods=["GET"])
+def get_videogame_tournaments_by_user(user_id):
+    videojuegos_ids = (
+        db.session.query(User_videojuego.videojuego_id)
+        .filter(User_videojuego.user_id == user_id)
+        .subquery()
+    )
+
+    tournaments = (
+        Tournament.query
+        .filter(Tournament.videojuego_id.in_(videojuegos_ids))
+        .all()
+    )
+
+    registered_tournaments_ids = {
+        ut.tournament_id for ut in User_tournament.query.filter_by(user_id=user_id).all()
+    }
+
+    return [
+        {
+            **t.serialize(),
+            "videojuego_name": t.videojuego.name,
+            "videojuego_img": t.videojuego.img,
+            "is_registered": t.id in registered_tournaments_ids
+        }
+        for t in tournaments
+    ]
