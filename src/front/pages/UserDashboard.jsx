@@ -177,7 +177,7 @@ export default function UserDashboard() {
             <div className="row my-4">
                 <div className="col-4 text-center">
                     <h4 className="text-start text-uppercase">Mis juegos</h4>
-                    <div className="row g-3">
+                    <div className="row">
                         {gameDetails.length > 0 
                             ? gameDetails.map((game) => (
                                 <div key={game.id} className="col-6">
@@ -276,7 +276,7 @@ export default function UserDashboard() {
                     </Link>
                 </div>
             </div>
-            <div className="d-flex justify-content-center w-100">
+            <div className="d-flex justify-content-center w-100 mb-3">
                 <div className="w-100 mt-4">
                 <h4 className="text-start text-uppercase">Torneos</h4>
                     <div className="table-responsive rounded shadow">

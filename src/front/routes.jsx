@@ -49,6 +49,8 @@ import ApiIntegration from "./pages/ApiIntegration.jsx";
 import UserDashboard from "./pages/UserDashboard.jsx";
 import SearchTeam from "./pages/SearchTeam.jsx";
 import TeamAplication from "./pages/TeamAplication.jsx";
+import SideBar from "./components/SideBar.jsx";
+import { DashboardLayout } from "./pages/DashboardLayout.jsx";
 
 
 export const router = createBrowserRouter(
@@ -60,6 +62,7 @@ export const router = createBrowserRouter(
     // Note: The child paths of the Layout element replace the Outlet component with the elements contained in the "element" attribute of these child paths.
 
       // Root Route: All navigation will start from here.
+      <>
       <Route path="/" element={<Layout />} errorElement={<h1>Not found!</h1>} >
 
         {/* Nested Routes: Defines sub-routes within the BaseHome component. */}
@@ -102,11 +105,14 @@ export const router = createBrowserRouter(
         <Route path="/team/tournament/:id" element={<SingleTeamTournament/>} />
         <Route path="/team/tournament/edit/:id" element={<EditTeamTournament/>} />
         <Route path="/user/login" element={<UserLogin />} />
-        <Route path="/user/dashboard" element={<UserDashboard />} />
         <Route path="/api-integration" element={<ApiIntegration />} />
         <Route path="/search/team" element={<SearchTeam />} />
         <Route path="/team/aplication/:team_id" element={<TeamAplication />} />
         <Route path="/select-tournament" element={<AddTournament />} />
       </Route>
-    )
+      <Route element={<DashboardLayout />}>
+        <Route path="/user/dashboard" element={<UserDashboard />} />
+        {/* más rutas protegidas */}
+      </Route>
+    </>)
 );
