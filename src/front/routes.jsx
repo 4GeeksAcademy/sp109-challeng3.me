@@ -49,6 +49,8 @@ import ApiIntegration from "./pages/ApiIntegration.jsx";
 import UserDashboard from "./pages/UserDashboard.jsx";
 import SearchTeam from "./pages/SearchTeam.jsx";
 import TeamAplication from "./pages/TeamAplication.jsx";
+import { Contactanos } from "./components/Contactanos.jsx";
+import { Nosotros } from "./components/Nosotros.jsx";
 
 
 export const router = createBrowserRouter(
@@ -107,6 +109,8 @@ export const router = createBrowserRouter(
         <Route path="/search/team" element={<SearchTeam />} />
         <Route path="/team/aplication/:team_id" element={<TeamAplication />} />
         <Route path="/select-tournament" element={<AddTournament />} />
+        <Route path="/contact" element={<Contactanos />} />
+        <Route path="/nosotros" element={<Nosotros />} />
       </Route>
     )
 );
