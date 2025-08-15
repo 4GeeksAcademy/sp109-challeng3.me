@@ -11,10 +11,15 @@ export const Home = () => {
 	}, [])
 
 	return (
-		<div className="text-center mt-5 container text-center">
-			<h1 className="text-4xl font-bold mb-4">Bienvenido a Challeng3.me</h1>
-			<p className="text-lg mb-4 w-75 mx-auto">Encuentra jugadores con un nivel similar para tus partidas, participa en cientos de torneos y consigue premios solo por jugar, crea tus propios equipos con amigos y competid en torneos por equipos, todo esto y mucho más proximamente aquí...</p>
-			<img src={logo} alt="Logo" className="w-25 mb-4" />
+		<div className="mt-3 container text-center">
+			<h1 className="text-4xl font-bold mb-3">Bienvenido a Challeng3.me</h1>
+			<h3>¡¡Un Lugar unico!!</h3> 
+			<p className="w-75 mx-auto mt-3">
+			Conecta con jugadores de tu nivel, compite en torneos, cargados de adrenalina, y gana premios reales solo por jugar.
+			Crea tus propios equipos y forma parte de la competencia.
+			Todo esto y mucho más... Muy pronto, aquí.</p>
+			<p className="text-lg w-75 mx-auto">Preparado para pasar al siguiente nivel...</p>
+			<img src={logo} alt="Logo" className="w-50 rounded rounded-5 m-4" />
 		</div>
 	)
 }
