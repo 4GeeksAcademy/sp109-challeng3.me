@@ -328,6 +328,20 @@ button, [type="button"], [type="reset"], [type="submit"] {
     box-shadow: var(--bs-btn-box-shadow) rgba(var(--bs-dark-rgb), .5);
 }
 
+.btn-dark {
+    --bs-btn-color: var(--bs-light);
+    --bs-btn-bg: #2b3239;
+    --bs-btn-border-color: transparent;
+    --bs-btn-hover-color: var(--bs-tertiary-color);
+    --bs-btn-hover-bg: var(--bs-tertiary-bg);
+    --bs-btn-hover-border-color: var(--bs-tertiary-bg);
+    --bs-btn-active-bg: var(--bs-tertiary-bg);
+    --bs-btn-active-color: var(--bs-tertiary-color);
+    --bs-btn-active-border-color: var(--bs-tertiary-bg);
+    --bs-btn-focus-shadow-rgb: 0 0 0 $btn -focus-width rgba(var(--bs-light-rgb), .5);
+    box-shadow: var(--bs-btn-box-shadow) rgba(var(--bs-dark-rgb), .5);
+}
+
 .btn-danger {
     --bs-btn-color: #fff;
     --bs-btn-bg: #fa5c7c;
@@ -344,3 +358,178 @@ button, [type="button"], [type="reset"], [type="submit"] {
     --bs-btn-disabled-bg: #fa5c7c;
     --bs-btn-disabled-border-color: #fa5c7c;
 }
+:root {
+    --sidebar-width: 280px;
+    --sidebar-width-collapsed: 80px;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: 100vh;
+    width: var(--sidebar-width);
+    background: #2b3239;
+    transition: all 0.3s ease;
+}
+
+.sidebar.collapsed {
+    width: var(--sidebar-width-collapsed);
+}
+
+.sidebar-link {
+    color: #a0a3bd;
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    margin: 4px 16px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.sidebar-link:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.sidebar-link.active {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.logo-text {
+    background: linear-gradient(45deg, #6b8cff, #8b9fff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: opacity 0.3s ease;
+}
+
+.notification-badge {
+    background: #ff6b6b;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+}
+
+.profile-section {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+}
+
+.main-content {
+    margin-left: var(--sidebar-width);
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.collapsed~.main-content {
+    margin-left: var(--sidebar-width-collapsed);
+}
+
+.toggle-btn {
+    position: absolute;
+    right: -15px;
+    top: 20px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    border: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.collapsed .toggle-btn {
+    transform: rotate(180deg);
+}
+
+.collapsed .hide-on-collapse {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.collapsed .logo-text {
+    opacity: 0;
+}
+
+.collapsed .profile-info {
+    opacity: 0;
+}
+
+.collapsed .sidebar-link {
+    text-align: center;
+    padding: 1rem !important;
+    margin: 4px 8px;
+}
+
+.collapsed .sidebar-link i {
+    margin: 0 !important;
+}
+
+.profile-info {
+    transition: opacity 0.2s ease;
+}
+
+.logo {
+    display: block;
+    top: 0;
+    position: sticky;
+    text-align: center;
+    line-height: var(--ct-topbar-height);
+    padding: 0 calc(var(--ct-leftbar-width-sm) * .5 - var(--ct-logo-sm-height) * .7);
+    transition: all .25s ease-in-out;
+    max-height: 100px;
+    aspect-ratio: 1;
+    object-fit: contain;
+}
+
+button, a {
+    outline: none !important;
+}
+a {
+    color: rgba(var(--ct-link-color-rgb), var(--ct-link-opacity, 1));
+    text-decoration: none;
+}
+
+.footer {
+    height: var(--ct-footer-height);
+    display: flex;
+    align-items: center;
+    padding: 0 1.5rem;
+    color: var(--ct-emphasis-color);
+    transition: all .25s ease-in-out;
+    border-top: 1px solid var(--ct-border-color);
+}
+
+.footer-links {
+    display: flex;
+    gap: 200px;
+}
+
+.minilogo {
+    height: 40px;
+    aspect-ratio: 1;
+}
+
+.brand-logo {
+    width: 200px;
+    height: px;
+}
+
+.page-title-box .page-title {
+    font-size: 18px;
+    margin: 0;
+    line-height: 75px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+

@@ -44,6 +44,7 @@ const UserLogin = () => {
       } else if (role === "user") {
         dispatch({ type: "set_auth", payload: true });
         navigate("/user/dashboard");
+        console.log(store.user_auth)
       } else {
         alert("Rol no reconocido.");
         return;
@@ -79,8 +80,8 @@ const UserLogin = () => {
               <label htmlFor="exampleInputPassword1" className="form-label ms-3">Password</label>
               <div className="mb-3 p-3 pt-0 input-group">
               <input value= {password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password" type="password" className="form-control" id="exampleInputPassword1"/>
-              <div class="input-group-text input-group-password " data-password="false">
-                  <i class="bi bi-eye-slash"></i>
+              <div className="input-group-text input-group-password " data-password="false">
+                  <i className="bi bi-eye-slash"></i>
                 </div>
           </div>
           <div className="d-flex gap-2 flex-column p-2">
