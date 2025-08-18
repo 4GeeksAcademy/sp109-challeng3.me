@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CreateUserModal from "../components/CreateUserModal.jsx";
 import { jwtDecode } from "jwt-decode";
+import logo from "../assets/img/logo-big.png";
 
 const UserLogin = () => {
   // Access the global state and dispatch function using the useGlobalReducer hook.
@@ -43,6 +44,7 @@ const UserLogin = () => {
       } else if (role === "user") {
         dispatch({ type: "set_auth", payload: true });
         navigate("/user/dashboard");
+        console.log(store.user_auth)
       } else {
         alert("Rol no reconocido.");
         return;
@@ -64,19 +66,26 @@ const UserLogin = () => {
   }
 
   return (
-    <div className="container mt-5 w-75">
-      <h1 className="text-center">Accede a tu cuenta</h1>
-        <form className="w-50 m-auto border p-4 shadow rounded" onSubmit={accesLogin}>
-          <div className="mb-3">
+    <div className="container p-3 w-50">
+        <form className="w-50 m-auto border shadow rounded" onSubmit={accesLogin}>
+          <div className="rounded rounded-bottom-0" style={{backgroundColor:"#05052f"}}>
+           <img src={logo} alt="Logo" className="w-50 d-flex mx-auto" />
+          </div>
+         <h3 className="text-center mt-2">Sing In</h3>
+         <p className="text-center"> Enter your username and password to access. </p>
+          <div className="mb-3 p-3">
               <label htmlFor="exampleInputEmail1" className="form-label">Email</label>
-              <input value= {email} onChange={(e) => setEmail(e.target.value)} type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>
+              <input value= {email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email" type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>
           </div>
-          <div className="mb-3">
-              <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
-              <input value= {password} onChange={(e) => setPassword(e.target.value)} type="password" className="form-control" id="exampleInputPassword1"/>
+              <label htmlFor="exampleInputPassword1" className="form-label ms-3">Password</label>
+              <div className="mb-3 p-3 pt-0 input-group">
+              <input value= {password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password" type="password" className="form-control" id="exampleInputPassword1"/>
+              <div className="input-group-text input-group-password " data-password="false">
+                  <i className="bi bi-eye-slash"></i>
+                </div>
           </div>
-          <div className="d-flex gap-2 flex-column">
-            <button type="submit" className="btn btn-success">Login</button>
+          <div className="d-flex gap-2 flex-column p-2">
+            <button type="submit" className="btn btn-danger p-2">Login</button>
             <div className="d-flex gap-1 small-text align-self-center">
               ¿No tienes cuenta? 
               <CreateUserModal/>

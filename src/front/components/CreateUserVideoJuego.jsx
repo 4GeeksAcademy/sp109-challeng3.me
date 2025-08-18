@@ -19,10 +19,13 @@ export const CreateUserVideoJuego = () => {
   useEffect(() => {
     const token = localStorage.getItem("token")
 
-    if (store.user_auth == true && token !== null) {
+    if (store.user_auth && token) {
       const decoded = jwtDecode(token)
-      userVideoJuego.user_id = decoded.sub || null
-      userVideoJuego.ranking = "0"
+      setUserVideoJuego((prev) => ({
+        ...prev,
+        user_id: decoded.sub || null,
+        ranking: "0",
+      }))
     } else {
       alert('No estás autenticado. Por favor, inicia sesión.')
       navigate('/user/login')
@@ -34,12 +37,12 @@ export const CreateUserVideoJuego = () => {
     .catch(err => console.error("Error al cargar videojuegos:", err))
   }, []);
 
-    function newUserVideoJuego (){
+    function newUserVideoJuego (id){
       const requestOptions = {
         method: "POST",
         headers: {'Content-Type': 'application/json' },
          body: JSON.stringify({
-                  videojuego_id: userVideoJuego.videojuego_id,
+                  videojuego_id: id,
                   user_id: userVideoJuego.user_id,
                   ranking: userVideoJuego.ranking
               })
@@ -51,41 +54,38 @@ export const CreateUserVideoJuego = () => {
 }
 
   return (
-    <div className="container m-auto mt-5">
-      <ul className="list-group ">
-
-            <li
-              className="list-group-item d-flex justify-content-between"> 
-  
-              <div className="input-group input-group-sm mb-3 row d-flex justify-content-center">
-                <div className="col-8">
-                Selecciona un juego para añadirlo a tu perfil:
-                 <select
-                    className="form-control mt-2"
-                    value={userVideoJuego.videojuego_id}
-                    onChange={(e) =>
-                      setUserVideoJuego({ ...userVideoJuego, videojuego_id: e.target.value })
-                    }
-                 >
-                  <option value="">Selecciona un videojuego</option>
-                  {videojuegos.map((vj) => (
-                    <option key={vj.id} value={vj.id}>
-                      {vj.name}
-                    </option>
-                    ))}
-                 </select>
-                </div>
-                <Link className="text-center" to="/user/videojuego/">
-                <button className="btn btn-success m-1 w-50 mt-4" 
-                  onClick={newUserVideoJuego}>
-                  Guardar
-                </button>
-                </Link>
+    <div className="container m-auto p-5 bg-body h-full">
+      
+      <div className="row">
+        <div className="col-12 mb-4">
+          <div className="page-title-box">
+            <div className="page-title">
+              <h5>Selecciona un juego para añadirlo a tu perfil</h5>
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-12 d-flex flex-wrap gap-4">
+            {videojuegos.map(g => (
+              <div key={g.id} className="col-2" onClick={() => newUserVideoJuego(g.id)} style={{cursor: "pointer"}}>
+                  <div className="card widget-flat bg-body-secondary p-1 text-center">
+                      <div className="card-body">
+                        <img 
+                            src={g.img} 
+                            alt={g.name}
+                            className="mini-gameimg p-2 mx-auto row mb-2"
+                        />
+                        <span>{g.name}</span>
+                      </div>
+                  </div>
               </div>
-            </li>
-      </ul>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <Link to="/user/dashboard/">
-        <button className="btn btn-primary mt-2">Atrás</button>
+        <button className="btn btn-danger mt-2">Atrás</button>
       </Link>
     </div>
   );

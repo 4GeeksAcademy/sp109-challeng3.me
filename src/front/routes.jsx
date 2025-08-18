@@ -49,6 +49,8 @@ import ApiIntegration from "./pages/ApiIntegration.jsx";
 import UserDashboard from "./pages/UserDashboard.jsx";
 import SearchTeam from "./pages/SearchTeam.jsx";
 import TeamAplication from "./pages/TeamAplication.jsx";
+import { Contactanos } from "./components/Contactanos.jsx";
+import { Nosotros } from "./components/Nosotros.jsx";
 import SideBar from "./components/SideBar.jsx";
 import { DashboardLayout } from "./pages/DashboardLayout.jsx";
 
@@ -70,6 +72,13 @@ export const router = createBrowserRouter(
         <Route path= "/" element={<Home />} />
         <Route path="/single/:theId" element={ <Single />} />  {/* Dynamic route for single items */}
         <Route path="/demo" element={<Demo />} />
+        <Route path="/user/login" element={<UserLogin />} />
+        <Route path="/contact" element={<Contactanos />} />
+        <Route path="/nosotros" element={<Nosotros />} />
+      </Route>
+
+      <Route element={<DashboardLayout />}>
+        <Route path="/user/dashboard" element={<UserDashboard />} />
         <Route path="/tournament" element={<Tournament />} />
         <Route path="/card/:id" element={ <Card />} />
         <Route path="/form" element={<Form />} />
@@ -99,20 +108,15 @@ export const router = createBrowserRouter(
         <Route path="/user/videojuego" element={<UserVideoJuego />} />
         <Route path="/user/videojuego/:id" element={<CardUserVideoJuego />} />
         <Route path="/user/videojuego/edit/:id" element={<EditUserVideoJuego />} />
-        <Route path="/select-game" element={<CreateUserVideoJuego />} />
+        <Route path="/select/game" element={<CreateUserVideoJuego />} />
         <Route path="/team/tournament" element={<TeamTournamentCRUD />} />
         <Route path="/team/tournament/create" element={<CreateTeamTournament/>} />
         <Route path="/team/tournament/:id" element={<SingleTeamTournament/>} />
         <Route path="/team/tournament/edit/:id" element={<EditTeamTournament/>} />
-        <Route path="/user/login" element={<UserLogin />} />
         <Route path="/api-integration" element={<ApiIntegration />} />
         <Route path="/search/team" element={<SearchTeam />} />
         <Route path="/team/aplication/:team_id" element={<TeamAplication />} />
-        <Route path="/select-tournament" element={<AddTournament />} />
-      </Route>
-      <Route element={<DashboardLayout />}>
-        <Route path="/user/dashboard" element={<UserDashboard />} />
-        {/* más rutas protegidas */}
+        <Route path="/search/tournament" element={<AddTournament />} />
       </Route>
     </>)
 );

@@ -29,12 +29,10 @@ export default function UserDashboard() {
             const currentTime = Math.floor(Date.now() / 1000); // tiempo actual en segundos
 
             if (decoded.exp && decoded.exp < currentTime) {
-                alert('Token expirado. Por favor, inicia sesión nuevamente.');
                 localStorage.removeItem("token")
                 navigate('/user/login')
             }
         } else {
-            alert('No estás autenticado. Por favor, inicia sesión.');
             navigate('/user/login')
         }
     }
@@ -155,7 +153,7 @@ export default function UserDashboard() {
     }
 
     return (
-        <div className="container bg-dark">
+        <div className="container bg-body">
             <div className="d-flex justify-content-center align-items-center gap-4 my-4 bg-body-secondary col-6 m-auto p-4 rounded shadow">
                 <div className="constainer border-end p-4">
                     <img
@@ -195,7 +193,7 @@ export default function UserDashboard() {
                             ))
                             : <span className="m-auto">No tienes juegos vinculados.</span>}
                     </div>
-                    <button className="btn btn-danger mt-3" onClick={() => navigate("/select-game")}>Selecciona más juegos</button>
+                    <button className="btn btn-danger mt-3" onClick={() => navigate("/select/game")}>Selecciona más juegos</button>
                 </div>
                 <div className="col-4 text-center border-end border-start">
                     <h4 className="text-start text-uppercase">Mis Equipos</h4>

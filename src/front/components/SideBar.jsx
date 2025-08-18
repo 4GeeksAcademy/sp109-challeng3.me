@@ -1,10 +1,11 @@
 import React, { useState, useEffect, Children } from "react";
 import { jwtDecode } from "jwt-decode";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import logo from "../../../public/logo-challeng3me.png";
-import isologo from "../../../public/isologo-challeng3me.png";
+import logo from "../assets/img/logo-challeng3me.webp";
+import useGlobalReducer from "../hooks/useGlobalReducer";
 
 function SideBar({children}) {
+  const {store, dispatch} = useGlobalReducer()
   const [isLoggedIn, setIsLoggedIn] = useState(false); 
   const [role, setRole] = useState(null); 
   const [collapsed, setCollapsed] = useState(false); 
@@ -22,7 +23,6 @@ function SideBar({children}) {
         navigate("/user/login");
       }
     } else {
-      alert("No estás autenticado. Por favor, inicia sesión.");
       navigate("/user/login");
     }
   };
@@ -46,36 +46,49 @@ function SideBar({children}) {
     }
   }, [token]);
 
+  const logout = () => {
+		localStorage.removeItem("token")
+		setRole(null)
+		dispatch({ type: 'set_admin_auth', payload: false })
+		dispatch({ type: 'set_auth', payload: false })
+		navigate('/user/login')
+	}
+
   return (
     <>
       <nav
-      className={`sidebar d-flex flex-column position-sticky h-full ${
+      className={`sidebar d-flex flex-column position-sticky ${
         collapsed ? "collapsed" : ""
       }`}
     >
       <button
-        className="toggle-btn btn btn-sm btn-outline-dark p-2"
+        className=" btn btn-sm btn-outline-dark p-2"
         onClick={() => setCollapsed(!collapsed)} // 🔹 Cambiamos el estado
       >
         <i className={`fas fa-list`}></i>
       </button>
 
       <div className="p-4">
+        {collapsed && <img src={logo} alt="logo" className="minilogo"/>}
         {!collapsed && <img src={logo} alt="logo" className="logo logo-text mx-auto"/>}
       </div>
 
       <div className="nav flex-column">
-        <Link to="#" className="sidebar-link active text-decoration-none p-3">
+        <Link to="/user/dashboard" className="sidebar-link active text-decoration-none p-3">
           <i className="fas fa-home me-3"></i>
           {!collapsed && <span>Dashboard</span>}
         </Link>
-        <Link to="#" className="sidebar-link text-decoration-none p-3">
-          <i className="fas fa-chart-bar me-3"></i>
-          {!collapsed && <span>Analytics</span>}
+        <Link to="/select/game" className="sidebar-link text-decoration-none p-3">
+          <i className="bi bi-controller me-3"></i>
+          {!collapsed && <span>Juegos</span>}
+        </Link>
+        <Link to="/search/tournament" className="sidebar-link text-decoration-none p-3">
+          <i className="bi bi-trophy-fill me-3"></i>
+          {!collapsed && <span>Torneos</span>}
         </Link>
         <Link to="#" className="sidebar-link text-decoration-none p-3">
           <i className="fas fa-users me-3"></i>
-          {!collapsed && <span>Customers</span>}
+          {!collapsed && <span>Equipos</span>}
         </Link>
         <Link to="#" className="sidebar-link text-decoration-none p-3">
           <i className="fas fa-box me-3"></i>
@@ -87,20 +100,10 @@ function SideBar({children}) {
         </Link>
       </div>
 
-      <div className="profile-section mt-auto p-4">
-        <div className="d-flex align-items-center">
-          <img
-            src="https://randomuser.me/api/portraits/women/70.jpg"
-            className="rounded-circle"
-            alt="Profile"
-            style={{ width: "40px", height: "40px" }}
-          />
-          {!collapsed && (
-            <div className="ms-3 profile-info">
-              <h6 className="text-white mb-0">Alex Morgan</h6>
-              <small className="text-muted">{role}</small>
-            </div>
-          )}
+      <div className="profile-section mt-auto">
+        <div  onClick={logout} className="sidebar-link text-decoration-none p-3 text-danger">
+          <span ><i className="bi bi-door-open-fill me-3"></i></span>
+          {!collapsed && <span>Logout</span>}
         </div>
       </div>
     </nav>

@@ -3,11 +3,13 @@ import React, { useEffect, useState } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import isologo from "../assets/img/isologo-challeng3me.webp";
 
 export const Navbar = () => {
 	const { store, dispatch } = useGlobalReducer()
 	const [isAdmin, setIsAdmin] = useState(false)
 	const [isUser, setIsUser] = useState(false)
+	const [user, setUser] = useState([])
 	const navigate = useNavigate()
 
 	useEffect(() => {
@@ -27,6 +29,8 @@ export const Navbar = () => {
 			} else if (decoded?.role === 'user') {
 				setIsUser(true);
 				setIsAdmin(false);
+				const userId = decoded.sub || null
+				if (userId) {getUserInfo(userId)}
 			}
 		} catch (error) {
 			console.error("Token inválido:", error.message);
@@ -36,13 +40,10 @@ export const Navbar = () => {
 		}
 	}, [store.admin_auth, store.user_auth, navigate])
 
-	const logout = () => {
-		localStorage.removeItem("token")
-		setIsAdmin(false)
-		setIsUser(false)
-		dispatch({ type: 'set_admin_auth', payload: false })
-		dispatch({ type: 'set_auth', payload: false })
-		navigate('/user/login')
+	const getUserInfo = (id) => {
+		fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/' + id)
+		.then(res => res.json())
+		.then(data => setUser(data))
 	}
 
 
@@ -51,18 +52,37 @@ export const Navbar = () => {
 		<nav className="navbar bg-body-secondary">
 			<div className="container">
 				<Link to="/">
-					<span className="navbar-brand mb-0 h1">Challeng3.me</span>
+					<img src={isologo} alt="isologo" className="brand-logo"/>
 				</Link>
 				{isUser || isAdmin ? (
 					<div className="ml-auto d-flex gap-2">
-						<Link to="/user/dashboard">
-							<button className="btn btn-light">User Dashboard</button>
-						</Link>
-						<button className="btn btn-light" onClick={logout}>Logout</button>
+						<div className="dropdown d-flex align-items-center">
+							<a className="nav-link dropdown-toggle d-flex align-items-center btn btn-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<img
+								src={user.img}
+								className="rounded-circle"
+								alt="Profile"
+								style={{ width: "40px", height: "40px" }}
+								draggable="false"
+							/>
+								<div className="ms-3 profile-info">
+									<h6 className="text-white mb-0">{user.username}</h6>
+									{isAdmin ? (<small className="text-muted">Admin</small>)
+									:
+									(<small className="text-muted">Jugador</small>)}
+								</div>
+							</a>
+							<ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+								<li><a className="dropdown-item" href="#">Acción</a></li>
+								<li><a className="dropdown-item" href="#">Otra acción</a></li>
+								<li><hr className="dropdown-divider"/></li>
+								<li><a className="dropdown-item" href="#">Algo más aquí</a></li>
+							</ul>
+						</div>
 					</div>
 				) : (
 					<Link to="/user/login">
-						<button className="btn btn-light">User Login</button>
+						<button className="btn btn-light">Login</button>
 					</Link>
 				)}
 					{isAdmin && (

@@ -328,6 +328,20 @@ button, [type="button"], [type="reset"], [type="submit"] {
     box-shadow: var(--bs-btn-box-shadow) rgba(var(--bs-dark-rgb), .5);
 }
 
+.btn-dark {
+    --bs-btn-color: var(--bs-light);
+    --bs-btn-bg: #2b3239;
+    --bs-btn-border-color: transparent;
+    --bs-btn-hover-color: var(--bs-tertiary-color);
+    --bs-btn-hover-bg: var(--bs-tertiary-bg);
+    --bs-btn-hover-border-color: var(--bs-tertiary-bg);
+    --bs-btn-active-bg: var(--bs-tertiary-bg);
+    --bs-btn-active-color: var(--bs-tertiary-color);
+    --bs-btn-active-border-color: var(--bs-tertiary-bg);
+    --bs-btn-focus-shadow-rgb: 0 0 0 $btn -focus-width rgba(var(--bs-light-rgb), .5);
+    box-shadow: var(--bs-btn-box-shadow) rgba(var(--bs-dark-rgb), .5);
+}
+
 .btn-danger {
     --bs-btn-color: #fff;
     --bs-btn-bg: #fa5c7c;
@@ -354,9 +368,13 @@ body {
 }
 
 .sidebar {
-    width: var(--sidebar-width);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
     height: 100vh;
-    background: linear-gradient(135deg, #1a1c2e 0%, #16181f 100%);
+    width: var(--sidebar-width);
+    background: #2b3239;
     transition: all 0.3s ease;
 }
 
@@ -400,6 +418,7 @@ body {
 
 .profile-section {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
 }
 
 .main-content {
@@ -494,3 +513,23 @@ a {
     display: flex;
     gap: 200px;
 }
+
+.minilogo {
+    height: 40px;
+    aspect-ratio: 1;
+}
+
+.brand-logo {
+    width: 200px;
+    height: px;
+}
+
+.page-title-box .page-title {
+    font-size: 18px;
+    margin: 0;
+    line-height: 75px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
