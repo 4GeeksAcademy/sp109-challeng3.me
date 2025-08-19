@@ -53,29 +53,46 @@ const AddTournament = () => {
       .catch((err) => console.error("Error al unirse al torneo:", err))
   };
 
-  console.log(filteredTournaments)
-
   return (
-    <div className="container">
-      <ul>
-        {filteredTournaments.map(t => (
-          <li key={t.id} className="border p-2">
-            <div className="d-flex justify-content-between align-items-center flex-nowrap">
-              <h4>{t.name}</h4>
-                <div className="d-flex flex-column align-items-end">
-                    <span>Nivel: {t.level}</span>
-                    <span>Premium: {t.type}</span>
-                </div>
-                <img className="mini-gameimg" src={t.videojuego_img} alt={t.videojuego_name} />
-                <span>{t.videojuego_name}</span>
-                {t.is_registered ? (
-                  <button className="btn btn-success" disabled>Inscrito</button>
-                ) : (
-                  <button className="btn btn-warning" onClick={() => addUserTournament(t.id)}>Unirse</button>
-                )}                  
-                    </div>
-          </li>))}
-      </ul>
+     <div className="container m-auto p-5 bg-body h-full">
+      <div className="row">
+        <div className="col-12 mb-4">
+          <div className="page-title-box">
+            <div className="page-title">
+              <h5>Selecciona un Torneo para inscribirte</h5>
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-12 d-flex flex-wrap gap-4">
+            <table className="mb-0 table table-hover">
+                <tbody >
+                    {filteredTournaments.map(t => (
+                    <tr key={t.id} className="bg-body-secondary p-2">
+                            <td className="my-1">
+                                <h5 className="font-14 pt-2 ps-2">{t.name}</h5>
+                                <span className="text-muted font-13 ps-2">{t.type}</span>
+                            </td>
+                            <td className="my-1 pt-4">
+                                <span className="text-muted font-14">Nivel necesario: {t.level}</span>
+                            </td>
+                            <td className="pt-3">
+                                <img className="mini-gameimg mx-2" src={t.videojuego_img} alt={t.videojuego_name} />
+                            </td>
+                            <td className="text-end p-4 font-14">
+                                {t.is_registered ? (
+                                <span className="text-danger "><i class="bi bi-check-circle-fill"></i> Inscrito</span>
+                                ) : (
+                                <button className="btn btn-danger mx-auto" onClick={() => addUserTournament(t.id)}>Unirse</button>
+                                )}                  
+                            </td>
+                        </tr>)
+                    )}
+                </tbody>
+            </table>
+          </div>
+         </div>
+      </div>
     </div>
   )
 }

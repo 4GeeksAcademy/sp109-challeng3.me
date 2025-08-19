@@ -53,6 +53,7 @@ import { Contactanos } from "./components/Contactanos.jsx";
 import { Nosotros } from "./components/Nosotros.jsx";
 import SideBar from "./components/SideBar.jsx";
 import { DashboardLayout } from "./pages/DashboardLayout.jsx";
+import TeamSection from "./pages/TeamSection.jsx";
 
 
 export const router = createBrowserRouter(
@@ -117,6 +118,7 @@ export const router = createBrowserRouter(
         <Route path="/search/team" element={<SearchTeam />} />
         <Route path="/team/aplication/:team_id" element={<TeamAplication />} />
         <Route path="/search/tournament" element={<AddTournament />} />
+        <Route path="/team/section" element={<TeamSection />} />
       </Route>
     </>)
 );

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Mozilla+Headline:wght@200..700&display=swap');
+
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -32,6 +34,7 @@
     height: 100px; /* Ajusta el tamaño de la imagen */
     border-radius: 50%; /* Hace que la imagen sea circular */
     object-fit: cover; /* Asegura que la imagen se recorte correctamente */
+    border: 0.5px solid white;
 }
 
 .mini-gameimg {
@@ -108,6 +111,7 @@ ul li {
     --bs-form-valid-color: #6ce2c1;
     --bs-form-invalid-color: #fc9db0;
     --bs-form-invalid-border-color: #fc9db0;
+    --bs-topbar-user-bg: #3c4655;
 
 }
 
@@ -161,6 +165,7 @@ ul li {
     border-radius: var(--bs-card-border-radius);
     box-shadow: var(--bs-box-shadow);
     margin-bottom: 1.5rem;
+    font-size: 14px;
 }
 
 .widget-flat {
@@ -374,8 +379,10 @@ body {
     bottom: 0;
     height: 100vh;
     width: var(--sidebar-width);
-    background: #2b3239;
+    background: var(--bs-secondary-bg);
     transition: all 0.3s ease;
+    box-shadow: var(--bs-btn-box-shadow) rgba(var(--bs-dark-rgb), .5);
+    border-right: 0.5px solid rgba(var(--bs-dark-rgb), .5);
 }
 
 .sidebar.collapsed {
@@ -417,7 +424,6 @@ body {
 }
 
 .profile-section {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
     cursor: pointer;
 }
 
@@ -483,8 +489,8 @@ body {
     top: 0;
     position: sticky;
     text-align: center;
-    line-height: var(--ct-topbar-height);
-    padding: 0 calc(var(--ct-leftbar-width-sm) * .5 - var(--ct-logo-sm-height) * .7);
+    line-height: var(--bs-topbar-height);
+    padding: 0 calc(var(--bs-leftbar-width-sm) * .5 - var(--bs-logo-sm-height) * .7);
     transition: all .25s ease-in-out;
     max-height: 100px;
     aspect-ratio: 1;
@@ -495,23 +501,28 @@ button, a {
     outline: none !important;
 }
 a {
-    color: rgba(var(--ct-link-color-rgb), var(--ct-link-opacity, 1));
+    color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
     text-decoration: none;
 }
 
 .footer {
-    height: var(--ct-footer-height);
+    height: var(--bs-footer-height);
     display: flex;
     align-items: center;
     padding: 0 1.5rem;
-    color: var(--ct-emphasis-color);
+    color: var(--bs-emphasis-color);
     transition: all .25s ease-in-out;
-    border-top: 1px solid var(--ct-border-color);
+    border-top: 1px solid var(--bs-border-color);
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    width: 100%;
 }
 
 .footer-links {
     display: flex;
     gap: 200px;
+    color: white;
 }
 
 .minilogo {
@@ -533,3 +544,82 @@ a {
     text-overflow: ellipsis;
 }
 
+.diagonal {
+    background: var(--bs-secondary-bg);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    clip-path: polygon(100% 0%, 0% 0%, 0% 0%, 0% 60%);
+    transform: rotate(180deg);
+    z-index: 0;
+    box-shadow: 10px 5px 5px black;
+}
+.hero {
+    z-index: 2;
+    position: relative;
+}
+
+h2, .h2 {
+    font-size: calc(1.3122rem + .7464vw);
+}
+
+.font-16 {
+    font-size: 16px !important;
+}
+.font-14 {
+    font-size: 14px !important;
+}
+.font-13 {
+    font-size: 13px !important;
+}
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-width: 0 1px;
+    border-style: solid;
+    border-color: var(--bs-topbar-user-border);
+    background-color: var(--bs-topbar-user-bg);
+    min-height: var(--bs-topbar-height);
+    transition: none;
+}
+.navbar-custom .topbar-menu .nav-link {
+    padding: 0;
+    position: relative;
+    color: var(--bs-topbar-item-color);
+    display: flex;
+    align-items: center;
+    height: var(--bs-topbar-height);
+    cursor: pointer;
+}
+h6, .h6 {
+    font-size: .765rem;
+}
+.perfilbtn {
+    height: 56px !important;
+}
+/* Desde md (≥768px) aparece el borde start */
+@media (min-width: 768px) {
+  .b-md-start { border-left: 1px solid var(--bs-border-color) !important; }
+}
+
+/* Desde lg (≥992px) aparece el borde end */
+@media (min-width: 992px) {
+  .b-lg-end { border-right: 1px solid var(--bs-border-color) !important; }
+}
+
+/* Opcional: quitar bordes en < md para que no se vean al apilar */
+@media (max-width: 767.98px) {
+  .b-md-start,
+  .b-lg-end {
+    border: 0 !important;
+  }
+}
+.mozilla-headline {
+  font-family: "Mozilla Headline", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}

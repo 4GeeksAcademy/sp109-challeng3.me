@@ -19,7 +19,8 @@ export const CreateUserVideoJuego = () => {
   useEffect(() => {
     const token = localStorage.getItem("token")
 
-    if (store.user_auth && token) {
+    if (token) {
+
       const decoded = jwtDecode(token)
       setUserVideoJuego((prev) => ({
         ...prev,
@@ -65,10 +66,11 @@ export const CreateUserVideoJuego = () => {
           </div>
         </div>
         <div className="row">
-          <div className="col-12 d-flex flex-wrap gap-4">
+          <div className="col-12 col-lg-7 d-flex flex-wrap gap-4">
             {videojuegos.map(g => (
-              <div key={g.id} className="col-2" onClick={() => newUserVideoJuego(g.id)} style={{cursor: "pointer"}}>
-                  <div className="card widget-flat bg-body-secondary p-1 text-center">
+              <div key={g.id} className="col-4" onClick={() => newUserVideoJuego(g.id)} style={{cursor: "pointer"}}>
+                  <div className="card widget-flat bg-body-secondary p-1 text-center" style={{height: "auto"}}>
+
                       <div className="card-body">
                         <img 
                             src={g.img} 
@@ -80,6 +82,10 @@ export const CreateUserVideoJuego = () => {
                   </div>
               </div>
             ))}
+          </div>
+          <div className="col-12 col-lg-5 d-flex justify-content-center flex-column">
+            <i className="bi bi-joystick text-danger display-1 mx-auto mb-4"></i>
+            <span className="text-muted mozilla-headline blackquote">Selecciona tus juegos competitivos favoritos y conéctate con jugadores que comparten tu pasión. Aquí podrás descubrir torneos, formar equipos y demostrar tu nivel en el campo de batalla de tu juego preferido.</span>
           </div>
         </div>
       </div>
