@@ -86,6 +86,7 @@ function SideBar({children}) {
           <i className="bi bi-trophy-fill me-3"></i>
           {!collapsed && <span>Torneos</span>}
         </Link>
+
         <Link to="/team/section" className="sidebar-link text-decoration-none p-3">
           <i className="fas fa-users me-3"></i>
           {!collapsed && <span>Equipos</span>}

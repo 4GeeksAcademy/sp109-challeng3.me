@@ -20,6 +20,7 @@ export const CreateUserVideoJuego = () => {
     const token = localStorage.getItem("token")
 
     if (token) {
+
       const decoded = jwtDecode(token)
       setUserVideoJuego((prev) => ({
         ...prev,
@@ -69,6 +70,7 @@ export const CreateUserVideoJuego = () => {
             {videojuegos.map(g => (
               <div key={g.id} className="col-4" onClick={() => newUserVideoJuego(g.id)} style={{cursor: "pointer"}}>
                   <div className="card widget-flat bg-body-secondary p-1 text-center" style={{height: "auto"}}>
+
                       <div className="card-body">
                         <img 
                             src={g.img} 

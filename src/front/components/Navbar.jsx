@@ -57,6 +57,7 @@ export const Navbar = () => {
 	return (
 		<nav className="navbar bg-body-secondary py-0">
 			<div className="container">
+
 				<Link to="/" className="py-3">
 					<img src={isologo} alt="isologo" className="brand-logo"/>
 				</Link>
