@@ -152,7 +152,7 @@ const CreateTeam = () => {
                     <div class="mb-3">
                         <label class="form-label" htmlFor="name">Nombre del equipo</label>
                         <input class="form-control" type="text" name="name" id="name" value={team.videojuego_id}
-                            onChange={(e) => setTeam({ ...team, videojuego_id: parseInt(e.target.value) })}/>
+                            onChange={(e) => setTeam({ ...team, videojuego_id: e.target.value })}/>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" htmlFor="img">Logo del equipo</label>

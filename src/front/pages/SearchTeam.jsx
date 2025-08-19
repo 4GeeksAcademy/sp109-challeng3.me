@@ -10,7 +10,6 @@ export default function SearchTeam() {
     const [userTeams, setUserTeams] = useState([])
     const navigate = useNavigate()
 
-
     const getTeams = () => {
         fetch(import.meta.env.VITE_BACKEND_URL + "/api/team")
             .then(res => res.json())
