@@ -151,8 +151,8 @@ const CreateTeam = () => {
                     style={{ height: "auto" }}>
                     <div class="mb-3">
                         <label class="form-label" htmlFor="name">Nombre del equipo</label>
-                        <input class="form-control" type="text" name="name" id="name" value={team.videojuego_id}
-                            onChange={(e) => setTeam({ ...team, videojuego_id: e.target.value })}/>
+                        <input class="form-control" type="text" name="name" id="name" value={team.name}
+                            onChange={(e) => setTeam({ ...team, name: e.target.value })}/>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" htmlFor="img">Logo del equipo</label>
