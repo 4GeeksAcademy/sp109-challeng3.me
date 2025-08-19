@@ -8,9 +8,11 @@ export const DashboardLayout = () => {
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
       <SideBar />
-      <div style={{ flex: 1, position: "sticky" }}>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <Navbar />
-        <Outlet />
+        <main style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+          <Outlet />
+        </main>
         <Footer/>
       </div>
     </div>

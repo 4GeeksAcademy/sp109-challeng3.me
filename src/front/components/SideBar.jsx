@@ -74,7 +74,7 @@ function SideBar({children}) {
       </div>
 
       <div className="nav flex-column">
-        <Link to="/user/dashboard" className="sidebar-link active text-decoration-none p-3">
+        <Link to="/user/dashboard" className="sidebar-link text-decoration-none p-3">
           <i className="fas fa-home me-3"></i>
           {!collapsed && <span>Dashboard</span>}
         </Link>
@@ -86,7 +86,7 @@ function SideBar({children}) {
           <i className="bi bi-trophy-fill me-3"></i>
           {!collapsed && <span>Torneos</span>}
         </Link>
-        <Link to="#" className="sidebar-link text-decoration-none p-3">
+        <Link to="/team/section" className="sidebar-link text-decoration-none p-3">
           <i className="fas fa-users me-3"></i>
           {!collapsed && <span>Equipos</span>}
         </Link>

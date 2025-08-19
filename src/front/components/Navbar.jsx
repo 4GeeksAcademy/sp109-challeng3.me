@@ -46,37 +46,40 @@ export const Navbar = () => {
 		.then(data => setUser(data))
 	}
 
-
+  const logout = () => {
+		localStorage.removeItem("token")
+		setRole(null)
+		dispatch({ type: 'set_admin_auth', payload: false })
+		dispatch({ type: 'set_auth', payload: false })
+		navigate('/user/login')
+	}
 
 	return (
-		<nav className="navbar bg-body-secondary">
+		<nav className="navbar bg-body-secondary py-0">
 			<div className="container">
-				<Link to="/">
+				<Link to="/" className="py-3">
 					<img src={isologo} alt="isologo" className="brand-logo"/>
 				</Link>
 				{isUser || isAdmin ? (
-					<div className="ml-auto d-flex gap-2">
-						<div className="dropdown d-flex align-items-center">
-							<a className="nav-link dropdown-toggle d-flex align-items-center btn btn-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+					<div className="ml-auto d-flex gap-2 perfilbtn">
+						<div className="dropdown d-flex align-items-center perfilbtn">
+							<a className="nav-link dropdown-toggle arrow-none nav-user px-2 dropdown-toggle border-0 perfilbtn" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 							<img
 								src={user.img}
 								className="rounded-circle"
 								alt="Profile"
-								style={{ width: "40px", height: "40px" }}
+								style={{ width: "40px", height: "40px", border: "0.5px solid white" }}
 								draggable="false"
 							/>
-								<div className="ms-3 profile-info">
-									<h6 className="text-white mb-0">{user.username}</h6>
-									{isAdmin ? (<small className="text-muted">Admin</small>)
-									:
-									(<small className="text-muted">Jugador</small>)}
-								</div>
+								<span class="d-lg-flex flex-column gap-1 d-none"><h5 class="my-0">{user.username}</h5>
+								<h6 class="my-0 fw-normal align-self-start">
+									Nivel: {user.level} {user.premium ? ("Premium") : ("Free")}
+								</h6></span>
 							</a>
 							<ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-								<li><a className="dropdown-item" href="#">Acción</a></li>
-								<li><a className="dropdown-item" href="#">Otra acción</a></li>
+								<li><Link className="dropdown-item" to="/user/dashboard">Dashboard</Link></li>
 								<li><hr className="dropdown-divider"/></li>
-								<li><a className="dropdown-item" href="#">Algo más aquí</a></li>
+								<li><Link className="dropdown-item" to="/" onClick={logout}>Log Out</Link></li>
 							</ul>
 						</div>
 					</div>

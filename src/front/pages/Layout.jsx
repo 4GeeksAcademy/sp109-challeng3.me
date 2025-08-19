@@ -8,9 +8,15 @@ import SideBar from "../components/SideBar.jsx"
 export const Layout = () => {
     return (
         <ScrollToTop>
-            <Navbar />
+        <div style={{ display: "flex", minHeight: "100vh" }}>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+                <Navbar />
+                <main style={{ flex: 1, display: "flex", flexDirection: "column" }}>
                 <Outlet />
-            <Footer />
+                </main>
+                <Footer/>
+            </div>
+        </div>
         </ScrollToTop>
     )
 }

@@ -152,9 +152,11 @@ export default function UserDashboard() {
         .catch((err) => console.error("Error al unirse al torneo:", err))
     }
 
+    const onlyInscribed = filteredTournaments.filter(t => t.is_registered == true)
+
     return (
         <div className="container bg-body">
-            <div className="d-flex justify-content-center align-items-center gap-4 my-4 bg-body-secondary col-6 m-auto p-4 rounded shadow">
+            <div className="d-flex justify-content-center align-items-center gap-4 my-4 bg-body-secondary m-auto p-4 rounded shadow" style={{ width: "fit-content" }}>
                 <div className="constainer border-end p-4">
                     <img
                         src={user.img}
@@ -172,8 +174,8 @@ export default function UserDashboard() {
                 </div>
             </div>
 
-            <div className="row my-4">
-                <div className="col-4 text-center">
+            <div className="row my-4 d-flex flex-wrap">
+                <div className="col-12 col-md-6 col-lg-4 text-center">
                     <h4 className="text-start text-uppercase">Mis juegos</h4>
                     <div className="row">
                         {gameDetails.length > 0 
@@ -193,9 +195,8 @@ export default function UserDashboard() {
                             ))
                             : <span className="m-auto">No tienes juegos vinculados.</span>}
                     </div>
-                    <button className="btn btn-danger mt-3" onClick={() => navigate("/select/game")}>Selecciona más juegos</button>
                 </div>
-                <div className="col-4 text-center border-end border-start">
+                <div className="col-12 col-md-6 col-lg-4 text-center b-md-start b-lg-end">
                     <h4 className="text-start text-uppercase">Mis Equipos</h4>
                     <div className="row g-3">
                         {userTeams.length > 0 
@@ -223,13 +224,8 @@ export default function UserDashboard() {
                             : <span className="m-auto">No tienes equipos creados</span>
                         }
                     </div>
-                    <div className="d-flex justify-content-around mt-3">
-                        <Link to="/team/create">
-                            <button className="btn btn-danger">Crear Equipo</button>
-                        </Link>
-                    </div>
                 </div>
-                <div className="col-4 text-center">
+                <div className="col-12 col-md-6 col-lg-4 text-center">
                     <h4 className="text-start text-uppercase">Otros Equipos</h4>
                     <div className="row g-3">
                         {otherTeams.length > 0 ? (
@@ -269,32 +265,29 @@ export default function UserDashboard() {
                             <span className="m-auto">No participas en ningún otro equipo</span>
                     )}
                     </div>
-                    <Link to="/search/team">
-                        <button className="btn btn-danger mt-3">Unirse a un Equipo</button>
-                    </Link>
                 </div>
             </div>
             <div className="d-flex justify-content-center w-100 mb-3">
                 <div className="w-100 mt-4">
-                <h4 className="text-start text-uppercase">Torneos</h4>
+                <h4 className="text-start text-uppercase">Torneos inscritos</h4>
                     <div className="table-responsive rounded shadow">
-                        <table className="mb-0 table table-hover">
+                        <table className="mb-0 table table-hover align-middle">
                             <tbody >
-                                {filteredTournaments.map(t => (
+                                {onlyInscribed.map(t => (
                                 <tr key={t.id} className="bg-body-secondary p-2">
-                                        <td className="font-14 my-1 ">
-                                            <h5>{t.name}</h5>
-                                            <span className="text-muted">{t.type}</span>
+                                        <td className="my-1 ">
+                                            <h5 className="font-14 ps-3">{t.name}</h5>
+                                            <span className="font-13 text-muted ps-3">{t.type}</span>
                                         </td>
-                                        <td>
-                                            <span className="text-muted">Nivel necesario: {t.level}</span>
+                                        <td className="my-1">
+                                            <span className="text-muted font-14">Nivel necesario: {t.level}</span>
                                         </td>
-                                        <td>
+                                        <td >
                                             <img className="mini-gameimg mx-2" src={t.videojuego_img} alt={t.videojuego_name} />
                                         </td>
-                                        <td className="text-end">
+                                        <td className="text-end pe-3 font-14">
                                             {t.is_registered ? (
-                                            <button className="btn btn-dissable" disabled>Inscrito</button>
+                                            <span className="text-danger"><i class="bi bi-check-circle-fill"></i> Inscrito</span>
                                             ) : (
                                             <button className="btn btn-light" onClick={() => addUserTournament(t.id)}>Unirse</button>
                                             )}                  

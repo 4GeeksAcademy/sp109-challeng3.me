@@ -103,41 +103,50 @@ export default function SearchTeam() {
     });
 
     return (
-        <div className="container mt-5">
-            <h1 className="text-center">Buscar Equipos</h1>
-            <p className="text-center">Aquí podrás buscar equipos que jueguen los mismos juegos que tu.</p>
-            <ul>
-                {
-                filteredTeams.map(team => {
-                    const game = games.find(g => g.id === team.videojuego_id);
-                    const pendingRequest = userTeams.some(ut => ut.team_id === team.id && ut.status === "pending");
-
-                    return (
-                        <li key={team.id} className="border p-2">
-                            <div className="d-flex justify-content-between align-items-center flex-nowrap">
-                                <img src={team.img} alt={team.name} className="mini-gameimg p-2 mx-2" />
-                                <h4>{team.name}</h4>
-                                <div className="d-flex flex-column align-items-end">
-                                    <span>Nivel: {team.level}</span>
-                                    <span>Premium: {team.premium ? "Sí" : "No"}</span>
-                                </div>
-                                <p>{game ? game.name : "Desconocido"}</p>
-
-                                {pendingRequest ? (
-                                    <span className="text-warning">Solicitud pendiente</span>
-                                ) : (
-                                    <button className="btn btn-warning" onClick={() => inscribirseAlEquipo(team.id)}>Solicitar unirse</button>   
-                                )}
-
-                                <Link to={`/team/${team.id}`} className="btn btn-primary">
-                                    <i className="fa-solid fa-eye"></i>
-                                </Link>   
-                            </div>
-                        </li>
-                    );
-                })}
-            </ul>
+    <div className="container m-auto p-5 bg-body h-full">
+        <div className="row">
+            <div className="col-12 mb-4">
+                <div className="page-title-box">
+                    <div className="page-title">
+                        <h5>Selecciona un Equipo para solicitar unirte</h5>
+                 </div>
+                 </div>
+            </div>
         </div>
+        <div className="row">
+            <div className="table-responsive rounded shadow px-0">
+                <table className="mb-0 table table-hover align-middle">
+                    <tbody >
+                        {filteredTeams.map(t => {
+                            const game = games.find(g => g.id === t.videojuego_id);
+                            const pendingRequest = userTeams.some(ut => ut.team_id === t.id && ut.status === "pending")
+                            return (
+                            <tr key={t.id} className="bg-body-secondary p-2" onClick={() => navigate(`/team/${t.id}`)}>
+                                <td className="pt-3">
+                                    <img className="mini-gameimg mx-2" src={t.img} alt={t.name} style={{border: "0.5px solid grey"}} />
+                                </td>
+                                <td className="my-1">
+                                    <h5 className="font-14 pt-2 ps-2">{t.name}</h5>
+                                    <span className="font-13 text-muted ps-2">{game ? game.name : "Desconocido"}</span>
+                                </td>
+                                <td className="my-1 ">
+                                    <h5 className="text-muted font-14">Nivel del equipo: {t.level}</h5>
+                                    <span className="text-muted font-14">Premium: {t.premium ? "Sí" : "No"}</span>
+                                </td>
+                                <td className="text-end p-4 font-14">
+                                        {pendingRequest ? (
+                                        <span className="text-danger">Solicitud pendiente</span>
+                                    ) : (
+                                        <button className="btn btn-danger" onClick={() => inscribirseAlEquipo(team.id)}>Solicitar unirse</button>   
+                                    )}             
+                                </td>
+                            </tr>)}
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
     )
 }
