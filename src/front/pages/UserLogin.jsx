@@ -5,74 +5,80 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CreateUserModal from "../components/CreateUserModal.jsx";
 import { jwtDecode } from "jwt-decode";
-import logo from "../assets/img/logo-big.png";
+import logo from "../assets/img/logo-challeng3me.webp";
 
 const UserLogin = () => {
   // Access the global state and dispatch function using the useGlobalReducer hook.
   const { store, dispatch } = useGlobalReducer();
-  const [email,setEmail] = useState("")
-  const [password,setPassword] = useState ("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const navigate = useNavigate();
 
-  
-  function accesLogin (e){
+
+  function accesLogin(e) {
     e.preventDefault()
     const requestOptions = {
       method: "POST",
-      headers: {'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: email,
         password: password
       })
     }
-      
-  fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/login", requestOptions)
-  .then(async (response) => {
-    const data = await response.json();
 
-    if (response.status === 200 && data.access_token) {
-      localStorage.setItem("token", data.access_token);
+    fetch(import.meta.env.VITE_BACKEND_URL + "/api/user/login", requestOptions)
+      .then(async (response) => {
+        const data = await response.json();
 
-      // Decodifica el token para obtener el rol
-      const decoded = jwtDecode(data.access_token);
-      const role = decoded.role;
+        if (response.status === 200 && data.access_token) {
+          localStorage.setItem("token", data.access_token);
 
-      // Establece auth en el store según el rol
-      if (role === "admin") {
-        dispatch({ type: "set_admin_auth", payload: true });
-        navigate("/admin/dashboard");
-      } else if (role === "user") {
-        dispatch({ type: "set_auth", payload: true });
-        navigate("/user/dashboard");
-        console.log(store.user_auth)
-      } else {
-        alert("Rol no reconocido.");
-        return;
-      }
+          // Decodifica el token para obtener el rol
+          const decoded = jwtDecode(data.access_token);
+          const role = decoded.role;
 
-      setEmail("");
-      setPassword("");
-    } else if (response.status === 401 || response.status === 400) {
-        // Si credenciales inválidas
-        alert("Email o contraseña inválido.");
-      } else {
-        // Otros errores
-        alert(data?.msg || "Error desconocido.");
-      }
-    })
-  .catch((error) => {
-    alert("Error de red o del servidor");
-  })
+          // Establece auth en el store según el rol
+          if (role === "admin") {
+            dispatch({ type: "set_admin_auth", payload: true });
+            navigate("/admin/dashboard");
+          } else if (role === "user") {
+            dispatch({ type: "set_auth", payload: true });
+            navigate("/user/dashboard");
+            console.log(store.user_auth)
+          } else {
+            alert("Rol no reconocido.");
+            return;
+          }
+
+          setEmail("");
+          setPassword("");
+        } else if (response.status === 401 || response.status === 400) {
+          // Si credenciales inválidas
+          alert("Email o contraseña inválido.");
+        } else {
+          // Otros errores
+          alert(data?.msg || "Error desconocido.");
+        }
+      })
+      .catch((error) => {
+        alert("Error de red o del servidor");
+      })
   }
 
   return (
-    <div className="container p-3 w-50">
-        <form className="w-50 m-auto border shadow rounded" onSubmit={accesLogin}>
-          <div className="rounded rounded-bottom-0" style={{backgroundColor:"#05052f"}}>
-           <img src={logo} alt="Logo" className="w-50 d-flex mx-auto" />
+    <div className="account-pages pt-2 pt-sm-5 pb-4 pb-sm-5">
+    <div className="container">
+      <div className="justify-content-center row">
+        <div className="col-xxl-4 col-xl-5 col-lg-6 col-md-8">
+        <form className="m-auto border shadow rounded" onSubmit={accesLogin}>
+          <div className="rounded rounded-bottom-0 " >
+           <img src={logo} alt="Logo" className="w-25 d-flex mx-auto rounded p-2" />
           </div>
-         <h3 className="text-center mt-2">Sing In</h3>
-         <p className="text-center"> Enter your username and password to access. </p>
+          <div className="text-center w-75 m-auto mt-2">
+          <h4 className="text-dark- text-center mt-0 fw-bold">Sing In</h4>
+          <p className="text-muted mb-4"> Enter your username and password to access. </p>
+
+          </div>
           <div className="mb-3 p-3">
               <label htmlFor="exampleInputEmail1" className="form-label">Email</label>
               <input value= {email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email" type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>
@@ -84,18 +90,28 @@ const UserLogin = () => {
                   <i className="bi bi-eye-slash"></i>
                 </div>
           </div>
-          <div className="d-flex gap-2 flex-column p-2">
-            <button type="submit" className="btn btn-danger p-2">Login</button>
-            <div className="d-flex gap-1 small-text align-self-center">
+          <div className="d-flex gap-2 flex-column">
+            <div className="text-center">
+            <button type="submit" className="btn btn-danger">Log In</button>
+            </div>
+            <div className="d-flex gap-1 small-text align-self-center mt-3">
               ¿No tienes cuenta? 
               <CreateUserModal/>
               </div>
-              <div className="d-flex gap-1 small-text align-self-center">
+              <div className="d-flex gap-1 small-text align-self-center mb-4">
               ¿Olvidaste la contraseña?
               </div>
           </div>
         </form>
+
+        </div>
+
+      </div>
     </div>
+
+    </div>
+
+
   );
 };
 export default UserLogin;
