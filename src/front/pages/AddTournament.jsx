@@ -10,6 +10,12 @@ const AddTournament = () => {
   const [user, setUser] = useState(null)
   const [filteredTournaments, setFilteredTournaments] = useState([])
 
+  const getTournaments = () => {
+
+        fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/' + user.id + '/videogame-tournaments')
+        .then(res => res.json())
+        .then(data => setFilteredTournaments(data))
+  }
   useEffect(() => {
     const token = localStorage.getItem("token");
     // La comprobación del token es suficiente, ya que si no hay token, no hay usuario autenticado.
@@ -22,9 +28,12 @@ const AddTournament = () => {
     const decoded = jwtDecode(token);
     const uid = decoded.sub;
 
-    fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/' + uid + '/videogame-tournaments')
+    fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/' + uid )
     .then(res => res.json())
-    .then(data => setFilteredTournaments(data))
+    .then(data => setUser(data))
+    .then(a => getTournaments())
+    
+
   } , [])
 
   const addUserTournament = (tournamentId) => {
@@ -46,6 +55,7 @@ const AddTournament = () => {
       .then((response) => {
         if (response.ok) {
           alert("¡Te has unido al torneo con éxito!")
+          getTournaments()
         } else {
           response.json().then(err => alert(`No se pudo unir al torneo: ${err.message || 'Error desconocido'}`))
         }

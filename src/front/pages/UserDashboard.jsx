@@ -156,10 +156,10 @@ export default function UserDashboard() {
 
     return (
         <div className="container bg-body">
-            <div className="d-flex justify-content-center align-items-center gap-4 my-4 bg-body-secondary m-auto p-4 rounded shadow" style={{ width: "fit-content" }}>
+            <div className="d-flex justify-content-center align-items-center gap-4 my-5 bg-body-secondary m-auto p-4 rounded shadow" style={{ width: "fit-content" }}>
                 <div className="constainer border-end p-4">
                     <img
-                        src={user.img}
+                        src={user.img ? user.img : "https://static.vecteezy.com/system/resources/previews/023/465/688/non_2x/contact-dark-mode-glyph-ui-icon-address-book-profile-page-user-interface-design-white-silhouette-symbol-on-black-space-solid-pictogram-for-web-mobile-isolated-illustration-vector.jpg"}
                         alt={user.username}
                         className="gameimg"
                     />
@@ -169,7 +169,7 @@ export default function UserDashboard() {
                     <p><strong>Email: </strong>{user.email}</p>
                     <p><strong>Nivel: </strong>{user.level}</p>
                     <div className="text-center">
-                        <EditUserModal userId={user.id} onUserModified={getUserInfo}/>
+                        <button className="btn btn-danger h-25 text-8" onClick={() => navigate(`/edit/user/${user.id}`)}>Editar perfil</button>
                     </div>
                 </div>
             </div>
@@ -287,7 +287,7 @@ export default function UserDashboard() {
                                         </td>
                                         <td className="text-end pe-3 font-14">
                                             {t.is_registered ? (
-                                            <span className="text-danger"><i class="bi bi-check-circle-fill"></i> Inscrito</span>
+                                            <span className="text-danger"><i className="bi bi-check-circle-fill"></i> Inscrito</span>
                                             ) : (
                                             <button className="btn btn-light" onClick={() => addUserTournament(t.id)}>Unirse</button>
                                             )}                  

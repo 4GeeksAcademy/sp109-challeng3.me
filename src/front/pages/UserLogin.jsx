@@ -17,6 +17,11 @@ const UserLogin = () => {
   
   function accesLogin (e){
     e.preventDefault()
+
+    if (!email || !password) {
+      alert("Por favor, completa email y contraseña.");
+      return;
+    }
     const requestOptions = {
       method: "POST",
       headers: {'Content-Type': 'application/json' },

@@ -137,7 +137,7 @@ const CreateTeam = () => {
         
         <div className="row">
             <div className="col-12 col-md-6 d-flex flex-column p-5">
-                <i className="fas fa-users text-danger display-1 mx-auto mb-4"></i>
+                <i className="fas fa-users text-rojo display-1 mx-auto mb-4"></i>
                 <span className="text-muted mozilla-headline blackquote mb-2">Forma un grupo con amigos o conoce nuevos compañeros que comparten tu misma pasión por los videojuegos. Diseña tu logo, elige tu nombre y prepárate para enfrentarte a otros equipos en torneos y desafíos.</span>
                 <span className="text-muted mozilla-headline blackquote">Tu equipo puede ser pequeño hoy, pero con esfuerzo, estrategia y unión… ¡puede convertirse en una verdadera leyenda!</span>
             </div>
@@ -149,15 +149,15 @@ const CreateTeam = () => {
                         addTeam()
                     }}
                     style={{ height: "auto" }}>
-                    <div class="mb-3">
-                        <label class="form-label" htmlFor="name">Nombre del equipo</label>
-                        <input class="form-control" type="text" name="name" id="name" value={team.videojuego_id}
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="name">Nombre del equipo</label>
+                        <input className="form-control" type="text" name="name" id="name" value={team.videojuego_id}
                             onChange={(e) => setTeam({ ...team, videojuego_id: e.target.value })}/>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label" htmlFor="img">Logo del equipo</label>
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="img">Logo del equipo</label>
                         <input 
-                            class="form-control" 
+                            className="form-control" 
                             type="file" 
                             value="" 
                             name="img" 
@@ -173,8 +173,8 @@ const CreateTeam = () => {
                                 />
                             )}
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label" htmlFor="game">Nombre del equipo</label>
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="game">Nombre del equipo</label>
                         <select
                             className="form-control mt-2"
                             value={team.videojuego_id}
