@@ -62,7 +62,7 @@ const CreateUserModal = ({onUserCreated}) => {
                         <label for="Email">Email</label>
                         <input type="email" name="Email" id="Email" value={user.email} onChange={(e) => setUser({ ...user, email: e.target.value })}/>
                         <div className="d-flex justify-content-around">
-                        <button className="btn btn-success mt-3" onClick={addUser}>Crear Usuario</button>
+                        <button className="btn btn-danger mt-3" onClick={addUser}>Crear Usuario</button>
                         <button className="btn btn-secondary mt-3" onClick={closePopup}>Cerrar</button>
                         </div>
                     </div>

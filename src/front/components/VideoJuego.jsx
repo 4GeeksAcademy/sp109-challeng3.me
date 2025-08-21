@@ -60,7 +60,7 @@ export const Videojuego = () => {
             <h1 className="display-4">Videojuegos</h1>
               <Link to="/api-integration">
             {isAdmin && (
-                <button className="btn btn-success mt-4">Create videojuego</button>
+                <button className="btn btn-danger mt-4">Create videojuego</button>
             )}
               </Link>
             </div>

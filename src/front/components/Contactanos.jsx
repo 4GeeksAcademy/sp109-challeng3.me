@@ -20,7 +20,7 @@ export const Contactanos = () => {
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="text-center">
-                            <h3 _msttexthash="365651" _msthash="99">Póngase en <span className="text-danger" _istranslated="1">Contacto</span></h3>
+                            <h3 _msttexthash="365651" _msthash="99">Póngase en <span className="text-rojo" _istranslated="1">Contacto</span></h3>
                             <p className="text-muted mt-2" _msttexthash="12019384" _msthash="100">Por favor, rellene el siguiente formulario y nos pondremos en contacto con usted en breve.
                                 <p>Para más información póngase en contacto con nosotros.</p></p>
                         </div>

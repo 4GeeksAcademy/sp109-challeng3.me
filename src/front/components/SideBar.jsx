@@ -102,7 +102,7 @@ function SideBar({children}) {
       </div>
 
       <div className="profile-section mt-auto">
-        <div  onClick={logout} className="sidebar-link text-decoration-none p-3 text-danger">
+        <div  onClick={logout} className="sidebar-link text-decoration-none p-3 text-rojo">
           <span ><i className="bi bi-door-open-fill me-3"></i></span>
           {!collapsed && <span>Logout</span>}
         </div>

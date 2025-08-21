@@ -137,7 +137,7 @@ const CreateTeam = () => {
         
         <div className="row">
             <div className="col-12 col-md-6 d-flex flex-column p-5">
-                <i className="fas fa-users text-danger display-1 mx-auto mb-4"></i>
+                <i className="fas fa-users text-rojo display-1 mx-auto mb-4"></i>
                 <span className="text-muted mozilla-headline blackquote mb-2">Forma un grupo con amigos o conoce nuevos compañeros que comparten tu misma pasión por los videojuegos. Diseña tu logo, elige tu nombre y prepárate para enfrentarte a otros equipos en torneos y desafíos.</span>
                 <span className="text-muted mozilla-headline blackquote">Tu equipo puede ser pequeño hoy, pero con esfuerzo, estrategia y unión… ¡puede convertirse en una verdadera leyenda!</span>
             </div>
