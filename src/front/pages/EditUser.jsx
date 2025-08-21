@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
 import DraggableMarker from "../components/DraggableMarker";
 import "leaflet/dist/leaflet.css";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const EditUser = () => {
 
     const {userId} = useParams()
     const [uploading, setUploading] = useState(false)
     const [position, setPosition] = useState([40.4168, -3.7038])
+    const navigate = useNavigate()
     const [user, setUser] = useState({
         username: "",
         password: "",
@@ -82,8 +83,7 @@ const EditUser = () => {
                         latitude: null,
                         longitude: null
                     })
-                    closePopup()
-                    onUserModified()
+                    navigate("/user/dashboard")
                 }
                 else {
                     alert('No se puede modificar ese usuario')

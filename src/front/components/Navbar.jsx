@@ -4,6 +4,7 @@ import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import isologo from "../assets/img/isologo-challeng3me.webp";
+import { useLocation } from "react-router-dom";
 
 export const Navbar = () => {
 	const { store, dispatch } = useGlobalReducer()
@@ -11,6 +12,7 @@ export const Navbar = () => {
 	const [isUser, setIsUser] = useState(false)
 	const [user, setUser] = useState([])
 	const navigate = useNavigate()
+	const location = useLocation()
 
 	useEffect(() => {
 		const token = localStorage.getItem("token");
@@ -48,7 +50,7 @@ export const Navbar = () => {
 
 	useEffect(() => {
 		getUserInfo(user.id)
-	}, [navigate])
+	}, [location.pathname])
 
   const logout = () => {
 		localStorage.removeItem("token")
