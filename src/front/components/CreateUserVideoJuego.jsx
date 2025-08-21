@@ -84,7 +84,7 @@ export const CreateUserVideoJuego = () => {
             ))}
           </div>
           <div className="col-12 col-lg-5 d-flex justify-content-center flex-column">
-            <i className="bi bi-joystick text-danger display-1 mx-auto mb-4"></i>
+            <i className="bi bi-joystick text-rojo display-1 mx-auto mb-4"></i>
             <span className="text-muted mozilla-headline blackquote">Selecciona tus juegos competitivos favoritos y conéctate con jugadores que comparten tu pasión. Aquí podrás descubrir torneos, formar equipos y demostrar tu nivel en el campo de batalla de tu juego preferido.</span>
           </div>
         </div>

@@ -95,9 +95,9 @@ const UserLogin = () => {
                 </div>
           </div>
           <div className="d-flex gap-2 flex-column">
-            <div className="text-center">
-            <button type="submit" className="btn btn-danger">Log In</button>
-            </div>
+            {/* <div className="text-center"> */}
+            <button type="submit" className="btn btn-danger mx-3">Log In</button>
+            {/* </div> */}
             <div className="d-flex gap-1 small-text align-self-center mt-3">
                 <Link to="/singup">
                   ¿No tienes cuenta? 

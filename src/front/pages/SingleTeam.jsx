@@ -65,7 +65,7 @@ const SingleTeam = () => {
         <div className="container p-5 bg-body h-full d-flex justify-content-center">
             <div className="col-12 col-md-6">
                 <div className="card p-4 d-flex flex-column align-items-center" style={{ height: "auto" }}>
-
+                
                     {team === null ? <Navigate to="/user/dashboard" /> : null}
                     <img src={team.img} alt="Team Logo" className="gameimg mb-3" />
                     <h3 className="text-danger">{team.name}</h3>

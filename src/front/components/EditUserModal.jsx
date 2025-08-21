@@ -165,7 +165,7 @@ const EditUserModal = ({onUserModified, userId}) => {
                         </MapContainer>
 
                         <div className="d-flex justify-content-around">
-                        <button className="btn btn-success mt-3" onClick={() => editUser(user.id)}>Editar Usuario</button>
+                        <button className="btn btn-danger mt-3" onClick={() => editUser(user.id)}>Editar Usuario</button>
                         <button className="btn btn-secondary mt-3" onClick={closePopup}>Cerrar</button>
                         </div>
                     </div>

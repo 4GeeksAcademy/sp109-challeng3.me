@@ -10,12 +10,7 @@ const AddTournament = () => {
   const [user, setUser] = useState(null)
   const [filteredTournaments, setFilteredTournaments] = useState([])
 
-  const getTournaments = () => {
-
-        fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/' + user.id + '/videogame-tournaments')
-        .then(res => res.json())
-        .then(data => setFilteredTournaments(data))
-  }
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
     // La comprobación del token es suficiente, ya que si no hay token, no hay usuario autenticado.
@@ -30,10 +25,9 @@ const AddTournament = () => {
 
     fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/' + uid )
     .then(res => res.json())
-    .then(data => setUser(data))
-    .then(a => getTournaments())
-    
-
+    .then(data => {
+      setUser(data)
+    })
   } , [])
 
   const addUserTournament = (tournamentId) => {
@@ -61,7 +55,21 @@ const AddTournament = () => {
         }
       })
       .catch((err) => console.error("Error al unirse al torneo:", err))
-  };
+  }
+
+   const getTournaments = (id) => {
+      if (!user || !user.id) return;  // 🚨 evita error si user todavía no está listo
+
+      fetch(import.meta.env.VITE_BACKEND_URL + '/api/user/' + user.id + '/videogame-tournaments')
+        .then(res => res.json())
+        .then(data => setFilteredTournaments(data))
+  }
+
+    useEffect(() => {
+      if (user && user.id) {
+        getTournaments();
+      }
+    }, [user])
 
   return (
      <div className="container m-auto p-5 bg-body h-full">
@@ -83,17 +91,29 @@ const AddTournament = () => {
                                 <h5 className="font-14 pt-2 ps-2">{t.name}</h5>
                                 <span className="text-muted font-13 ps-2">{t.type}</span>
                             </td>
-                            <td className="my-1 pt-4">
-                                <span className="text-muted font-14">Nivel necesario: {t.level}</span>
+                            <td className="my-1 pt-2">
+                                <span className="text-muted font-13">Nivel necesario: {t.level}</span>
+                                <p className="text-muted font-13 mb-0 mt-2">Premio: {t.prize}</p>
                             </td>
                             <td className="pt-3">
                                 <img className="mini-gameimg mx-2" src={t.videojuego_img} alt={t.videojuego_name} />
                             </td>
                             <td className="text-end p-4 font-14">
                                 {t.is_registered ? (
-                                <span className="text-danger "><i class="bi bi-check-circle-fill"></i> Inscrito</span>
+                                  <span className="text-danger ">
+                                    <i className="bi bi-check-circle-fill"></i> Inscrito
+                                  </span>
+                                ) : t.level > user.level ? (
+                                  <span className="text-warning">
+                                    <i className="bi bi-exclamation-triangle-fill"></i> Nivel insuficiente
+                                  </span>
                                 ) : (
-                                <button className="btn btn-danger mx-auto" onClick={() => addUserTournament(t.id)}>Unirse</button>
+                                  <button
+                                    className="btn btn-danger mx-auto"
+                                    onClick={() => addUserTournament(t.id)}
+                                  >
+                                    Unirse
+                                  </button>
                                 )}                  
                             </td>
                         </tr>)
