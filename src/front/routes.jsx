@@ -54,6 +54,8 @@ import { Nosotros } from "./components/Nosotros.jsx";
 import SideBar from "./components/SideBar.jsx";
 import { DashboardLayout } from "./pages/DashboardLayout.jsx";
 import TeamSection from "./pages/TeamSection.jsx";
+import EditUser from "./pages/EditUser.jsx";
+import SingUp from "./pages/SingUp.jsx";
 
 
 export const router = createBrowserRouter(
@@ -76,6 +78,7 @@ export const router = createBrowserRouter(
         <Route path="/user/login" element={<UserLogin />} />
         <Route path="/contact" element={<Contactanos />} />
         <Route path="/nosotros" element={<Nosotros />} />
+        <Route path="/singup" element={<SingUp />} />
       </Route>
 
       <Route element={<DashboardLayout />}>
@@ -119,6 +122,7 @@ export const router = createBrowserRouter(
         <Route path="/team/aplication/:team_id" element={<TeamAplication />} />
         <Route path="/search/tournament" element={<AddTournament />} />
         <Route path="/team/section" element={<TeamSection />} />
+        <Route path="/edit/user/:userId" element={<EditUser/>} />
       </Route>
     </>)
 );

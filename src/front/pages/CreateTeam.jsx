@@ -154,10 +154,10 @@ const CreateTeam = () => {
                         <input class="form-control" type="text" name="name" id="name" value={team.name}
                             onChange={(e) => setTeam({ ...team, name: e.target.value })}/>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label" htmlFor="img">Logo del equipo</label>
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="img">Logo del equipo</label>
                         <input 
-                            class="form-control" 
+                            className="form-control" 
                             type="file" 
                             value="" 
                             name="img" 
@@ -173,8 +173,8 @@ const CreateTeam = () => {
                                 />
                             )}
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label" htmlFor="game">Nombre del equipo</label>
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="game">Nombre del equipo</label>
                         <select
                             className="form-control mt-2"
                             value={team.videojuego_id}

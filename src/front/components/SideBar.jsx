@@ -69,8 +69,7 @@ function SideBar({children}) {
       </button>
 
       <div className="p-4">
-        {collapsed && <img src={logo} alt="logo" className="minilogo"/>}
-        {!collapsed && <img src={logo} alt="logo" className="logo logo-text mx-auto"/>}
+        <img src={logo} alt="logo" className={`${!collapsed ? "logo" : "minilogo"} mx-auto transition`}/>
       </div>
 
       <div className="nav flex-column">
@@ -90,14 +89,6 @@ function SideBar({children}) {
         <Link to="/team/section" className="sidebar-link text-decoration-none p-3">
           <i className="fas fa-users me-3"></i>
           {!collapsed && <span>Equipos</span>}
-        </Link>
-        <Link to="#" className="sidebar-link text-decoration-none p-3">
-          <i className="fas fa-box me-3"></i>
-          {!collapsed && <span>Products</span>}
-        </Link>
-        <Link to="#" className="sidebar-link text-decoration-none p-3">
-          <i className="fas fa-gear me-3"></i>
-          {!collapsed && <span>Settings</span>}
         </Link>
       </div>
 

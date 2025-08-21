@@ -62,26 +62,34 @@ const SingleTeam = () => {
     }, [team, user])
 
     return (
-        <div className="container text-center w-50 my-5 border p-4">
-            {team === null ? <Navigate to="/user/dashboard" /> : null}
-            <img src={team.img} alt="Team Logo" className="gameimg mb-3" />
-            <h3>{team.name}</h3>
-            <p>Level: {team.level}</p>
-            <p>Premium: {team.premium ? "Premium" : "Free"}</p>
-            {owner ? (
-                <p>Founder: {user.username}</p>
-            ) : (
-                <p>Founder: {ownerData.username}</p>
-            )}
-            <p>Members: </p>
-            <ul></ul>
-            <button className="btn btn-primary mx-2" onClick={() => navigate("/search/team")}>Atras</button>
-            {owner && (<>
-                <button className="btn btn-secondary mx-2" onClick={() => navigate("/team/edit/" + team_id)}>Editar Equipo</button>
-                <button className="btn btn-danger mx-2" onClick={() => navigate("/team/aplication/" + team_id)}>Solicitudes</button>
-                <button className="btn btn-danger mx-2" onClick={() => navigate("/user/dashboard")}>Eliminar</button>
-            </>)}
+        <div className="container p-5 bg-body h-full d-flex justify-content-center">
+            <div className="col-12 col-md-6">
+                <div className="card p-4 d-flex flex-column align-items-center" style={{ height: "auto" }}>
+                
+                    {team === null ? <Navigate to="/user/dashboard" /> : null}
+                    <img src={team.img} alt="Team Logo" className="gameimg mb-3" />
+                    <h3 className="text-danger">{team.name}</h3>
+                    <p>Nivel: {team.level}</p>
+                    <p>Premium: {team.premium ? "Premium" : "Free"}</p>
+                    {owner ? (
+                        <p>Fundador: {user.username}</p>
+                    ) : (
+                        <p>Fundador: {ownerData.username}</p>
+                    )}
+                    <div className="d-flex gap-4 w-50 flex-wrap justify-content-center">
+                        <button className="btn btn-outline-danger mb-2" onClick={() => navigate(-1)}>Atras</button>
+                        {owner && (<>
+                            <button className="btn btn-outline-danger mb-2" onClick={() => navigate("/team/edit/" + team_id)}>Editar Equipo</button>
+                            <button className="btn btn-danger mb-2" onClick={() => navigate("/team/aplication/" + team_id)}>Solicitudes</button>
+                            <button className="btn btn-outline-danger mb-2" onClick={() => { 
+                                deleteTeam()
+                                navigate("/user/dashboard")
+                                }}>Eliminar</button>
+                        </>)}
+                    </div>
+                </div>
 
+            </div>
         </div>
     )
 }

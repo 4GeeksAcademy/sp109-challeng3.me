@@ -120,7 +120,7 @@ export default function SearchTeam() {
                             const game = games.find(g => g.id === t.videojuego_id);
                             const pendingRequest = userTeams.some(ut => ut.team_id === t.id && ut.status === "pending")
                             return (
-                            <tr key={t.id} className="bg-body-secondary p-2" onClick={() => navigate(`/team/${t.id}`)}>
+                            <tr key={t.id} className="bg-body-secondary p-2">
                                 <td className="pt-3">
                                     <img className="mini-gameimg mx-2" src={t.img} alt={t.name} style={{border: "0.5px solid grey"}} />
                                 </td>
@@ -132,11 +132,17 @@ export default function SearchTeam() {
                                     <h5 className="text-muted font-14">Nivel del equipo: {t.level}</h5>
                                     <span className="text-muted font-14">Premium: {t.premium ? "Sí" : "No"}</span>
                                 </td>
+                                <td>
+                                    <button className="btn btn-dark d-flex flex-row align-items-center gap-2 mx-auto" onClick={() => navigate(`/team/${t.id}`)}>
+                                    <i class="bi bi-eye-fill font-14"></i>
+                                    <span className="text-muted font-14">Ver equipo</span>
+                                    </button>
+                                </td>
                                 <td className="text-end p-4 font-14">
                                         {pendingRequest ? (
                                         <span className="text-danger">Solicitud pendiente</span>
                                     ) : (
-                                        <button className="btn btn-danger" onClick={() => inscribirseAlEquipo(team.id)}>Solicitar unirse</button>   
+                                        <button className="btn btn-danger" onClick={() => inscribirseAlEquipo(t.id)}>Solicitar unirse</button>   
                                     )}             
                                 </td>
                             </tr>)}

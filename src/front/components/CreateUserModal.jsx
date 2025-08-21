@@ -39,7 +39,6 @@ const CreateUserModal = ({onUserCreated}) => {
                     email: ""
                 })
                 closePopup()
-                onUserCreated()
             }
         })
     }

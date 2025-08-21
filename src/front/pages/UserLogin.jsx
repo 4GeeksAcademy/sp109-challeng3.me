@@ -17,6 +17,11 @@ const UserLogin = () => {
 
   function accesLogin(e) {
     e.preventDefault()
+
+    if (!email || !password) {
+      alert("Por favor, completa email y contraseña.");
+      return;
+    }
     const requestOptions = {
       method: "POST",
       headers: { 'Content-Type': 'application/json' },
@@ -66,26 +71,25 @@ const UserLogin = () => {
   }
 
   return (
-    <div className="account-pages pt-2 pt-sm-5 pb-4 pb-sm-5">
-    <div className="container">
-      <div className="justify-content-center row">
+    <div className="container m-auto p-5 bg-body h-full d-flex justify-content-center align-items-center">
         <div className="col-xxl-4 col-xl-5 col-lg-6 col-md-8">
-        <form className="m-auto border shadow rounded" onSubmit={accesLogin}>
+        <form className="m-auto card" onSubmit={accesLogin} style={{ height: "auto" }}>
+          <div className="card-body">
           <div className="rounded rounded-bottom-0 " >
            <img src={logo} alt="Logo" className="w-25 d-flex mx-auto rounded p-2" />
           </div>
           <div className="text-center w-75 m-auto mt-2">
-          <h4 className="text-dark- text-center mt-0 fw-bold">Sing In</h4>
-          <p className="text-muted mb-4"> Enter your username and password to access. </p>
+          <h4 className="text-dark- text-center mt-0 fw-bold">Bienvenido</h4>
+          <p className="text-muted mb-4">Introduce tu email y password para acceder.</p>
 
           </div>
           <div className="mb-3 p-3">
               <label htmlFor="exampleInputEmail1" className="form-label">Email</label>
-              <input value= {email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email" type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>
+              <input value= {email} onChange={(e) => setEmail(e.target.value)} placeholder="Introduce tu email" type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"/>
           </div>
               <label htmlFor="exampleInputPassword1" className="form-label ms-3">Password</label>
               <div className="mb-3 p-3 pt-0 input-group">
-              <input value= {password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password" type="password" className="form-control" id="exampleInputPassword1"/>
+              <input value= {password} onChange={(e) => setPassword(e.target.value)} placeholder="Introduce tu password" type="password" className="form-control" id="exampleInputPassword1"/>
               <div className="input-group-text input-group-password " data-password="false">
                   <i className="bi bi-eye-slash"></i>
                 </div>
@@ -95,19 +99,19 @@ const UserLogin = () => {
             <button type="submit" className="btn btn-danger mx-3">Log In</button>
             {/* </div> */}
             <div className="d-flex gap-1 small-text align-self-center mt-3">
-              ¿No tienes cuenta? 
-              <CreateUserModal/>
+                <Link to="/singup">
+                  ¿No tienes cuenta? 
+                </Link>
               </div>
               <div className="d-flex gap-1 small-text align-self-center mb-4">
               ¿Olvidaste la contraseña?
               </div>
           </div>
+          </div>
         </form>
 
         </div>
 
-      </div>
-    </div>
 
     </div>
 

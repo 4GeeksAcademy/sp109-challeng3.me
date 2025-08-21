@@ -4,6 +4,7 @@ import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import isologo from "../assets/img/isologo-challeng3me.webp";
+import { useLocation } from "react-router-dom";
 
 export const Navbar = () => {
 	const { store, dispatch } = useGlobalReducer()
@@ -11,6 +12,7 @@ export const Navbar = () => {
 	const [isUser, setIsUser] = useState(false)
 	const [user, setUser] = useState([])
 	const navigate = useNavigate()
+	const location = useLocation()
 
 	useEffect(() => {
 		const token = localStorage.getItem("token");
@@ -46,6 +48,10 @@ export const Navbar = () => {
 		.then(data => setUser(data))
 	}
 
+	useEffect(() => {
+		getUserInfo(user.id)
+	}, [location.pathname])
+
   const logout = () => {
 		localStorage.removeItem("token")
 		setRole(null)
@@ -66,7 +72,7 @@ export const Navbar = () => {
 						<div className="dropdown d-flex align-items-center perfilbtn">
 							<a className="nav-link dropdown-toggle arrow-none nav-user px-2 dropdown-toggle border-0 perfilbtn" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 							<img
-								src={user.img}
+								src={user.img ? user.img : "https://static.vecteezy.com/system/resources/previews/023/465/688/non_2x/contact-dark-mode-glyph-ui-icon-address-book-profile-page-user-interface-design-white-silhouette-symbol-on-black-space-solid-pictogram-for-web-mobile-isolated-illustration-vector.jpg"}
 								className="rounded-circle"
 								alt="Profile"
 								style={{ width: "40px", height: "40px", border: "0.5px solid white" }}
