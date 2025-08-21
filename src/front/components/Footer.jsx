@@ -9,7 +9,7 @@ export const Footer = () => (
 					<div className="col-md-6">
 						<div className="footer-links d-flex gap-3 justify-content-end">
 							<Link to="/nosotros" className="footer-links">Sobre Nosotros</Link>&nbsp;
-							<Link to="/about" className="footer-links">Apoyanos</Link>&nbsp;
+							<Link to="https://paypal.me/JoseLuisVelaBorrego" className="footer-links" target="_blank" rel="noopener noreferrer">Apoyanos</Link>&nbsp;
 							<Link to="/contact" className="footer-links">Contactanos</Link>
 						</div>
 					</div>

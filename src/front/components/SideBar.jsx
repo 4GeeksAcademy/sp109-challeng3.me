@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Children } from "react";
 import { jwtDecode } from "jwt-decode";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import logo from "../assets/img/logo-challeng3me.webp";
+import logo from "../assets/img/logo-challeng3me (1).png";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 
 function SideBar({children}) {

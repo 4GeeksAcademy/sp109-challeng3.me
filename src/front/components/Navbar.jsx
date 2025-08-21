@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import isologo from "../assets/img/isologo-challeng3me.webp";
+import isologo from "../assets/img/isologo-challeng3me (1).png";
 import { useLocation } from "react-router-dom";
 
 export const Navbar = () => {

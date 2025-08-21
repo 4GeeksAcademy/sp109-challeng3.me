@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
-import logo from "../assets/img/logo-challeng3me.webp";
+import logo from "../assets/img/logo-challeng3me (1).png";
 import bgimg from "../assets/img/Crowds-4-1024x683-1.jpg";
 import { Link } from "react-router-dom";
 
